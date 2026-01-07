@@ -1,22 +1,4 @@
-export interface Set {
-    id: string;
-    reps: number;
-    weight: number;
-}
-
-export interface Exercise {
-    id: string;
-    name: string;
-    sets: Set[];
-}
-
-export interface Workout {
-    id: string;
-    name: string;
-    date: string;
-    duration: string;
-    exercises: Exercise[];
-}
+import { Workout, Exercise, ExerciseType } from "../types";
 
 export const workouts: Workout[] = [
     {
@@ -201,5 +183,34 @@ export const workouts: Workout[] = [
                 ],
             },
         ],
+    },
+];
+
+
+
+export const exercises: Exercise[] = [
+    {
+        id: "exercise-1",
+        name: "Bench Press",
+        strength: true,
+        type: ExerciseType.CHEST,
+    },
+    {
+        id: "exercise-2",
+        name: "Squats",
+        strength: true,
+        type: ExerciseType.LEGS,
+    },
+    {
+        id: "exercise-3",
+        name: "Deadlift",
+        strength: true,
+        type: ExerciseType.BACK,
+    },
+    {
+        id: "exercise-4",
+        name: "Running",
+        strength: false,
+        type: ExerciseType.CARDIO,
     },
 ];

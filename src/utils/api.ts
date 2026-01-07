@@ -3,10 +3,7 @@ export const getWorkouts = async () => {
     return response.json();
 }
 
-// function fetchQuery(query: string) {
-//     return new Promise((resolve, reject) => {
-//         setTimeout(() => {
-//             resolve({1: "workout 1", 2: "workout 2", 3: "workout 3"});
-//         }, 1000);
-//     });
-// }
+export const getExercises = async () => {
+    const response = await fetch('http://localhost:3000/exercises');
+    return response.json();
+}

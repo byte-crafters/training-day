@@ -3,9 +3,9 @@ import { Box, Typography, Button } from "@mui/material";
 import WorkoutCard from "../../components/WorkoutCard";
 import "./WorkoutTracker.scss";
 import { useEffect, useState } from "react";
-import { getWorkouts } from "../../utils/api";
+import { getExercises, getWorkouts } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
-import { setWorkouts } from "../../store";
+import { setExercises, setWorkouts } from "../../store";
 
 interface Workout {
     date: string;
@@ -28,8 +28,14 @@ function WorkoutTracker() {
         dispatch(setWorkouts(workouts));
     }
 
+    const fetchExercises = async () => {
+        const exercises = await getExercises();
+        dispatch(setExercises(exercises));
+    }
+
     useEffect(() => {
         fetchWorkouts();
+        fetchExercises();
     }, []);
 
     return (

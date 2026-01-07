@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
     Box,
     Typography,
@@ -11,7 +12,7 @@ import {
 } from "@mui/material";
 import "./SelectExercises.scss";
 
-type Category = "All" | "Chest" | "Back" | "Legs" | "Custom";
+type Category = "All" | "Chest" | "Back" | "Legs" | "Cardio";
 
 interface Exercise {
     id: string;
@@ -23,30 +24,36 @@ function SelectExercises() {
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<Category>("All");
     const [searchQuery, setSearchQuery] = useState("");
-    const [exercises, setExercises] = useState<Exercise[]>([
-        { id: "1", name: "Push-Ups", selected: true },
-        { id: "2", name: "Dumbbell Bench Press", selected: true },
-        { id: "3", name: "Pull-Ups", selected: true },
-        { id: "4", name: "Lat Pulldown", selected: true },
-        { id: "5", name: "Squats", selected: true },
-        { id: "6", name: "Lunges", selected: true },
-        { id: "7", name: "Plank", selected: true },
-    ]);
+    const [selectedExerciseIds, setSelectedExerciseIds] = useState<Set<string>>(
+        new Set()
+    );
 
-    const categories: Category[] = ["All", "Chest", "Back", "Legs", "Custom"];
+    const exercisesFromStore = useSelector((state: any) => state.exercises);
+
+    const exercises: Exercise[] = exercisesFromStore.map((exercise: any) => ({
+        ...exercise,
+        selected: selectedExerciseIds.has(exercise.id),
+    }));
+
+    const categories: Category[] = ["All", "Chest", "Back", "Legs", "Cardio"];
 
     const handleToggleExercise = (id: string) => {
-        setExercises((prev) =>
-            prev.map((exercise) =>
-                exercise.id === id
-                    ? { ...exercise, selected: !exercise.selected }
-                    : exercise
-            )
-        );
+        setSelectedExerciseIds((prev) => {
+            const newSet = new Set(prev);
+            if (newSet.has(id)) {
+                newSet.delete(id);
+            } else {
+                newSet.add(id);
+            }
+            return newSet;
+        });
     };
 
-    const filteredExercises = exercises.filter((exercise) =>
-        exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredExercises = exercisesFromStore.filter(
+        (exercise) =>
+            exercise.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+            (selectedCategory === "All" ||
+                exercise.type === selectedCategory.toLowerCase())
     );
 
     const selectedExercisesCount = exercises.filter(
@@ -54,7 +61,9 @@ function SelectExercises() {
     ).length;
 
     const handleBeginWorkout = () => {
-        const selectedExercises = exercises.filter((exercise) => exercise.selected);
+        const selectedExercises = exercises.filter(
+            (exercise) => exercise.selected
+        );
         if (selectedExercises.length === 0) {
             return;
         }
@@ -83,7 +92,7 @@ function SelectExercises() {
                     </svg>
                 </IconButton>
                 <Typography variant="h4" className="select-exercises__title">
-                    Select Exercises
+                    What are you up to today?
                 </Typography>
                 <Box className="select-exercises__header-spacer" />
             </Box>
@@ -96,25 +105,25 @@ function SelectExercises() {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <path d="m21 21-4.35-4.35"></path>
-                                </svg>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="m21 21-4.35-4.35"></path>
+                                    </svg>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
                 </Box>
 
                 <Box className="select-exercises__categories">
@@ -141,7 +150,9 @@ function SelectExercises() {
                         >
                             <Checkbox
                                 checked={exercise.selected}
-                                onChange={() => handleToggleExercise(exercise.id)}
+                                onChange={() =>
+                                    handleToggleExercise(exercise.id)
+                                }
                                 className="select-exercises__checkbox"
                             />
                             <Typography className="select-exercises__exercise-name">
@@ -184,4 +195,3 @@ function SelectExercises() {
 }
 
 export default SelectExercises;
-
