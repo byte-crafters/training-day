@@ -4,6 +4,8 @@ import WorkoutCard from "../../components/WorkoutCard";
 import "./WorkoutTracker.scss";
 import { useEffect, useState } from "react";
 import { getWorkouts } from "../../utils/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setWorkouts } from "../../store";
 
 interface Workout {
     date: string;
@@ -13,12 +15,17 @@ interface Workout {
 
 function WorkoutTracker() {
     const navigate = useNavigate();
-    const [recentWorkouts, setRecentWorkouts] = useState<Workout[]>([]);
+    const dispatch = useDispatch();
+
     const [isLoading, setIsLoading] = useState(true);
+
+    const workouts = useSelector((state) => {
+        return state.workouts.slice(0, 3);
+    });
 
     const fetchWorkouts = async () => {
         const workouts = await getWorkouts();
-        console.log(workouts);
+        dispatch(setWorkouts(workouts));
     }
 
     useEffect(() => {
@@ -53,7 +60,7 @@ function WorkoutTracker() {
                         Recent Workouts
                     </Typography>
                     <Box className="workout-tracker__workouts-list">
-                        {recentWorkouts.map((workout, index) => (
+                        {workouts.map((workout, index) => (
                             <WorkoutCard
                                 key={index}
                                 date={workout.date}

@@ -1,6 +1,8 @@
 import ReactDOM from "react-dom/client";
 import { StrictMode } from "react";
 import App from "./app/App.tsx";
+import { Provider } from "react-redux";
+import { store } from "./store/index.ts";
 import "./index.css";
 
 async function enableMocking() {
@@ -20,7 +22,9 @@ async function enableMocking() {
 enableMocking().then(() => {
     ReactDOM.createRoot(document.getElementById("root")!).render(
         <StrictMode>
-            <App />
+            <Provider store={store}>
+                <App />
+            </Provider>
         </StrictMode>
     );
 });
