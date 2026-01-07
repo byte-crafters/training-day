@@ -49,6 +49,18 @@ function SelectExercises() {
         exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const selectedExercisesCount = exercises.filter(
+        (exercise) => exercise.selected
+    ).length;
+
+    const handleBeginWorkout = () => {
+        const selectedExercises = exercises.filter((exercise) => exercise.selected);
+        if (selectedExercises.length === 0) {
+            return;
+        }
+        navigate("/my-workout", { state: { exercises: selectedExercises } });
+    };
+
     return (
         <Box className="select-exercises">
             <Box component="header" className="select-exercises__header">
@@ -77,12 +89,13 @@ function SelectExercises() {
             </Box>
 
             <Box component="main" className="select-exercises__main">
-                <TextField
-                    className="select-exercises__search"
-                    placeholder="Search exercises..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    InputProps={{
+                <Box sx={{ marginBottom: "20px" }}>
+                    <TextField
+                        className="select-exercises__search"
+                        placeholder="Search exercises..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
                                 <svg
@@ -102,6 +115,7 @@ function SelectExercises() {
                         ),
                     }}
                 />
+                </Box>
 
                 <Box className="select-exercises__categories">
                     {categories.map((category) => (
@@ -159,6 +173,8 @@ function SelectExercises() {
                     variant="contained"
                     fullWidth
                     className="select-exercises__begin-button"
+                    onClick={handleBeginWorkout}
+                    disabled={selectedExercisesCount === 0}
                 >
                     Begin Workout
                 </Button>

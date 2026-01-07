@@ -3,6 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WorkoutTracker from "../pages/WorkoutTracker";
 import SelectExercises from "../pages/SelectExercises";
+import MyWorkout from "../pages/MyWorkout";
 
 const darkTheme = createTheme({
     palette: {
@@ -34,6 +35,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<WorkoutTracker />} />
                     <Route path="/select-exercises" element={<SelectExercises />} />
+                    <Route path="/my-workout" element={<MyWorkout />} />
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

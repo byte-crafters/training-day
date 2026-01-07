@@ -20,38 +20,13 @@ function WorkoutTracker() {
     return (
         <Box className="workout-tracker">
             <Box component="header" className="workout-tracker__header">
-                <Typography variant="h4" className="workout-tracker__title">
+                <Typography variant="h2" className="workout-tracker__title">
                     Workout Tracker
                 </Typography>
-                <IconButton
-                    className="workout-tracker__menu-button"
-                    aria-label="Menu"
-                >
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </IconButton>
             </Box>
 
             <Box component="main" className="workout-tracker__main">
                 <Box className="workout-tracker__welcome-section">
-                    <Typography variant="h3" className="workout-tracker__greeting">
-                        Welcome Back!
-                    </Typography>
-                    <Typography className="workout-tracker__subtitle">
-                        Ready to train?
-                    </Typography>
                     <Button
                         variant="contained"
                         size="large"
