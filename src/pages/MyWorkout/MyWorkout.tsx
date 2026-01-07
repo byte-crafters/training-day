@@ -1,17 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Box, Typography, IconButton, Button } from "@mui/material";
-import ExerciseCard from "../../components/ExerciseCard";
+import ExerciseList, { Exercise } from "../../components/ExerciseList";
 import "./MyWorkout.scss";
-
-interface Exercise {
-    id: string;
-    name: string;
-    icon: string;
-    totalSets: number;
-    completedSets: number;
-    currentSet: number;
-}
 
 interface SelectedExercise {
     id: string;
@@ -120,9 +111,7 @@ function MyWorkout() {
                     </Box>
 
                     <Box className="my-workout__exercises-list">
-                        {exercises.map((exercise) => (
-                            <ExerciseCard key={exercise.id} exercise={exercise} />
-                        ))}
+                        <ExerciseList exercises={exercises} />
                     </Box>
                 </Box>
             )}

@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import "./ExerciseCard.scss";
 
 export interface ExerciseCardProps {
@@ -13,8 +14,14 @@ export interface ExerciseCardProps {
 }
 
 function ExerciseCard({ exercise }: ExerciseCardProps) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate("/exercise-detail", { state: { exercise } });
+    };
+
     return (
-        <Box className="exercise-card">
+        <Box className="exercise-card" onClick={handleClick} sx={{ cursor: "pointer" }}>
             <Box className="exercise-card__icon">{exercise.icon}</Box>
             <Box className="exercise-card__content">
                 <Typography className="exercise-card__name">

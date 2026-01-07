@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import WorkoutTracker from "../pages/WorkoutTracker";
 import SelectExercises from "../pages/SelectExercises";
 import MyWorkout from "../pages/MyWorkout";
+import ExerciseDetail from "../pages/ExerciseDetail";
+import EditSet from "../pages/EditSet";
 
 const darkTheme = createTheme({
     palette: {
@@ -36,6 +38,8 @@ function App() {
                     <Route path="/" element={<WorkoutTracker />} />
                     <Route path="/select-exercises" element={<SelectExercises />} />
                     <Route path="/my-workout" element={<MyWorkout />} />
+                    <Route path="/exercise-detail" element={<ExerciseDetail />} />
+                    <Route path="/edit-set" element={<EditSet />} />
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

@@ -61,9 +61,7 @@
     }
 
     &__exercises-list {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
+        // Стили перенесены в компонент ExerciseList
     }
 
     &__footer {
