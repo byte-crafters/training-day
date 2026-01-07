@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, IconButton, Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import WorkoutCard from "../../components/WorkoutCard";
 import "./WorkoutTracker.scss";
+import { useEffect, useState } from "react";
+import { getWorkouts } from "../../utils/api";
 
 interface Workout {
     date: string;
@@ -11,11 +13,17 @@ interface Workout {
 
 function WorkoutTracker() {
     const navigate = useNavigate();
-    const recentWorkouts: Workout[] = [
-        { date: "Mon, Apr 20", name: "Full Body Workout", duration: "45 mins" },
-        { date: "Sat, Apr 18", name: "Cardio Session", duration: "30 mins" },
-        { date: "Wed, Apr 16", name: "Upper Body", duration: "50 mins" },
-    ];
+    const [recentWorkouts, setRecentWorkouts] = useState<Workout[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchWorkouts = async () => {
+        const workouts = await getWorkouts();
+        console.log(workouts);
+    }
+
+    useEffect(() => {
+        fetchWorkouts();
+    }, []);
 
     return (
         <Box className="workout-tracker">
@@ -38,7 +46,10 @@ function WorkoutTracker() {
                 </Box>
 
                 <Box className="workout-tracker__workouts-section">
-                    <Typography variant="h5" className="workout-tracker__section-title">
+                    <Typography
+                        variant="h5"
+                        className="workout-tracker__section-title"
+                    >
                         Recent Workouts
                     </Typography>
                     <Box className="workout-tracker__workouts-list">
