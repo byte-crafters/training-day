@@ -37,14 +37,26 @@ function App() {
     const dispatch = useDispatch();
 
     const fetchWorkouts = async () => {
+        try {
         const workouts = await getWorkouts();
         dispatch(setWorkouts(workouts));
+        } catch (error) {
+            console.error('Failed to fetch workouts:', error);
+            // Можно добавить уведомление пользователю или установить пустой массив
+            dispatch(setWorkouts([]));
     }
+    };
 
     const fetchExercises = async () => {
+        try {
         const exercises = await getExercises();
         dispatch(setExercises(exercises));
+        } catch (error) {
+            console.error('Failed to fetch exercises:', error);
+            // Можно добавить уведомление пользователю или установить пустой массив
+            dispatch(setExercises([]));
     }
+    };
 
     useEffect(() => {
         fetchWorkouts();
