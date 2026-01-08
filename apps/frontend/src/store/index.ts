@@ -1,5 +1,5 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-import { Workout } from '../types';
+import { Workout } from '@training-day/shared';
 
 const workoutsSlice = createSlice({
     name: 'workout',

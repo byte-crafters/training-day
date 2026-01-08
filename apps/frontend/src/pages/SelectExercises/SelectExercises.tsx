@@ -9,7 +9,7 @@ import {
     InputAdornment,
     Button,
 } from "@mui/material";
-import { Exercise, ExerciseType } from "../../types";
+import { Exercise, ExerciseType } from "@training-day/shared";
 import "./SelectExercises.scss";
 import { setCurrentWorkout } from "../../store";
 import { createWorkout } from "../../utils/helpers";

@@ -9,7 +9,7 @@ import {
     CircularProgress,
 } from "@mui/material";
 import "./ExerciseDetail.scss";
-import { Set, Activity } from "../../types";
+import { Set, Activity } from "@training-day/shared";
 import { useDispatch, useSelector } from "react-redux";
 import { addSet } from "../../store";
 

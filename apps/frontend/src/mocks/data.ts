@@ -1,4 +1,4 @@
-import { Workout, Exercise, ExerciseType } from "../types";
+import { Workout, Exercise, ExerciseType } from "@training-day/shared";
 
 export const workouts: Workout[] = [
     {

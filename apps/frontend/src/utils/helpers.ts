@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Exercise, Activity, Workout } from '../types';
+import { Exercise, Activity, Workout } from '@training-day/shared';
 
 /**
  * Преобразует Exercise в Activity (выбранное упражнение с пустыми сетами)

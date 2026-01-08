@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useSelector } from "react-redux";
 import ExerciseCard from "../ExerciseCard";
-import { Activity } from "../../types";
+import { Activity } from "@training-day/shared";
 import "./ExerciseList.scss";
 
 export interface Exercise {

@@ -9,7 +9,7 @@ import {
     CircularProgress,
 } from "@mui/material";
 import "./EditSet.scss";
-import { Set, Exercise } from "../../types";
+import { Set, Exercise } from "@training-day/shared";
 
 function EditSet() {
     const navigate = useNavigate();

@@ -5,6 +5,13 @@ export interface Set {
     note: string | null;
 }
 
+export interface Exercise {
+    id: string;
+    name: string;
+    strength: boolean;
+    type: ExerciseType;
+}
+
 export interface Activity extends Exercise {
     sets: Set[];
 }
@@ -17,17 +24,10 @@ export interface Workout {
     exercises: Activity[];
 }
 
-
-export interface Exercise {
-    id: string;
-    name: string;
-    strength: boolean;
-    type: ExerciseType;
-}
-
 export enum ExerciseType {
     CHEST = "chest",
     LEGS = "legs",
     BACK = "back",
     CARDIO = "cardio",
 }
+
