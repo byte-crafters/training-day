@@ -23,21 +23,6 @@ function WorkoutTracker() {
         return state.workouts.slice(0, 3);
     });
 
-    const fetchWorkouts = async () => {
-        const workouts = await getWorkouts();
-        dispatch(setWorkouts(workouts));
-    }
-
-    const fetchExercises = async () => {
-        const exercises = await getExercises();
-        dispatch(setExercises(exercises));
-    }
-
-    useEffect(() => {
-        fetchWorkouts();
-        fetchExercises();
-    }, []);
-
     return (
         <Box className="workout-tracker">
             <Box component="header" className="workout-tracker__header">
@@ -66,9 +51,9 @@ function WorkoutTracker() {
                         Recent Workouts
                     </Typography>
                     <Box className="workout-tracker__workouts-list">
-                        {workouts.map((workout, index) => (
+                        {workouts.map((workout) => (
                             <WorkoutCard
-                                key={index}
+                                key={workout.id}
                                 date={workout.date}
                                 name={workout.name}
                                 duration={workout.duration}

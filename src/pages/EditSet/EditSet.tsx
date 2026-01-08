@@ -9,24 +9,7 @@ import {
     CircularProgress,
 } from "@mui/material";
 import "./EditSet.scss";
-
-interface Set {
-    id: string;
-    setNumber: number;
-    reps: number;
-    weight?: number;
-    note?: string;
-    savedAt: Date;
-}
-
-interface Exercise {
-    id: string;
-    name: string;
-    icon: string;
-    totalSets: number;
-    completedSets: number;
-    currentSet: number;
-}
+import { Set, Exercise } from "../../types";
 
 function EditSet() {
     const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
     Box,
@@ -9,37 +9,42 @@ import {
     CircularProgress,
 } from "@mui/material";
 import "./ExerciseDetail.scss";
-
-interface Exercise {
-    id: string;
-    name: string;
-    icon: string;
-    totalSets: number;
-    completedSets: number;
-    currentSet: number;
-}
-
-interface Set {
-    id: string;
-    setNumber: number;
-    reps: number;
-    weight?: number;
-    note?: string;
-    savedAt: Date;
-}
+import { Set, Activity } from "../../types";
+import { useDispatch, useSelector } from "react-redux";
+import { addSet } from "../../store";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
     const location = useLocation();
-    const exercise = (location.state as { exercise?: Exercise })?.exercise;
+    const dispatch = useDispatch();
+    
+    // Получаем exercise из location.state (для отображения)
+    const exerciseFromState = (location.state as { exercise?: { id: string; name: string; totalSets?: number } })?.exercise;
+    
+    // Получаем currentWorkout из Redux store
+    const currentWorkout = useSelector((state: any) => state.currentWorkout);
+    
+    // Находим Activity из currentWorkout по id
+    const activity = currentWorkout?.exercises?.find(
+        (ex: Activity) => ex.id === exerciseFromState?.id
+    ) || null;
+    
+    // Используем activity если есть, иначе fallback на exerciseFromState
+    const exercise = activity || exerciseFromState;
 
     const [reps, setReps] = useState(15);
     const [weight, setWeight] = useState<number | "">(0);
     const [note, setNote] = useState("");
     const [savedSets, setSavedSets] = useState<Set[]>([]);
-    const [isSaving, setIsSaving] = useState(false);
-    const [showSaveMessage, setShowSaveMessage] = useState(false);
-    const [currentSetNumber, setCurrentSetNumber] = useState(1);
+    const [isSaving] = useState(false);
+    const [showSaveMessage] = useState(false);
+
+    // Синхронизируем savedSets с sets из activity
+    useEffect(() => {
+        if (activity?.sets) {
+            setSavedSets(activity.sets);
+        }
+    }, [activity?.sets]);
 
     if (!exercise) {
         navigate("/my-workout");
@@ -61,48 +66,40 @@ function ExerciseDetail() {
     };
 
     const handleSaveSet = () => {
-        if (reps <= 0) {
+        if (!activity) {
             return;
         }
-        setIsSaving(true);
-        // Имитация сохранения
-        setTimeout(() => {
-            const newSet: Set = {
-                id: Date.now().toString(),
-                setNumber: currentSetNumber,
-                reps: reps,
-                weight: weight !== "" ? Number(weight) : undefined,
-                note: note || undefined,
-                savedAt: new Date(),
-            };
-            setSavedSets([...savedSets, newSet]);
-            setCurrentSetNumber(currentSetNumber + 1);
-            setReps(15); // Сброс к значению по умолчанию
-            setWeight(0);
-            setNote("");
-            setIsSaving(false);
-            setShowSaveMessage(true);
-            setTimeout(() => setShowSaveMessage(false), 3000);
-        }, 500);
+
+        const newSet: Set = {
+            id: Date.now().toString(),
+            reps: reps,
+            weight: weight || 0,
+            note: note || null,
+        };
+
+        dispatch(addSet({ exerciseId: activity.id, set: newSet }));
+        
+        // Обновляем локальное состояние для немедленного отображения
+        setSavedSets((prev) => [...prev, newSet]);
+        
+        // Сброс полей после сохранения
+        setReps(15);
+        setWeight(0);
+        setNote("");
     };
 
     const handleDeleteSet = () => {
         if (savedSets.length > 0) {
             const updatedSets = savedSets.slice(0, -1);
             setSavedSets(updatedSets);
-            if (updatedSets.length > 0) {
-                setCurrentSetNumber(updatedSets[updatedSets.length - 1].setNumber + 1);
-            } else {
-                setCurrentSetNumber(1);
-            }
         }
     };
 
-    const handleEditSet = (setToEdit: Set) => {
+    const handleEditSet = (_setToEdit: Set) => {
         console.log('11111');
         // navigate("/edit-set", {
         //     state: {
-        //         set: setToEdit,
+        //         set: _setToEdit,
         //         exercise: exercise,
         //         onSave: (updatedSet: Set) => {
         //             setSavedSets((prevSets) =>
@@ -146,74 +143,43 @@ function ExerciseDetail() {
             </Box>
 
             <Box component="main" className="exercise-detail__main">
-                {savedSets.length > 0 && (
-                    <Box className="exercise-detail__card">
-                        <Box className="exercise-detail__previous-sets">
-                            <Typography className="exercise-detail__previous-sets-title">
-                                Previous Sets
-                            </Typography>
-                            {savedSets.map((set) => (
-                                <Box
-                                    key={set.id}
-                                    className="exercise-detail__previous-set-item"
-                                    onClick={() => handleEditSet(set)}
-                                    sx={{ cursor: "pointer" }}
-                                >
-                                    <Typography className="exercise-detail__previous-set-text">
-                                        Set {set.setNumber}: {set.reps} reps
-                                        {set.weight !== undefined && set.weight > 0 && ` • ${set.weight} kg`}
-                                    </Typography>
-                                    <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="exercise-detail__arrow"
-                                    >
-                                        <path d="M9 18l6-6-6-6" />
-                                    </svg>
-                                </Box>
-                            ))}
-                        </Box>
-                    </Box>
-                )}
-
                 <Box className="exercise-detail__card">
-                    <Box className="exercise-detail__reps-section">
-                        <Typography className="exercise-detail__reps-label">
-                            Reps
-                        </Typography>
-                        <TextField
-                            type="number"
-                            className="exercise-detail__reps-input"
-                            value={reps}
-                            onChange={handleRepsChange}
-                            inputProps={{
-                                min: 0,
-                            }}
-                        />
-                    </Box>
+                    <Typography className="exercise-detail__add-set-title">
+                        Add set
+                    </Typography>
+                    
+                    <Box className="exercise-detail__inputs-row">
+                        <Box className="exercise-detail__input-group">
+                            <Typography className="exercise-detail__input-label">
+                                Reps
+                            </Typography>
+                            <TextField
+                                type="number"
+                                className="exercise-detail__compact-input"
+                                value={reps}
+                                onChange={handleRepsChange}
+                                inputProps={{
+                                    min: 0,
+                                }}
+                            />
+                        </Box>
 
-                    <Box className="exercise-detail__weight-section">
-                        <Typography className="exercise-detail__weight-label">
-                            Weight (kg)
-                        </Typography>
-                        <TextField
-                            type="number"
-                            className="exercise-detail__weight-input"
-                            value={weight}
-                            onChange={handleWeightChange}
-                            placeholder="0"
-                            inputProps={{
-                                min: 0,
-                                step: 1,
-                                style: { textAlign: "center", fontSize: "32px", fontWeight: 600 },
-                            }}
-                        />
+                        <Box className="exercise-detail__input-group">
+                            <Typography className="exercise-detail__input-label">
+                                Weight (kg)
+                            </Typography>
+                            <TextField
+                                type="number"
+                                className="exercise-detail__compact-input"
+                                value={weight}
+                                onChange={handleWeightChange}
+                                placeholder="0"
+                                inputProps={{
+                                    min: 0,
+                                    step: 1,
+                                }}
+                            />
+                        </Box>
                     </Box>
 
                     <Box className="exercise-detail__note-section">
@@ -248,6 +214,42 @@ function ExerciseDetail() {
                         </Box>
                     )}
                 </Box>
+
+                {savedSets.length > 0 && (
+                    <Box className="exercise-detail__card">
+                        <Box className="exercise-detail__previous-sets">
+                            <Typography className="exercise-detail__previous-sets-title">
+                                Previous Sets
+                            </Typography>
+                            {savedSets.map((set, index) => (
+                                <Box
+                                    key={set.id}
+                                    className="exercise-detail__previous-set-item"
+                                    onClick={() => handleEditSet(set)}
+                                    sx={{ cursor: "pointer" }}
+                                >
+                                    <Typography className="exercise-detail__previous-set-text">
+                                        Set {index + 1}: {set.reps} reps
+                                        {set.weight !== undefined && set.weight > 0 && ` • ${set.weight} kg`}
+                                    </Typography>
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="exercise-detail__arrow"
+                                    >
+                                        <path d="M9 18l6-6-6-6" />
+                                    </svg>
+                                </Box>
+                            ))}
+                        </Box>
+                    </Box>
+                )}
             </Box>
 
             <Box className="exercise-detail__footer">

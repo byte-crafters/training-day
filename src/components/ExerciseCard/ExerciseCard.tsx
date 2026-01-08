@@ -28,12 +28,12 @@ function ExerciseCard({ exercise }: ExerciseCardProps) {
                     {exercise.name}
                 </Typography>
                 <Typography className="exercise-card__status">
-                    {exercise.completedSets} of {exercise.totalSets} sets completed
+                    {exercise.completedSets} sets completed
                 </Typography>
             </Box>
             <Box className="exercise-card__progress">
                 <Typography className="exercise-card__progress-text">
-                    {exercise.currentSet} of {exercise.totalSets}
+                    {exercise.completedSets > 0 ? "Continue" : "Start"}
                 </Typography>
                 <svg
                     width="20"

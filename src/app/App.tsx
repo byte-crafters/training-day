@@ -6,6 +6,10 @@ import SelectExercises from "../pages/SelectExercises";
 import MyWorkout from "../pages/MyWorkout";
 import ExerciseDetail from "../pages/ExerciseDetail";
 import EditSet from "../pages/EditSet";
+import { getExercises, getWorkouts } from "../utils/api";
+import { useDispatch } from "react-redux";
+import { setExercises, setWorkouts } from "../store";
+import { useEffect } from "react";
 
 const darkTheme = createTheme({
     palette: {
@@ -30,6 +34,23 @@ const darkTheme = createTheme({
 });
 
 function App() {
+    const dispatch = useDispatch();
+
+    const fetchWorkouts = async () => {
+        const workouts = await getWorkouts();
+        dispatch(setWorkouts(workouts));
+    }
+
+    const fetchExercises = async () => {
+        const exercises = await getExercises();
+        dispatch(setExercises(exercises));
+    }
+
+    useEffect(() => {
+        fetchWorkouts();
+        fetchExercises();
+    }, []);
+
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />

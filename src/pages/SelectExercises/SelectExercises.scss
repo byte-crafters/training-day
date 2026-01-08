@@ -127,17 +127,14 @@
     &__exercise-item {
         display: flex;
         align-items: center;
-        padding: 16px 0;
+        justify-content: space-between;
+        padding: 16px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+        cursor: pointer;
+        transition: background-color 0.2s ease;
 
-    &__checkbox {
-        color: #888888 !important;
-        padding: 0 !important;
-        margin-right: 16px !important;
-
-        &.Mui-checked {
-            color: #0066ff !important;
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.05);
         }
     }
 

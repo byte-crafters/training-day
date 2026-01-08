@@ -35,6 +35,115 @@
         width: 40px;
     }
 
+    &__name-section {
+        padding: 0 24px 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__name-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-height: auto;
+        height: auto;
+    }
+
+    &__name-text {
+        font-size: 24px;
+        font-weight: 600;
+        color: #ffffff;
+        text-align: center;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+        font-family: inherit;
+        letter-spacing: normal;
+    }
+
+    &__edit-button {
+        color: #888888 !important;
+        padding: 4px !important;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #0066ff !important;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &__save-button {
+        color: #888888 !important;
+        padding: 4px !important;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #00cc66 !important;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &__name-input {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        
+        .MuiInputBase-root {
+            font-size: 24px !important;
+            font-weight: 600 !important;
+            color: #ffffff !important;
+            text-align: center !important;
+            line-height: 1.5 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: auto !important;
+            height: auto !important;
+            width: auto !important;
+            font-family: inherit !important;
+            letter-spacing: normal !important;
+            
+            input {
+                text-align: center !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 24px !important;
+                font-weight: 600 !important;
+                color: #ffffff !important;
+                line-height: 1.5 !important;
+                height: auto !important;
+                width: auto !important;
+                font-family: inherit !important;
+                letter-spacing: normal !important;
+                
+                &::placeholder {
+                    color: rgba(255, 255, 255, 0.5);
+                    font-size: 24px !important;
+                }
+            }
+        }
+        
+        .MuiInputBase-input {
+            font-size: 24px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            font-family: inherit !important;
+            letter-spacing: normal !important;
+            
+            &:focus {
+                text-align: center;
+            }
+        }
+    }
+
     &__main {
         flex: 1;
         padding: 0 24px;

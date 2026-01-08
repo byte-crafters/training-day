@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     Box,
     Typography,
@@ -8,65 +8,69 @@ import {
     TextField,
     InputAdornment,
     Button,
-    Checkbox,
 } from "@mui/material";
+import { Exercise, ExerciseType } from "../../types";
 import "./SelectExercises.scss";
+import { setCurrentWorkout } from "../../store";
+import { createWorkout } from "../../utils/helpers";
 
 type Category = "All" | "Chest" | "Back" | "Legs" | "Cardio";
 
-interface Exercise {
-    id: string;
-    name: string;
-    selected: boolean;
-}
-
 function SelectExercises() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [selectedCategory, setSelectedCategory] = useState<Category>("All");
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedExerciseIds, setSelectedExerciseIds] = useState<Set<string>>(
-        new Set()
-    );
+    const [selectedExerciseIds, setSelectedExerciseIds] = useState<string[]>([]);
 
-    const exercisesFromStore = useSelector((state: any) => state.exercises);
-
-    const exercises: Exercise[] = exercisesFromStore.map((exercise: any) => ({
-        ...exercise,
-        selected: selectedExerciseIds.has(exercise.id),
-    }));
+    const exercisesFromStore: Exercise[] = useSelector((state: any) => state.exercises);
 
     const categories: Category[] = ["All", "Chest", "Back", "Legs", "Cardio"];
 
     const handleToggleExercise = (id: string) => {
         setSelectedExerciseIds((prev) => {
-            const newSet = new Set(prev);
-            if (newSet.has(id)) {
-                newSet.delete(id);
+            if (prev.includes(id)) {
+                return prev.filter((exerciseId) => exerciseId !== id);
             } else {
-                newSet.add(id);
+                return [...prev, id];
             }
-            return newSet;
         });
     };
 
-    const filteredExercises = exercisesFromStore.filter(
-        (exercise) =>
-            exercise.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-            (selectedCategory === "All" ||
-                exercise.type === selectedCategory.toLowerCase())
-    );
+    const getCategoryType = (category: Category): ExerciseType | null => {
+        switch (category) {
+            case "Chest":
+                return ExerciseType.CHEST;
+            case "Back":
+                return ExerciseType.BACK;
+            case "Legs":
+                return ExerciseType.LEGS;
+            case "Cardio":
+                return ExerciseType.CARDIO;
+            default:
+                return null;
+        }
+    };
 
-    const selectedExercisesCount = exercises.filter(
-        (exercise) => exercise.selected
-    ).length;
+    const filteredExercises = exercisesFromStore.filter((exercise) => {
+        const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase());
+        const categoryType = getCategoryType(selectedCategory);
+        const matchesCategory = selectedCategory === "All" || exercise.type === categoryType;
+        return matchesSearch && matchesCategory;
+    });
+
+    const selectedExercisesCount = selectedExerciseIds.length;
 
     const handleBeginWorkout = () => {
-        const selectedExercises = exercises.filter(
-            (exercise) => exercise.selected
+        const selectedExercises = exercisesFromStore.filter((exercise) =>
+            selectedExerciseIds.includes(exercise.id)
         );
         if (selectedExercises.length === 0) {
             return;
         }
+
+        dispatch(setCurrentWorkout(createWorkout(selectedExercises)));
         navigate("/my-workout", { state: { exercises: selectedExercises } });
     };
 
@@ -143,39 +147,36 @@ function SelectExercises() {
                 </Box>
 
                 <Box className="select-exercises__list">
-                    {filteredExercises.map((exercise) => (
-                        <Box
-                            key={exercise.id}
-                            className="select-exercises__exercise-item"
-                        >
-                            <Checkbox
-                                checked={exercise.selected}
-                                onChange={() =>
-                                    handleToggleExercise(exercise.id)
-                                }
-                                className="select-exercises__checkbox"
-                            />
-                            <Typography className="select-exercises__exercise-name">
-                                {exercise.name}
-                            </Typography>
-                            {exercise.selected && (
-                                <Box className="select-exercises__checkmark">
-                                    <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="3"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                </Box>
-                            )}
-                        </Box>
-                    ))}
+                    {filteredExercises.map((exercise) => {
+                        const isSelected = selectedExerciseIds.includes(exercise.id);
+                        return (
+                            <Box
+                                key={exercise.id}
+                                className="select-exercises__exercise-item"
+                                onClick={() => handleToggleExercise(exercise.id)}
+                            >
+                                <Typography className="select-exercises__exercise-name">
+                                    {exercise.name}
+                                </Typography>
+                                {isSelected && (
+                                    <Box className="select-exercises__checkmark">
+                                        <svg
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="3"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </Box>
+                                )}
+                            </Box>
+                        );
+                    })}
                 </Box>
             </Box>
 

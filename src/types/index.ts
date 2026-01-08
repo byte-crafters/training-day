@@ -2,11 +2,10 @@ export interface Set {
     id: string;
     reps: number;
     weight: number;
+    note: string | null;
 }
 
-export interface Activity {
-    id: string;
-    name: string;
+export interface Activity extends Exercise {
     sets: Set[];
 }
 
@@ -17,6 +16,7 @@ export interface Workout {
     duration: string;
     exercises: Activity[];
 }
+
 
 export interface Exercise {
     id: string;
