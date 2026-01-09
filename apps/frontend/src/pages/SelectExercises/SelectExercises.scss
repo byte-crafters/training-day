@@ -1,0 +1,184 @@
+.select-exercises {
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 48px 24px 24px;
+        position: relative;
+    }
+
+    &__back-button {
+        color: #ffffff;
+        padding: 8px;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    &__title {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    &__header-spacer {
+        width: 40px;
+    }
+
+    &__main {
+        flex: 1;
+        padding: 0 24px;
+        overflow-y: auto;
+        padding-bottom: 100px;
+    }
+
+    &__search {
+        width: 100%;
+
+        .MuiOutlinedInput-root {
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            color: #ffffff;
+
+            fieldset {
+                border-color: transparent;
+            }
+
+            &:hover fieldset {
+                border-color: transparent;
+            }
+
+            &.Mui-focused fieldset {
+                border-color: #0066ff;
+            }
+
+            input {
+                color: #ffffff;
+                padding: 14px 16px;
+
+                &::placeholder {
+                    color: #888888;
+                    opacity: 1;
+                }
+            }
+        }
+
+        .MuiInputAdornment-root {
+            color: #888888;
+            margin-left: 16px;
+        }
+    }
+
+    &__categories {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    &__category {
+        padding: 8px 20px !important;
+        border-radius: 20px !important;
+        text-transform: none !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        white-space: nowrap;
+        color: #ffffff !important;
+        background-color: transparent !important;
+        border: 1px solid transparent !important;
+
+        &--active {
+            background-color: #0066ff !important;
+            color: #ffffff !important;
+        }
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        &--active:hover {
+            background-color: #0052cc !important;
+        }
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__exercise-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    }
+
+    &__exercise-name {
+        flex: 1;
+        font-size: 16px;
+        font-weight: 500;
+        color: #ffffff;
+    }
+
+    &__checkmark {
+        width: 24px;
+        height: 24px;
+        background-color: #0066ff;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        margin-left: 16px;
+    }
+
+    &__footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 16px 24px;
+        background-color: #1a1a1a;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    &__begin-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%) !important;
+        box-shadow: 0 4px 14px 0 rgba(0, 102, 255, 0.3) !important;
+
+        &:hover {
+            background: linear-gradient(135deg, #0052cc 0%, #0040a3 100%) !important;
+            box-shadow: 0 4px 14px 0 rgba(0, 102, 255, 0.4) !important;
+        }
+    }
+}
+

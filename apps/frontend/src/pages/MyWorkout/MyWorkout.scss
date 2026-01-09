@@ -1,0 +1,245 @@
+.my-workout {
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 48px 24px 24px;
+        position: relative;
+    }
+
+    &__back-button {
+        color: #ffffff;
+        padding: 8px;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    &__title {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    &__header-spacer {
+        width: 40px;
+    }
+
+    &__name-section {
+        padding: 0 24px 24px;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__name-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-height: auto;
+        height: auto;
+    }
+
+    &__name-text {
+        font-size: 20px;
+        font-weight: 600;
+        color: #ffffff;
+        text-align: center;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+        font-family: inherit;
+        letter-spacing: normal;
+        white-space: nowrap;
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-variant: normal;
+        text-rendering: optimizeLegibility;
+    }
+
+    &__edit-button {
+        color: #888888 !important;
+        padding: 4px !important;
+        transition: color 0.2s ease;
+        flex-shrink: 0;
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
+
+        &:hover {
+            color: #0066ff !important;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &__save-button {
+        color: #888888 !important;
+        padding: 4px !important;
+        transition: color 0.2s ease;
+        flex-shrink: 0;
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
+
+        &:hover {
+            color: #00cc66 !important;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &__name-edit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-height: auto;
+        height: auto;
+    }
+
+    &__name-input {
+        .MuiInputBase-root {
+            font-size: 20px !important;
+            font-weight: 600 !important;
+            color: #ffffff !important;
+            text-align: center !important;
+            line-height: 1.5 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            min-height: auto !important;
+            height: auto !important;
+            font-family: inherit !important;
+            letter-spacing: normal !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            
+            input {
+                text-align: center !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 20px !important;
+                font-weight: 600 !important;
+                color: #ffffff !important;
+                line-height: 1.5 !important;
+                height: auto !important;
+                font-family: inherit !important;
+                letter-spacing: normal !important;
+                -webkit-font-smoothing: antialiased !important;
+                -moz-osx-font-smoothing: grayscale !important;
+                font-variant: normal !important;
+                text-rendering: optimizeLegibility !important;
+                
+                &::placeholder {
+                    color: rgba(255, 255, 255, 0.5);
+                    font-size: 20px !important;
+                    font-weight: 600 !important;
+                }
+            }
+        }
+        
+        .MuiInputBase-input {
+            font-size: 20px !important;
+            font-weight: 600 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            font-family: inherit !important;
+            letter-spacing: normal !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            
+            &:focus {
+                text-align: center;
+            }
+        }
+    }
+
+    &__main {
+        flex: 1;
+        padding: 0 24px;
+        overflow-y: auto;
+        padding-bottom: 100px;
+    }
+
+    &__timer-section {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    &__timer {
+        font-size: 48px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+
+    &__timer-label {
+        font-size: 14px;
+        color: #b0b0b0;
+    }
+
+    &__add-exercises-section {
+        margin-bottom: 24px;
+    }
+
+    &__add-exercises-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        border: 2px solid #0066ff !important;
+        color: #0066ff !important;
+        background-color: transparent !important;
+
+        &:hover {
+            background-color: rgba(0, 102, 255, 0.1) !important;
+            border-color: #0052cc !important;
+        }
+    }
+
+    &__exercises-list {
+        // Стили перенесены в компонент ExerciseList
+    }
+
+    &__footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 16px 24px;
+        background-color: #1a1a1a;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    &__finish-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        background-color: #dc2626 !important;
+        color: #ffffff !important;
+
+        &:hover {
+            background-color: #b91c1c !important;
+        }
+    }
+}
+
