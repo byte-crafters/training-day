@@ -154,6 +154,25 @@
         }
     }
 
+    &__add-set-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        background-color: #0066ff !important;
+        color: #ffffff !important;
+        margin-top: 24px !important;
+
+        &:hover {
+            background-color: #0052cc !important;
+        }
+
+        &:disabled {
+            background-color: #3a3a3a !important;
+            color: #888888 !important;
+        }
+    }
+
     &__previous-sets {
         margin-bottom: 24px;
     }
@@ -259,6 +278,19 @@
         &:hover {
             background-color: rgba(255, 255, 255, 0.1) !important;
             border-color: #4a4a4a !important;
+        }
+    }
+
+    &__finish-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        background-color: #0066ff !important;
+        color: #ffffff !important;
+
+        &:hover {
+            background-color: #0052cc !important;
         }
     }
 }

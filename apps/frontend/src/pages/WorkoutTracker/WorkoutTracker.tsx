@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import WorkoutCard from "../../components/WorkoutCard";
+import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
 import "./WorkoutTracker.scss";
 import { useEffect, useState } from "react";
-import { getExercises, getWorkouts } from "../../utils/api";
+import { getExercises, getWorkouts, createWorkout as createWorkoutAPI } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
-import { setExercises, setWorkouts } from "../../store";
+import { setExercises, setWorkouts, setCurrentWorkout } from "../../store";
 
 interface Workout {
     date: string;
@@ -18,10 +19,50 @@ function WorkoutTracker() {
     const dispatch = useDispatch();
 
     const [isLoading, setIsLoading] = useState(true);
+    const [isDismissed, setIsDismissed] = useState(false);
 
     const workouts = useSelector((state) => {
-        return state.workouts.slice(0, 3);
+        return state.workouts.slice(0, 2);
     });
+
+    const currentWorkout = useSelector((state) => {
+        return state.currentWorkout;
+    });
+
+    useEffect(() => {
+        console.log(workouts);
+        
+        console.log(currentWorkout);
+    }, [currentWorkout, workouts]);
+
+    const handleDeleteWorkout = () => {
+        dispatch(setCurrentWorkout(null));
+        setIsDismissed(true);
+    };
+
+    const handleDismissAndSave = async () => {
+        if (!currentWorkout) {
+            return;
+        }
+
+        try {
+            // Сохраняем тренировку в базу данных
+            await createWorkoutAPI(currentWorkout);
+            
+            // Обновляем список тренировок
+            const workouts = await getWorkouts();
+            dispatch(setWorkouts(workouts));
+            
+            // Очищаем текущую тренировку
+            dispatch(setCurrentWorkout(null));
+            
+            // Скрываем карточку
+            setIsDismissed(true);
+        } catch (error) {
+            console.error("Failed to save workout:", error);
+            // Можно добавить уведомление об ошибке
+        }
+    };
 
     return (
         <Box className="workout-tracker">
@@ -42,6 +83,14 @@ function WorkoutTracker() {
                         Start Training
                     </Button>
                 </Box>
+
+                {currentWorkout && currentWorkout.exercises?.length > 0 && !isDismissed && (
+                    <ContinueWorkoutCard
+                        workout={currentWorkout}
+                        onDismiss={handleDismissAndSave}
+                        onDelete={handleDeleteWorkout}
+                    />
+                )}
 
                 <Box className="workout-tracker__workouts-section">
                     <Typography

@@ -1,5 +1,6 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit';
+import { createSlice, configureStore, Middleware } from '@reduxjs/toolkit';
 import { Workout } from '@training-day/shared';
+import { saveCurrentWorkout, loadCurrentWorkout } from '../utils/storage';
 
 const workoutsSlice = createSlice({
     name: 'workout',
@@ -14,9 +15,12 @@ const workoutsSlice = createSlice({
     }
 });
 
+// Загружаем сохраненную тренировку из localStorage при инициализации
+const savedWorkout = loadCurrentWorkout();
+
 const currentWorkoutSlice = createSlice({
     name: 'currentWorkout',
-    initialState: null as Workout | null,
+    initialState: savedWorkout as Workout | null,
     reducers: {
         setCurrentWorkout(state, action) {
             return action.payload;
@@ -50,12 +54,31 @@ const exercisesSlice = createSlice({
     }
 });
 
+// Middleware для автоматического сохранения currentWorkout в localStorage
+const saveWorkoutMiddleware: Middleware = (store) => (next) => (action) => {
+    const result = next(action);
+    
+    // Сохраняем currentWorkout после любых действий, которые могут его изменить
+    if (
+        action.type === 'currentWorkout/setCurrentWorkout' ||
+        action.type === 'currentWorkout/updateWorkoutName' ||
+        action.type === 'currentWorkout/addSet'
+    ) {
+        const state = store.getState();
+        saveCurrentWorkout(state.currentWorkout);
+    }
+    
+    return result;
+};
+
 const store = configureStore({
     reducer: {
         workouts: workoutsSlice.reducer,
         currentWorkout: currentWorkoutSlice.reducer,
         exercises: exercisesSlice.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(saveWorkoutMiddleware),
 })
 
 export {store};

@@ -1,17 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Box, IconButton, Button, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { Box, IconButton, Button, Typography, CircularProgress } from "@mui/material";
 import ExerciseList from "../../components/ExerciseList";
 import "./MyWorkout.scss";
+import { setCurrentWorkout, setWorkouts } from "../../store";
+import { createWorkout as createWorkoutAPI, getWorkouts } from "../../utils/api";
 
 function MyWorkout() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // Получаем текущую тренировку из Redux store
     const currentWorkout = useSelector((state: any) => state.currentWorkout);
     const workoutName = currentWorkout?.name || "My Workout";
     const hasExercises = currentWorkout?.exercises?.length > 0;
+    const [isSaving, setIsSaving] = useState(false);
 
     // Если нет текущей тренировки или упражнений, перенаправляем обратно
     useEffect(() => {
@@ -19,6 +23,33 @@ function MyWorkout() {
             navigate("/select-exercises");
         }
     }, [currentWorkout, hasExercises, navigate]);
+
+    const handleFinishWorkout = async () => {
+        if (!currentWorkout) {
+            return;
+        }
+
+        setIsSaving(true);
+        try {
+            // Сохраняем тренировку в базу данных
+            await createWorkoutAPI(currentWorkout);
+            
+            // Обновляем список тренировок
+            const workouts = await getWorkouts();
+            dispatch(setWorkouts(workouts));
+            
+            // Очищаем текущую тренировку
+            dispatch(setCurrentWorkout(null));
+            
+            // Переходим на главную страницу
+            navigate("/");
+        } catch (error) {
+            console.error("Failed to finish workout:", error);
+            // Можно добавить уведомление об ошибке
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     return (
         <Box className="my-workout">
@@ -63,6 +94,17 @@ function MyWorkout() {
                         </Typography>
                     </Box> */}
 
+                    <Box className="my-workout__add-exercises-section">
+                        <Button
+                            variant="outlined"
+                            fullWidth
+                            className="my-workout__add-exercises-button"
+                            onClick={() => navigate("/select-exercises")}
+                        >
+                            Add Exercises
+                        </Button>
+                    </Box>
+
                     <Box className="my-workout__exercises-list">
                         <ExerciseList />
                     </Box>
@@ -74,9 +116,17 @@ function MyWorkout() {
                     variant="contained"
                     fullWidth
                     className="my-workout__finish-button"
-                    onClick={() => navigate("/")}
+                    onClick={handleFinishWorkout}
+                    disabled={isSaving}
                 >
-                    Finish Workout
+                    {isSaving ? (
+                        <>
+                            <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+                            Saving...
+                        </>
+                    ) : (
+                        "Finish Workout"
+                    )}
                 </Button>
             </Box>
         </Box>

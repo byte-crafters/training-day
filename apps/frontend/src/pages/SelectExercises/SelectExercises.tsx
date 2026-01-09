@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,10 +9,10 @@ import {
     InputAdornment,
     Button,
 } from "@mui/material";
-import { Exercise, ExerciseType } from "@training-day/shared";
+import { Exercise, ExerciseType, Activity } from "@training-day/shared";
 import "./SelectExercises.scss";
 import { setCurrentWorkout } from "../../store";
-import { createWorkout } from "../../utils/helpers";
+import { createWorkout, exerciseToActivity } from "../../utils/helpers";
 
 type Category = "All" | "Chest" | "Back" | "Legs" | "Cardio";
 
@@ -25,6 +25,15 @@ function SelectExercises() {
     const [selectedExerciseIds, setSelectedExerciseIds] = useState<string[]>([]);
 
     const exercisesFromStore: Exercise[] = useSelector((state: any) => state.exercises);
+    const currentWorkout = useSelector((state: any) => state.currentWorkout);
+
+    // Инициализируем выбранные упражнения из текущей тренировки, если она существует
+    useEffect(() => {
+        if (currentWorkout?.exercises) {
+            const existingExerciseIds = currentWorkout.exercises.map((ex: Activity) => ex.id);
+            setSelectedExerciseIds(existingExerciseIds);
+        }
+    }, [currentWorkout]);
 
     const categories: Category[] = ["All", "Chest", "Back", "Legs", "Cardio"];
 
@@ -70,7 +79,34 @@ function SelectExercises() {
             return;
         }
 
-        dispatch(setCurrentWorkout(createWorkout(selectedExercises)));
+        // Если есть текущая тренировка, обновляем её, сохраняя существующие сеты
+        if (currentWorkout) {
+            const existingExercisesMap = new Map(
+                currentWorkout.exercises.map((ex: Activity) => [ex.id, ex])
+            );
+
+            // Создаем обновленный список упражнений
+            const updatedExercises: Activity[] = selectedExercises.map((exercise) => {
+                const existingActivity = existingExercisesMap.get(exercise.id);
+                // Если упражнение уже было в тренировке, сохраняем его сеты
+                if (existingActivity) {
+                    return existingActivity;
+                }
+                // Если упражнение новое, создаем новую Activity
+                return exerciseToActivity(exercise);
+            });
+
+            const updatedWorkout = {
+                ...currentWorkout,
+                exercises: updatedExercises,
+            };
+
+            dispatch(setCurrentWorkout(updatedWorkout));
+        } else {
+            // Создаем новую тренировку
+            dispatch(setCurrentWorkout(createWorkout(selectedExercises)));
+        }
+
         navigate("/my-workout", { state: { exercises: selectedExercises } });
     };
 
@@ -188,7 +224,7 @@ function SelectExercises() {
                     onClick={handleBeginWorkout}
                     disabled={selectedExercisesCount === 0}
                 >
-                    Begin Workout
+                    {currentWorkout ? "Continue Workout" : "Begin Workout"}
                 </Button>
             </Box>
         </Box>

@@ -6,7 +6,6 @@ import {
     IconButton,
     Button,
     TextField,
-    CircularProgress,
 } from "@mui/material";
 import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
@@ -36,8 +35,6 @@ function ExerciseDetail() {
     const [weight, setWeight] = useState<number | "">(0);
     const [note, setNote] = useState("");
     const [savedSets, setSavedSets] = useState<Set[]>([]);
-    const [isSaving] = useState(false);
-    const [showSaveMessage] = useState(false);
 
     // Синхронизируем savedSets с sets из activity
     useEffect(() => {
@@ -86,13 +83,6 @@ function ExerciseDetail() {
         setReps(15);
         setWeight(0);
         setNote("");
-    };
-
-    const handleDeleteSet = () => {
-        if (savedSets.length > 0) {
-            const updatedSets = savedSets.slice(0, -1);
-            setSavedSets(updatedSets);
-        }
     };
 
     const handleEditSet = (_setToEdit: Set) => {
@@ -196,23 +186,15 @@ function ExerciseDetail() {
                         />
                     </Box>
 
-                    {showSaveMessage && (
-                        <Box className="exercise-detail__save-message">
-                            <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <Typography>Set {completedSets} saved!</Typography>
-                        </Box>
-                    )}
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        className="exercise-detail__add-set-button"
+                        onClick={handleSaveSet}
+                        disabled={reps <= 0}
+                    >
+                        Add Set
+                    </Button>
                 </Box>
 
                 {savedSets.length > 0 && (
@@ -256,26 +238,11 @@ function ExerciseDetail() {
                 <Button
                     variant="contained"
                     fullWidth
-                    className="exercise-detail__save-button"
-                    onClick={handleSaveSet}
-                    disabled={isSaving || savedSets.length >= totalSets || reps <= 0}
+                    className="exercise-detail__finish-button"
+                    onClick={() => navigate("/")}
                 >
-                    {isSaving ? (
-                        <CircularProgress size={20} color="inherit" />
-                    ) : (
-                        "Save Set"
-                    )}
+                    Finish Exercise
                 </Button>
-                {savedSets.length > 0 && (
-                    <Button
-                        variant="outlined"
-                        fullWidth
-                        className="exercise-detail__delete-button"
-                        onClick={handleDeleteSet}
-                    >
-                        Delete Set
-                    </Button>
-                )}
             </Box>
         </Box>
     );

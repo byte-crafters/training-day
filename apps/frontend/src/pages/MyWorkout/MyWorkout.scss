@@ -169,6 +169,25 @@
         color: #b0b0b0;
     }
 
+    &__add-exercises-section {
+        margin-bottom: 24px;
+    }
+
+    &__add-exercises-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        border: 2px solid #0066ff !important;
+        color: #0066ff !important;
+        background-color: transparent !important;
+
+        &:hover {
+            background-color: rgba(0, 102, 255, 0.1) !important;
+            border-color: #0052cc !important;
+        }
+    }
+
     &__exercises-list {
         // Стили перенесены в компонент ExerciseList
     }
