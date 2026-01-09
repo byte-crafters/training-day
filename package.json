@@ -1,45 +1,16 @@
 {
-  "name": "training-day",
-  "private": true,
+  "name": "training-day-monorepo",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,scss}\"",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
-    "@mui/material": "^6.1.9",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^7.11.0"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@types/react": "^18.2.43",
-    "@types/react-dom": "^18.2.17",
-    "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^9.9.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "globals": "^15.9.0",
-    "msw": "^2.12.7",
-    "prettier": "^3.7.4",
-    "sass": "^1.97.2",
-    "typescript": "^5.6.2",
-    "typescript-eslint": "^8.0.0",
-    "vite": "^5.4.0"
-  },
-  "msw": {
-    "workerDirectory": [
-      "public"
-    ]
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "build": "pnpm --recursive build",
+    "build:frontend": "pnpm --filter frontend build",
+    "build:backend": "pnpm --filter backend build",
+    "lint": "pnpm --recursive lint",
+    "format": "pnpm --recursive format"
   }
 }
