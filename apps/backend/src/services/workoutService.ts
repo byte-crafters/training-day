@@ -1,5 +1,6 @@
 import { supabase } from '../db/supabase.js';
 import { Workout, Activity, Set } from '@training-day/shared';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Сервис для работы с тренировками
@@ -10,11 +11,12 @@ export class WorkoutService {
      * Получить все тренировки с упражнениями и сетами
      */
     static async getAll(): Promise<Workout[]> {
-        // Получаем все тренировки
+        // Получаем все тренировки, сортируем по дате создания (сначала новые), затем по created_at
         const { data: workouts, error: workoutsError } = await supabase
             .from('workouts')
             .select('*')
-            .order('date', { ascending: false });
+            .order('date', { ascending: false })
+            .order('created_at', { ascending: false });
 
         if (workoutsError) {
             throw new Error(`Failed to fetch workouts: ${workoutsError.message}`);
@@ -26,10 +28,13 @@ export class WorkoutService {
 
         // Для каждой тренировки получаем activities и sets
         const workoutsWithExercises = await Promise.all(
-            workouts.map(async (workout) => {
+            workouts.map(async (workout: any) => {
                 const exercises = await this.getExercisesForWorkout(workout.id);
                 return {
-                    ...workout,
+                    id: workout.id,
+                    name: workout.name,
+                    date: workout.date, // Время создания тренировки
+                    duration: workout.duration, // Длительность тренировки
                     exercises,
                 };
             })
@@ -60,7 +65,10 @@ export class WorkoutService {
         const exercises = await this.getExercisesForWorkout(id);
 
         return {
-            ...workout,
+            id: workout.id,
+            name: workout.name,
+            date: workout.date, // Время создания тренировки
+            duration: workout.duration, // Длительность тренировки
             exercises,
         };
     }
@@ -121,31 +129,38 @@ export class WorkoutService {
         // Начинаем транзакцию (Supabase не поддерживает транзакции напрямую,
         // поэтому делаем последовательные операции)
         
+        console.log('Creating workout:', JSON.stringify(workout, null, 2));
+        
         // 1. Создаем тренировку
         const { data: createdWorkout, error: workoutError } = await supabase
             .from('workouts')
             .insert({
                 id: workout.id,
                 name: workout.name,
-                date: workout.date,
-                duration: workout.duration,
+                date: workout.date, // Время создания тренировки
+                duration: workout.duration, // Длительность тренировки
             })
             .select()
             .single();
 
         if (workoutError) {
+            console.error('Workout creation error:', workoutError);
             throw new Error(`Failed to create workout: ${workoutError.message}`);
         }
 
         // 2. Создаем activities и sets для каждого упражнения
         for (const exercise of workout.exercises) {
+            // Генерируем уникальный ID для activity
+            const activityId = uuidv4();
+            
             // Создаем activity
+            console.log('Creating activity for exercise:', exercise.id, exercise.name);
             const { data: activity, error: activityError } = await supabase
                 .from('activities')
                 .insert({
-                    id: exercise.id,
+                    id: activityId,
                     workout_id: workout.id,
-                    exercise_id: exercise.id,
+                    exercise_id: exercise.id, // Ссылка на Exercise из справочника
                     name: exercise.name,
                     strength: exercise.strength,
                     type: exercise.type,
@@ -154,6 +169,7 @@ export class WorkoutService {
                 .single();
 
             if (activityError) {
+                console.error('Activity creation error:', activityError);
                 // Если ошибка, удаляем созданную тренировку
                 await supabase.from('workouts').delete().eq('id', workout.id);
                 throw new Error(`Failed to create activity: ${activityError.message}`);
@@ -163,7 +179,7 @@ export class WorkoutService {
             if (exercise.sets && exercise.sets.length > 0) {
                 const setsToInsert = exercise.sets.map((set) => ({
                     id: set.id,
-                    activity_id: exercise.id,
+                    activity_id: activityId, // Используем уникальный ID activity
                     reps: set.reps,
                     weight: set.weight,
                     note: set.note,
@@ -175,7 +191,7 @@ export class WorkoutService {
 
                 if (setsError) {
                     // Если ошибка, удаляем созданную тренировку и activity
-                    await supabase.from('activities').delete().eq('id', exercise.id);
+                    await supabase.from('activities').delete().eq('id', activityId);
                     await supabase.from('workouts').delete().eq('id', workout.id);
                     throw new Error(`Failed to create sets: ${setsError.message}`);
                 }
@@ -190,13 +206,14 @@ export class WorkoutService {
      * Обновить тренировку
      */
     static async update(id: string, updates: Partial<Workout>): Promise<Workout> {
+        const updateData: any = {};
+        if (updates.name !== undefined) updateData.name = updates.name;
+        if (updates.date !== undefined) updateData.date = updates.date;
+        if (updates.duration !== undefined) updateData.duration = updates.duration;
+
         const { data, error } = await supabase
             .from('workouts')
-            .update({
-                name: updates.name,
-                date: updates.date,
-                duration: updates.duration,
-            })
+            .update(updateData)
             .eq('id', id)
             .select()
             .single();

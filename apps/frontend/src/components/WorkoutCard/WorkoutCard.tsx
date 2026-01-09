@@ -2,15 +2,23 @@ import { Box, Typography } from "@mui/material";
 import "./WorkoutCard.scss";
 
 export interface WorkoutCardProps {
-    date: string;
     name: string;
-    duration: string;
+    date: string; // ISO timestamp string (время создания)
+    duration: string; // Длительность тренировки
 }
 
-function WorkoutCard({ date, name, duration }: WorkoutCardProps) {
+function WorkoutCard({ name, date, duration }: WorkoutCardProps) {
+    // Извлекаем дату для отображения
+    const workoutDate = new Date(date);
+    const formattedDate = workoutDate.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+    });
+
     return (
         <Box className="workout-card">
-            <Typography className="workout-card__date">{date}</Typography>
+            <Typography className="workout-card__date">{formattedDate}</Typography>
             <Box className="workout-card__content">
                 <Typography className="workout-card__name">{name}</Typography>
                 <Typography className="workout-card__duration">

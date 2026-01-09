@@ -19,8 +19,8 @@ export interface Activity extends Exercise {
 export interface Workout {
     id: string;
     name: string;
-    date: string;
-    duration: string;
+    date: string; // ISO timestamp string (время создания тренировки)
+    duration: string; // Длительность тренировки
     exercises: Activity[];
 }
 

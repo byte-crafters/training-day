@@ -239,7 +239,7 @@ function ExerciseDetail() {
                     variant="contained"
                     fullWidth
                     className="exercise-detail__finish-button"
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate("/my-workout")}
                 >
                     Finish Exercise
                 </Button>

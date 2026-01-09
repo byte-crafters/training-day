@@ -4,28 +4,22 @@ import WorkoutCard from "../../components/WorkoutCard";
 import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
 import "./WorkoutTracker.scss";
 import { useEffect, useState } from "react";
-import { getExercises, getWorkouts, createWorkout as createWorkoutAPI } from "../../utils/api";
+import { getWorkouts, createWorkout as createWorkoutAPI } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
-import { setExercises, setWorkouts, setCurrentWorkout } from "../../store";
-
-interface Workout {
-    date: string;
-    name: string;
-    duration: string;
-}
+import { setWorkouts, setCurrentWorkout } from "../../store";
+import { Workout } from "@training-day/shared";
 
 function WorkoutTracker() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [isLoading, setIsLoading] = useState(true);
     const [isDismissed, setIsDismissed] = useState(false);
 
-    const workouts = useSelector((state) => {
+    const workouts = useSelector((state: any) => {
         return state.workouts.slice(0, 2);
     });
 
-    const currentWorkout = useSelector((state) => {
+    const currentWorkout = useSelector((state: any) => {
         return state.currentWorkout;
     });
 
@@ -45,19 +39,20 @@ function WorkoutTracker() {
             return;
         }
 
+        // Сохраняем ссылку на тренировку перед очисткой
+        const workoutToSave = currentWorkout;
+
+        // Скрываем карточку и очищаем currentWorkout сразу
+        setIsDismissed(true);
+        dispatch(setCurrentWorkout(null));
+
         try {
             // Сохраняем тренировку в базу данных
-            await createWorkoutAPI(currentWorkout);
+            await createWorkoutAPI(workoutToSave);
             
             // Обновляем список тренировок
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
-            
-            // Очищаем текущую тренировку
-            dispatch(setCurrentWorkout(null));
-            
-            // Скрываем карточку
-            setIsDismissed(true);
         } catch (error) {
             console.error("Failed to save workout:", error);
             // Можно добавить уведомление об ошибке
@@ -100,11 +95,11 @@ function WorkoutTracker() {
                         Recent Workouts
                     </Typography>
                     <Box className="workout-tracker__workouts-list">
-                        {workouts.map((workout) => (
+                        {workouts.map((workout: Workout) => (
                             <WorkoutCard
                                 key={workout.id}
-                                date={workout.date}
                                 name={workout.name}
+                                date={workout.date}
                                 duration={workout.duration}
                             />
                         ))}

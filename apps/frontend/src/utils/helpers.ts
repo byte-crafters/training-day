@@ -21,11 +21,12 @@ export function exerciseToActivity(exercise: Exercise): Activity {
 export function createWorkout(exercises: Exercise[]): Workout {
     // Преобразуем Exercise[] в Activity[]
     const activities: Activity[] = exercises.map(exerciseToActivity);
+    const now = new Date();
     
     return {
         id: uuidv4(),
-        name: 'Training on ' + new Date().toLocaleDateString(),
-        date: new Date().toISOString(),
+        name: 'Training on ' + now.toLocaleDateString(),
+        date: now.toISOString(), // Время создания тренировки
         duration: '0:00', // Начальная длительность
         exercises: activities,
     };

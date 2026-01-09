@@ -51,7 +51,7 @@
     }
 
     &__name-text {
-        font-size: 24px;
+        font-size: 20px;
         font-weight: 600;
         color: #ffffff;
         text-align: center;
@@ -60,12 +60,22 @@
         padding: 0;
         font-family: inherit;
         letter-spacing: normal;
+        white-space: nowrap;
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-variant: normal;
+        text-rendering: optimizeLegibility;
     }
 
     &__edit-button {
         color: #888888 !important;
         padding: 4px !important;
         transition: color 0.2s ease;
+        flex-shrink: 0;
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
 
         &:hover {
             color: #0066ff !important;
@@ -81,6 +91,10 @@
         color: #888888 !important;
         padding: 4px !important;
         transition: color 0.2s ease;
+        flex-shrink: 0;
+        width: 28px !important;
+        height: 28px !important;
+        min-width: 28px !important;
 
         &:hover {
             color: #00cc66 !important;
@@ -92,13 +106,18 @@
         }
     }
 
+    &__name-edit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-height: auto;
+        height: auto;
+    }
+
     &__name-input {
-        margin: 0;
-        padding: 0;
-        display: inline-block;
-        
         .MuiInputBase-root {
-            font-size: 24px !important;
+            font-size: 20px !important;
             font-weight: 600 !important;
             color: #ffffff !important;
             text-align: center !important;
@@ -107,36 +126,44 @@
             padding: 0 !important;
             min-height: auto !important;
             height: auto !important;
-            width: auto !important;
             font-family: inherit !important;
             letter-spacing: normal !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
             
             input {
                 text-align: center !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                font-size: 24px !important;
+                font-size: 20px !important;
                 font-weight: 600 !important;
                 color: #ffffff !important;
                 line-height: 1.5 !important;
                 height: auto !important;
-                width: auto !important;
                 font-family: inherit !important;
                 letter-spacing: normal !important;
+                -webkit-font-smoothing: antialiased !important;
+                -moz-osx-font-smoothing: grayscale !important;
+                font-variant: normal !important;
+                text-rendering: optimizeLegibility !important;
                 
                 &::placeholder {
                     color: rgba(255, 255, 255, 0.5);
-                    font-size: 24px !important;
+                    font-size: 20px !important;
+                    font-weight: 600 !important;
                 }
             }
         }
         
         .MuiInputBase-input {
-            font-size: 24px !important;
+            font-size: 20px !important;
+            font-weight: 600 !important;
             padding: 0 !important;
             margin: 0 !important;
             font-family: inherit !important;
             letter-spacing: normal !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
             
             &:focus {
                 text-align: center;

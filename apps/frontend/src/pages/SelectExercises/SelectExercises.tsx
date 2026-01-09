@@ -132,7 +132,7 @@ function SelectExercises() {
                     </svg>
                 </IconButton>
                 <Typography variant="h4" className="select-exercises__title">
-                    What are you up to today?
+                    Choose your exercises
                 </Typography>
                 <Box className="select-exercises__header-spacer" />
             </Box>

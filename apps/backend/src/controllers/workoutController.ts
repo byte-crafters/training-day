@@ -48,15 +48,24 @@ export class WorkoutController {
         try {
             const workout = req.body;
 
-            // Валидация
-            if (!workout.id || !workout.name || !workout.date) {
-                return res.status(400).json({ error: 'Missing required fields' });
+            // Валидация обязательных полей
+            if (!workout.id || !workout.name || !workout.date || !workout.duration) {
+                return res.status(400).json({ 
+                    error: 'Missing required fields',
+                    received: {
+                        id: !!workout.id,
+                        name: !!workout.name,
+                        date: !!workout.date,
+                        duration: !!workout.duration
+                    }
+                });
             }
 
             const createdWorkout = await WorkoutService.create(workout);
             res.status(201).json(createdWorkout);
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error';
+            console.error('Error creating workout:', error);
             res.status(500).json({ error: message });
         }
     }
