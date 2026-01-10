@@ -6,6 +6,9 @@ import { store } from "./store/index.ts";
 import "./index.css";
 
 async function enableMocking() {
+    return;
+
+    console.log(import.meta.env.MODE);
     if (import.meta.env.MODE !== "development") {
         return;
     }

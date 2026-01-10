@@ -1,21 +1,42 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { Box, IconButton, Button, Typography, CircularProgress, TextField } from "@mui/material";
+import {
+    Box,
+    IconButton,
+    Button,
+    Typography,
+    CircularProgress,
+    TextField,
+} from "@mui/material";
 import ExerciseList from "../../components/ExerciseList";
 import "./MyWorkout.scss";
-import { setCurrentWorkout, setWorkouts, updateWorkoutName, store } from "../../store";
-import { createWorkout as createWorkoutAPI, getWorkouts } from "../../utils/api";
+import {
+    setCurrentWorkout,
+    setWorkouts,
+    updateWorkoutName,
+    store,
+    useAppDispatch,
+    useAppSelector,
+    RootState,
+} from "../../store";
+import {
+    createWorkout as createWorkoutAPI,
+    getWorkouts,
+} from "../../utils/api";
 import { saveCurrentWorkout } from "../../utils/storage";
 
 function MyWorkout() {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     // Получаем текущую тренировку из Redux store
-    const currentWorkout = useSelector((state: any) => state.currentWorkout);
+    const currentWorkout = useAppSelector(
+        (state: RootState) => state.currentWorkout
+    );
     const workoutName = currentWorkout?.name || "My Workout";
-    const hasExercises = currentWorkout?.exercises?.length > 0;
+    const hasExercises =
+        currentWorkout?.exercises?.length &&
+        currentWorkout.exercises.length > 0;
     const [isSaving, setIsSaving] = useState(false);
     const [isEditingName, setIsEditingName] = useState(false);
     const [editedName, setEditedName] = useState(workoutName);
@@ -69,28 +90,28 @@ function MyWorkout() {
         setIsSaving(true);
         try {
             // Получаем актуальную версию currentWorkout из store перед сохранением
-            const state = store.getState();
-            const actualWorkout = (state as any).currentWorkout;
-            
+            const state: RootState = store.getState();
+            const actualWorkout = state.currentWorkout;
+
             if (!actualWorkout) {
                 setIsSaving(false);
                 return;
             }
-            
+
             // Сохраняем тренировку в базу данных
             await createWorkoutAPI(actualWorkout);
-            
+
             // Обновляем список тренировок
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
-            
+
             // Очищаем currentWorkout в Redux store
             // Middleware автоматически очистит localStorage при setCurrentWorkout(null)
             dispatch(setCurrentWorkout(null));
-            
+
             // Явно очищаем localStorage для гарантии
             saveCurrentWorkout(null);
-            
+
             // Переходим на главную страницу после успешного сохранения и очистки
             navigate("/");
         } catch (error) {
@@ -134,11 +155,13 @@ function MyWorkout() {
                                 className="my-workout__name-input"
                                 value={editedName}
                                 onChange={(e) => setEditedName(e.target.value)}
-                                sx={textWidth ? { width: `${textWidth}px` } : {}}
+                                sx={
+                                    textWidth ? { width: `${textWidth}px` } : {}
+                                }
                                 onKeyDown={(e) => {
-                                    if (e.key === 'Enter') {
+                                    if (e.key === "Enter") {
                                         handleSaveName();
-                                    } else if (e.key === 'Escape') {
+                                    } else if (e.key === "Escape") {
                                         handleCancelEditName();
                                     }
                                 }}
@@ -169,8 +192,8 @@ function MyWorkout() {
                         </Box>
                     ) : (
                         <Box className="my-workout__name-display">
-                            <Typography 
-                                style={{fontSize: '20px'}}
+                            <Typography
+                                style={{ fontSize: "20px" }}
                                 ref={textRef}
                                 className="my-workout__name-text"
                             >
@@ -202,7 +225,6 @@ function MyWorkout() {
 
             {hasExercises && (
                 <Box component="main" className="my-workout__main">
-
                     <Box className="my-workout__add-exercises-section">
                         <Button
                             variant="outlined"
@@ -230,7 +252,11 @@ function MyWorkout() {
                 >
                     {isSaving ? (
                         <>
-                            <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+                            <CircularProgress
+                                size={20}
+                                color="inherit"
+                                sx={{ mr: 1 }}
+                            />
                             Saving...
                         </>
                     ) : (
@@ -243,4 +269,3 @@ function MyWorkout() {
 }
 
 export default MyWorkout;
-

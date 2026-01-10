@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import {
     Box,
     Typography,
@@ -9,28 +8,41 @@ import {
     InputAdornment,
     Button,
 } from "@mui/material";
-import { Exercise, ExerciseType, Activity } from "@training-day/shared";
+import { ExerciseType, Activity } from "@training-day/shared";
 import "./SelectExercises.scss";
-import { setCurrentWorkout } from "../../store";
+import {
+    RootState,
+    setCurrentWorkout,
+    useAppDispatch,
+    useAppSelector,
+} from "../../store";
 import { createWorkout, exerciseToActivity } from "../../utils/helpers";
 
 type Category = "All" | "Chest" | "Back" | "Legs" | "Cardio";
 
 function SelectExercises() {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const [selectedCategory, setSelectedCategory] = useState<Category>("All");
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedExerciseIds, setSelectedExerciseIds] = useState<string[]>([]);
+    const [selectedExerciseIds, setSelectedExerciseIds] = useState<string[]>(
+        []
+    );
 
-    const exercisesFromStore: Exercise[] = useSelector((state: any) => state.exercises);
-    const currentWorkout = useSelector((state: any) => state.currentWorkout);
+    const exercisesFromStore = useAppSelector(
+        (state: RootState) => state.exercises
+    );
+    const currentWorkout = useAppSelector(
+        (state: RootState) => state.currentWorkout
+    );
 
     // Инициализируем выбранные упражнения из текущей тренировки, если она существует
     useEffect(() => {
         if (currentWorkout?.exercises) {
-            const existingExerciseIds = currentWorkout.exercises.map((ex: Activity) => ex.id);
+            const existingExerciseIds = currentWorkout.exercises.map(
+                (ex: Activity) => ex.id
+            );
             setSelectedExerciseIds(existingExerciseIds);
         }
     }, [currentWorkout]);
@@ -63,9 +75,12 @@ function SelectExercises() {
     };
 
     const filteredExercises = exercisesFromStore.filter((exercise) => {
-        const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = exercise.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
         const categoryType = getCategoryType(selectedCategory);
-        const matchesCategory = selectedCategory === "All" || exercise.type === categoryType;
+        const matchesCategory =
+            selectedCategory === "All" || exercise.type === categoryType;
         return matchesSearch && matchesCategory;
     });
 
@@ -86,15 +101,19 @@ function SelectExercises() {
             );
 
             // Создаем обновленный список упражнений
-            const updatedExercises: Activity[] = selectedExercises.map((exercise) => {
-                const existingActivity = existingExercisesMap.get(exercise.id);
-                // Если упражнение уже было в тренировке, сохраняем его сеты
-                if (existingActivity) {
-                    return existingActivity;
+            const updatedExercises: Activity[] = selectedExercises.map(
+                (exercise) => {
+                    const existingActivity = existingExercisesMap.get(
+                        exercise.id
+                    );
+                    // Если упражнение уже было в тренировке, сохраняем его сеты
+                    if (existingActivity) {
+                        return existingActivity;
+                    }
+                    // Если упражнение новое, создаем новую Activity
+                    return exerciseToActivity(exercise);
                 }
-                // Если упражнение новое, создаем новую Activity
-                return exerciseToActivity(exercise);
-            });
+            );
 
             const updatedWorkout = {
                 ...currentWorkout,
@@ -184,12 +203,16 @@ function SelectExercises() {
 
                 <Box className="select-exercises__list">
                     {filteredExercises.map((exercise) => {
-                        const isSelected = selectedExerciseIds.includes(exercise.id);
+                        const isSelected = selectedExerciseIds.includes(
+                            exercise.id
+                        );
                         return (
                             <Box
                                 key={exercise.id}
                                 className="select-exercises__exercise-item"
-                                onClick={() => handleToggleExercise(exercise.id)}
+                                onClick={() =>
+                                    handleToggleExercise(exercise.id)
+                                }
                             >
                                 <Typography className="select-exercises__exercise-name">
                                     {exercise.name}

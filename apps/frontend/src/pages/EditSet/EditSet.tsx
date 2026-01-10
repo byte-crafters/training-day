@@ -59,8 +59,8 @@ function EditSet() {
             const updatedSet: Set = {
                 ...set,
                 reps: reps,
-                weight: weight !== "" ? Number(weight) : undefined,
-                note: note || undefined,
+                weight: weight !== "" ? Number(weight) : 0,
+                note: note || null,
             };
             if (onSave) {
                 onSave(updatedSet);
@@ -92,7 +92,7 @@ function EditSet() {
                     </svg>
                 </IconButton>
                 <Typography variant="h4" className="edit-set__title">
-                    Edit Set {set.setNumber}
+                    Edit Set
                 </Typography>
                 <Box className="edit-set__header-spacer" />
             </Box>

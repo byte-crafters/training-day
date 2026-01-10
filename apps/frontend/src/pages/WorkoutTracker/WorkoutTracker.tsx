@@ -4,28 +4,30 @@ import WorkoutCard from "../../components/WorkoutCard";
 import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
 import "./WorkoutTracker.scss";
 import { useEffect, useState } from "react";
-import { getWorkouts, createWorkout as createWorkoutAPI } from "../../utils/api";
-import { useDispatch, useSelector } from "react-redux";
-import { setWorkouts, setCurrentWorkout } from "../../store";
+import {
+    getWorkouts,
+    createWorkout as createWorkoutAPI,
+} from "../../utils/api";
+import { setWorkouts, setCurrentWorkout, useAppSelector, useAppDispatch, RootState } from "../../store";
 import { Workout } from "@training-day/shared";
 
 function WorkoutTracker() {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const [isDismissed, setIsDismissed] = useState(false);
 
-    const workouts = useSelector((state: any) => {
+    const workouts = useAppSelector((state: RootState) => {
         return state.workouts.slice(0, 2);
-    });
+    }); 
 
-    const currentWorkout = useSelector((state: any) => {
+    const currentWorkout = useAppSelector((state: RootState) => {
         return state.currentWorkout;
     });
 
     useEffect(() => {
         console.log(workouts);
-        
+
         console.log(currentWorkout);
     }, [currentWorkout, workouts]);
 
@@ -49,7 +51,7 @@ function WorkoutTracker() {
         try {
             // Сохраняем тренировку в базу данных
             await createWorkoutAPI(workoutToSave);
-            
+
             // Обновляем список тренировок
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
@@ -79,13 +81,15 @@ function WorkoutTracker() {
                     </Button>
                 </Box>
 
-                {currentWorkout && currentWorkout.exercises?.length > 0 && !isDismissed && (
-                    <ContinueWorkoutCard
-                        workout={currentWorkout}
-                        onDismiss={handleDismissAndSave}
-                        onDelete={handleDeleteWorkout}
-                    />
-                )}
+                {currentWorkout &&
+                    currentWorkout.exercises?.length > 0 &&
+                    !isDismissed && (
+                        <ContinueWorkoutCard
+                            workout={currentWorkout}
+                            onDismiss={handleDismissAndSave}
+                            onDelete={handleDeleteWorkout}
+                        />
+                    )}
 
                 <Box className="workout-tracker__workouts-section">
                     <Typography
