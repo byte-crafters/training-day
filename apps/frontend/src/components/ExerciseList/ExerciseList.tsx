@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
-import { useSelector } from "react-redux";
 import ExerciseCard from "../ExerciseCard";
 import { Activity } from "@training-day/shared";
 import "./ExerciseList.scss";
+import { RootState, useAppSelector } from "../../store";
 
 export interface Exercise {
     id: string;
@@ -43,7 +43,7 @@ const defaultSets: Record<string, number> = {
 
 function ExerciseList() {
     // Получаем currentWorkout из Redux store
-    const currentWorkout = useSelector((state: any) => state.currentWorkout);
+    const currentWorkout = useAppSelector((state: RootState) => state.currentWorkout);
     const activities: Activity[] = currentWorkout?.exercises || [];
 
     // Преобразуем Activity[] в формат для отображения

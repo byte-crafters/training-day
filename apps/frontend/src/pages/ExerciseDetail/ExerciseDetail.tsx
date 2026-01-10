@@ -1,33 +1,33 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-    Box,
-    Typography,
-    IconButton,
-    Button,
-    TextField,
-} from "@mui/material";
+import { Box, Typography, IconButton, Button, TextField } from "@mui/material";
 import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
-import { useDispatch, useSelector } from "react-redux";
-import { addSet } from "../../store";
+import { addSet, RootState, useAppDispatch, useAppSelector } from "../../store";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
     const location = useLocation();
-    const dispatch = useDispatch();
-    
+    const dispatch = useAppDispatch();
+
     // Получаем exercise из location.state (для отображения)
-    const exerciseFromState = (location.state as { exercise?: { id: string; name: string; totalSets?: number } })?.exercise;
-    
+    const exerciseFromState = (
+        location.state as {
+            exercise?: { id: string; name: string; totalSets?: number };
+        }
+    )?.exercise;
+
     // Получаем currentWorkout из Redux store
-    const currentWorkout = useSelector((state: any) => state.currentWorkout);
-    
+    const currentWorkout = useAppSelector(
+        (state: RootState) => state.currentWorkout
+    );
+
     // Находим Activity из currentWorkout по id
-    const activity = currentWorkout?.exercises?.find(
-        (ex: Activity) => ex.id === exerciseFromState?.id
-    ) || null;
-    
+    const activity =
+        currentWorkout?.exercises?.find(
+            (ex: Activity) => ex.id === exerciseFromState?.id
+        ) || null;
+
     // Используем activity если есть, иначе fallback на exerciseFromState
     const exercise = activity || exerciseFromState;
 
@@ -75,18 +75,18 @@ function ExerciseDetail() {
         };
 
         dispatch(addSet({ exerciseId: activity.id, set: newSet }));
-        
+
         // Обновляем локальное состояние для немедленного отображения
         setSavedSets((prev) => [...prev, newSet]);
-        
+
         // Сброс полей после сохранения
         setReps(15);
         setWeight(0);
         setNote("");
     };
 
-    const handleEditSet = (_setToEdit: Set) => {
-        console.log('11111');
+    const handleEditSet = (set: Set) => {
+        console.log(set);
         // navigate("/edit-set", {
         //     state: {
         //         set: _setToEdit,
@@ -101,9 +101,6 @@ function ExerciseDetail() {
         //     },
         // });
     };
-
-    const totalSets = exercise.totalSets;
-    const completedSets = savedSets.length;
 
     return (
         <Box className="exercise-detail">
@@ -137,7 +134,7 @@ function ExerciseDetail() {
                     <Typography className="exercise-detail__add-set-title">
                         Add set
                     </Typography>
-                    
+
                     <Box className="exercise-detail__inputs-row">
                         <Box className="exercise-detail__input-group">
                             <Typography className="exercise-detail__input-label">
@@ -212,7 +209,9 @@ function ExerciseDetail() {
                                 >
                                     <Typography className="exercise-detail__previous-set-text">
                                         Set {index + 1}: {set.reps} reps
-                                        {set.weight !== undefined && set.weight > 0 && ` • ${set.weight} kg`}
+                                        {set.weight !== undefined &&
+                                            set.weight > 0 &&
+                                            ` • ${set.weight} kg`}
                                     </Typography>
                                     <svg
                                         width="20"
@@ -249,4 +248,3 @@ function ExerciseDetail() {
 }
 
 export default ExerciseDetail;
-

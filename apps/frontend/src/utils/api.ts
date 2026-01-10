@@ -1,3 +1,5 @@
+import { Workout } from "@training-day/shared";
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 /**
@@ -36,7 +38,7 @@ export const getExercises = async () => {
  * Нормализует данные тренировки перед отправкой на сервер
  * Убирает лишние поля и гарантирует наличие обязательных
  */
-function normalizeWorkoutForAPI(workout: any) {
+function normalizeWorkoutForAPI(workout: Workout) {
     return {
         id: workout.id,
         name: workout.name,
@@ -49,7 +51,7 @@ function normalizeWorkoutForAPI(workout: any) {
 /**
  * Создать тренировку
  */
-export const createWorkout = async (workout: any) => {
+export const createWorkout = async (workout: Workout) => {
     try {
         // Нормализуем данные перед отправкой
         const normalizedWorkout = normalizeWorkoutForAPI(workout);
@@ -80,7 +82,7 @@ export const createWorkout = async (workout: any) => {
 /**
  * Обновить тренировку
  */
-export const updateWorkout = async (id: string, workout: any) => {
+export const updateWorkout = async (id: string, workout: Workout) => {
     try {
         const response = await fetch(`${API_BASE_URL}/workouts/${id}`, {
             method: 'PUT',

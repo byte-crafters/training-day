@@ -1,39 +1,35 @@
-import { createSlice, configureStore, Middleware } from '@reduxjs/toolkit';
-import { Workout } from '@training-day/shared';
+import { createSlice, configureStore, Middleware, PayloadAction } from '@reduxjs/toolkit';
+import { Exercise, Set, Workout } from '@training-day/shared';
 import { saveCurrentWorkout, loadCurrentWorkout } from '../utils/storage';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+
+const initialWorkouts: Workout[] = [];
 
 const workoutsSlice = createSlice({
     name: 'workout',
-    initialState: [] as Workout[],
+    initialState: initialWorkouts,
     reducers: {
-        setWorkouts(state, action) {
+        setWorkouts(_state, action: PayloadAction<Workout[]>) {
             return action.payload;
-        },
-        removeWorkout(state, action) {
-            //
         },
     }
 });
 
-// Загружаем сохраненную тренировку из localStorage при инициализации
-const savedWorkout = loadCurrentWorkout();
+const initialCurrentWorkout: Workout | null = loadCurrentWorkout();
 
 const currentWorkoutSlice = createSlice({
     name: 'currentWorkout',
-    initialState: savedWorkout as Workout | null,
+    initialState: initialCurrentWorkout,
     reducers: {
-        setCurrentWorkout(state, action) {
+        setCurrentWorkout(_state, action: PayloadAction<Workout | null>) {
             return action.payload;
         },
-        updateWorkoutName(state, action) {
+        updateWorkoutName(state, action: PayloadAction<string>) {
             if (state) {
                 state.name = action.payload;
             }
         },
-        removeWorkout(state, action) {
-            //
-        },
-        addSet(state, action) {
+        addSet(state, action: PayloadAction<{ exerciseId: string; set: Set }>) {
             if (!state) return;
             const { exerciseId, set } = action.payload;
             const exercise = state.exercises.find((ex) => ex.id === exerciseId);
@@ -44,11 +40,13 @@ const currentWorkoutSlice = createSlice({
     }
 });
 
+const initialExercises: Exercise[] = [];
+
 const exercisesSlice = createSlice({
     name: 'exercise',
-    initialState: [],
+    initialState: initialExercises,
     reducers: {
-        setExercises(state, action) {
+        setExercises(_state, action: PayloadAction<Exercise[]>) {
             return action.payload;
         },
     }
@@ -60,9 +58,9 @@ const saveWorkoutMiddleware: Middleware = (store) => (next) => (action) => {
     
     // Сохраняем currentWorkout после любых действий, которые могут его изменить
     if (
-        action.type === 'currentWorkout/setCurrentWorkout' ||
-        action.type === 'currentWorkout/updateWorkoutName' ||
-        action.type === 'currentWorkout/addSet'
+        currentWorkoutSlice.actions.setCurrentWorkout.match(action) ||
+        currentWorkoutSlice.actions.updateWorkoutName.match(action) ||
+        currentWorkoutSlice.actions.addSet.match(action)
     ) {
         const state = store.getState();
         saveCurrentWorkout(state.currentWorkout);
@@ -79,7 +77,12 @@ const store = configureStore({
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(saveWorkoutMiddleware),
-})
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export {store};
 

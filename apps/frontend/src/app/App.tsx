@@ -7,8 +7,7 @@ import MyWorkout from "../pages/MyWorkout";
 import ExerciseDetail from "../pages/ExerciseDetail";
 import EditSet from "../pages/EditSet";
 import { getExercises, getWorkouts } from "../utils/api";
-import { useDispatch } from "react-redux";
-import { setExercises, setWorkouts } from "../store";
+import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect } from "react";
 
 const darkTheme = createTheme({
@@ -34,7 +33,7 @@ const darkTheme = createTheme({
 });
 
 function App() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const fetchWorkouts = async () => {
         try {
