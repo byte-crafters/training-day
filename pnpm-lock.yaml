@@ -71,6 +71,9 @@ importers:
       '@tma.js/sdk':
         specifier: ^3.1.6
         version: 3.1.6(typescript@5.9.3)
+      '@tma.js/sdk-react':
+        specifier: ^3.0.15
+        version: 3.0.15(@types/react@18.3.27)(react@18.3.1)(typescript@5.9.3)
       '@training-day/shared':
         specifier: file:../../packages/shared
         version: link:../../packages/shared
@@ -1039,6 +1042,15 @@ packages:
 
   '@tma.js/init-data-node@2.0.6':
     resolution: {integrity: sha512-UeN/kwXXxVkZ8xOOBjO4GI2i59fGjG5Yliin5g9L6zDxmmtllSH+fMPIqPdOgX2Jf42DGC6nDaG8wDrjRhu5Xw==}
+
+  '@tma.js/sdk-react@3.0.15':
+    resolution: {integrity: sha512-HsgqPINSBK87NIRZ+ZDol07QPhSQ3GOTofyZEH0xoaQjZWb9wVxUXwECa5ozRUdzWZI+Mgx8oD1pzrjyNkDjFA==}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@tma.js/sdk@3.1.6':
     resolution: {integrity: sha512-NENkQa7G5N9kwbL20ErUMO9Fukxl9eVhcJ439PbCg2WYMk/x9oNbx2DhEzhX4xM718zSjYejmSj1oXCKk0PxYA==}
@@ -3111,6 +3123,15 @@ snapshots:
       better-promises: 1.0.0
       error-kid: 1.0.2
       fp-ts: 2.16.11
+    transitivePeerDependencies:
+      - typescript
+
+  '@tma.js/sdk-react@3.0.15(@types/react@18.3.27)(react@18.3.1)(typescript@5.9.3)':
+    dependencies:
+      '@tma.js/sdk': 3.1.6(typescript@5.9.3)
+      react: 18.3.1
+    optionalDependencies:
+      '@types/react': 18.3.27
     transitivePeerDependencies:
       - typescript
 
