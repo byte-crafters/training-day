@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.13.5",
     "@mui/material": "^6.1.9",
     "@reduxjs/toolkit": "^2.11.2",
+    "@tma.js/sdk": "^3.1.6",
     "@training-day/shared": "file:../../packages/shared",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -48,4 +49,3 @@
     ]
   }
 }
-

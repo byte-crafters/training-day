@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ExerciseController } from '../controllers/exerciseController.js';
 import { WorkoutController } from '../controllers/workoutController.js';
+import { AuthController } from '../controllers/authController.js';
 
 const router = Router();
 
@@ -17,6 +18,9 @@ router.get('/workouts/:id', WorkoutController.getById);
 router.post('/workouts', WorkoutController.create);
 router.put('/workouts/:id', WorkoutController.update);
 router.delete('/workouts/:id', WorkoutController.delete);
+
+// Auth routes
+router.post('/auth/telegram', AuthController.initTelegram);
 
 // Health check
 router.get('/health', (_req, res) => {

@@ -6,9 +6,15 @@ import SelectExercises from "../pages/SelectExercises";
 import MyWorkout from "../pages/MyWorkout";
 import ExerciseDetail from "../pages/ExerciseDetail";
 import EditSet from "../pages/EditSet";
-import { getExercises, getWorkouts } from "../utils/api";
+import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect } from "react";
+import { retrieveLaunchParams } from "@tma.js/sdk";
+
+// Инициализация Telegram Mini App
+// retrieveLaunchParams() читает данные из window.Telegram.WebApp.initData,
+// которые доступны сразу при загрузке страницы (до загрузки React)
+const { initDataRaw, initData } = retrieveLaunchParams();
 
 const darkTheme = createTheme({
     palette: {
@@ -58,6 +64,17 @@ function App() {
     };
 
     useEffect(() => {
+        // Отправка данных инициализации Telegram Mini App на сервер
+        // initDataRaw и initData получены на верхнем уровне модуля,
+        // так как они доступны сразу при загрузке страницы через window.Telegram.WebApp.initData
+        console.log('Telegram Mini App init data:', initDataRaw, initData);
+
+        if (initDataRaw && typeof initDataRaw === 'string') {
+            sendTelegramInitData(initDataRaw).catch((error) => {
+                console.error('Failed to send Telegram init data to server:', error);
+            });
+        }
+
         fetchWorkouts();
         fetchExercises();
     }, []);

@@ -120,3 +120,28 @@ export const deleteWorkout = async (id: string) => {
         throw error;
     }
 };
+
+/**
+ * Отправить данные инициализации Telegram Mini App на сервер
+ */
+export const sendTelegramInitData = async (initDataRaw: string) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/telegram`, {
+            method: 'POST',
+            headers: {
+                Authorization: `tma ${initDataRaw}`,
+            },
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Backend error response:', errorText);
+            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Failed to send Telegram init data:', error);
+        throw error;
+    }
+};
