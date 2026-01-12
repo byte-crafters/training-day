@@ -70,16 +70,29 @@ function App() {
     const initDataRaw = useRawInitData();
 
     useEffect(() => {
-        // Отправляем данные авторизации Telegram на сервер
-        if (initDataRaw && typeof initDataRaw === "string") {
-            sendTelegramInitData(initDataRaw).catch((error) => {
-                // Ошибка уже показывается в api.ts
-                console.error("Failed to send Telegram init data:", error);
-            });
-        }
+        const initializeApp = async () => {
+            // Сначала авторизуемся, чтобы получить токены в cookies
+            if (initDataRaw && typeof initDataRaw === "string") {
+                try {
+                    await sendTelegramInitData(initDataRaw);
+                    // После успешной авторизации загружаем данные
+                    fetchWorkouts();
+                    fetchExercises();
+                } catch (error) {
+                    // Ошибка уже показывается в api.ts
+                    console.error("Failed to send Telegram init data:", error);
+                    // Все равно пытаемся загрузить данные (на случай, если токены уже есть)
+                    fetchWorkouts();
+                    fetchExercises();
+                }
+            } else {
+                // Если нет initData, все равно пытаемся загрузить данные
+                fetchWorkouts();
+                fetchExercises();
+            }
+        };
 
-        fetchWorkouts();
-        fetchExercises();
+        initializeApp();
     }, [initDataRaw]);
 
     return (
