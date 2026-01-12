@@ -87,20 +87,26 @@ export class AuthController {
                 // Устанавливаем токены в http-only, secure cookies
                 const isProduction = process.env.NODE_ENV === 'production';
                 
-                res.cookie('access_token', accessToken, {
+                const cookieOptions = {
                     httpOnly: true,
                     secure: isProduction, // В production только через HTTPS
-                    sameSite: isProduction ? 'none' : 'lax', // Для cross-site в production
+                    sameSite: (isProduction ? 'none' : 'lax') as 'none' | 'lax', // Для cross-site в production
                     maxAge: 15 * 60 * 1000, // 15 минут
                     path: '/',
+                };
+                
+                console.log('🍪 Cookie settings:', {
+                    NODE_ENV: process.env.NODE_ENV,
+                    isProduction,
+                    secure: cookieOptions.secure,
+                    sameSite: cookieOptions.sameSite,
                 });
+                
+                res.cookie('access_token', accessToken, cookieOptions);
 
                 res.cookie('refresh_token', refreshToken, {
-                    httpOnly: true,
-                    secure: isProduction,
-                    sameSite: isProduction ? 'none' : 'lax',
+                    ...cookieOptions,
                     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
-                    path: '/',
                 });
 
                 // Сохраняем распарсенные данные в res.locals для использования в других middleware
