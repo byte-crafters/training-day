@@ -29,5 +29,11 @@ export enum ExerciseType {
     LEGS = "legs",
     BACK = "back",
     CARDIO = "cardio",
+    SHOULDERS = "shoulders",
+    ABS = "abs",
+    TRICEPS = "triceps",
+    BICEPS = "biceps",
+    FOREARMS = "forearms",
+    CALVES = "calves",
 }
 

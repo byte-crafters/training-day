@@ -4,10 +4,18 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
 /**
  * Базовый fetch с обработкой ошибок
+ * credentials: 'include' позволяет отправлять cookies с каждым запросом
  */
-async function fetchAPI(endpoint: string) {
+async function fetchAPI(endpoint: string, options: RequestInit = {}) {
     try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`);
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            ...options,
+            credentials: 'include', // Важно: отправляем cookies с каждым запросом
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers,
+            },
+        });
         
         if (!response.ok) {
             throw new Error(`API Error: ${response.status} ${response.statusText}`);
@@ -60,6 +68,7 @@ export const createWorkout = async (workout: Workout) => {
         
         const response = await fetch(`${API_BASE_URL}/workouts`, {
             method: 'POST',
+            credentials: 'include', // Отправляем cookies
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -86,6 +95,7 @@ export const updateWorkout = async (id: string, workout: Workout) => {
     try {
         const response = await fetch(`${API_BASE_URL}/workouts/${id}`, {
             method: 'PUT',
+            credentials: 'include', // Отправляем cookies
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -110,6 +120,7 @@ export const deleteWorkout = async (id: string) => {
     try {
         const response = await fetch(`${API_BASE_URL}/workouts/${id}`, {
             method: 'DELETE',
+            credentials: 'include', // Отправляем cookies
         });
         
         if (!response.ok) {
@@ -128,6 +139,7 @@ export const sendTelegramInitData = async (initDataRaw: string) => {
     try {
         const response = await fetch(`${API_BASE_URL}/auth/telegram`, {
             method: 'POST',
+            credentials: 'include', // Важно: для получения cookies
             headers: {
                 Authorization: `tma ${initDataRaw}`,
             },

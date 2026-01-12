@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { validate, parse, type InitData } from '@tma.js/init-data-node';
+import { UserService } from '../services/userService.js';
+import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 
 /**
  * Контроллер для аутентификации и работы с Telegram Mini App
@@ -8,6 +10,7 @@ export class AuthController {
     /**
      * POST /api/auth/telegram
      * Получить и обработать данные инициализации Telegram Mini App
+     * Создает/обновляет пользователя и возвращает JWT токены в cookies
      */
     static async initTelegram(req: Request, res: Response) {
         try {
@@ -48,28 +51,71 @@ export class AuthController {
                 // Парсим данные для дальнейшего использования
                 const initData: InitData = parse(initDataRaw);
 
-                // Здесь можно добавить:
-                // - Сохранение данных пользователя в БД
-                // - Создание сессии/токена
-                // - Логирование данных пользователя
+                // Проверяем, что user данные присутствуют
+                if (!initData.user?.id) {
+                    return res.status(400).json({ 
+                        error: 'User data is missing in initData'
+                    });
+                }
 
-                console.log('Validated Telegram init data:', {
-                    userId: initData.user?.id,
-                    username: initData.user?.username,
-                    firstName: initData.user?.first_name,
+                const telegramUserId = initData.user.id;
+
+                // Создаем или обновляем пользователя в БД
+                const user = await UserService.createOrUpdate(telegramUserId, {
+                    username: initData.user.username,
+                    first_name: initData.user.first_name,
+                    last_name: initData.user.last_name,
+                });
+
+                console.log('User created/updated:', {
+                    id: user.id,
+                    telegramUserId: user.telegram_user_id,
+                    username: user.username,
+                });
+
+                // Генерируем JWT токены
+                const accessToken = generateAccessToken({
+                    userId: user.id,
+                    telegramUserId: user.telegram_user_id,
+                });
+
+                const refreshToken = generateRefreshToken({
+                    userId: user.id,
+                    telegramUserId: user.telegram_user_id,
+                });
+
+                // Устанавливаем токены в http-only, secure cookies
+                const isProduction = process.env.NODE_ENV === 'production';
+                
+                res.cookie('access_token', accessToken, {
+                    httpOnly: true,
+                    secure: isProduction, // В production только через HTTPS
+                    sameSite: isProduction ? 'none' : 'lax', // Для cross-site в production
+                    maxAge: 15 * 60 * 1000, // 15 минут
+                    path: '/',
+                });
+
+                res.cookie('refresh_token', refreshToken, {
+                    httpOnly: true,
+                    secure: isProduction,
+                    sameSite: isProduction ? 'none' : 'lax',
+                    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+                    path: '/',
                 });
 
                 // Сохраняем распарсенные данные в res.locals для использования в других middleware
                 res.locals.initData = initData;
+                res.locals.user = user;
 
-                // Возвращаем успешный ответ
+                // Возвращаем успешный ответ (без токенов в body для безопасности)
                 return res.status(200).json({ 
                     success: true,
-                    message: 'Telegram init data validated and received',
+                    message: 'Authentication successful',
                     user: {
-                        id: initData.user?.id,
-                        username: initData.user?.username,
-                        firstName: initData.user?.first_name,
+                        id: user.id,
+                        telegramUserId: user.telegram_user_id,
+                        username: user.username,
+                        firstName: user.first_name,
                     }
                 });
             } catch (validationError) {

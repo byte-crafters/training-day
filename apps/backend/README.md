@@ -24,19 +24,23 @@ Backend сервер для Training Day приложения, использу�
 SUPABASE_URL=your-project-url-here
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 TELEGRAM_BOT_TOKEN=your-telegram-bot-token-here
+JWT_SECRET=your-jwt-secret-key-here
+JWT_REFRESH_SECRET=your-jwt-refresh-secret-key-here
 PORT=3001
 ```
 
 ### 4. Создайте таблицы в базе данных
 
-Откройте Supabase Dashboard → SQL Editor и выполните SQL скрипт из файла:
-`src/db/schema.sql`
+Откройте Supabase Dashboard → SQL Editor и выполните SQL скрипты:
 
-Это создаст все необходимые таблицы:
-- `exercises` - упражнения
-- `workouts` - тренировки
-- `activities` - упражнения в тренировке
-- `sets` - сеты упражнений
+1. **Таблица users** (для авторизации): `migration_users.sql`
+   - Создает таблицу пользователей Telegram
+
+2. **Таблицы упражнений и тренировок**: `src/db/schema.sql` (если существует)
+   - `exercises` - упражнения
+   - `workouts` - тренировки
+   - `activities` - упражнения в тренировке
+   - `sets` - сеты упражнений
 
 ### 5. Запустите сервер
 

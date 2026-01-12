@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { ExerciseController } from '../controllers/exerciseController.js';
 import { WorkoutController } from '../controllers/workoutController.js';
 import { AuthController } from '../controllers/authController.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
@@ -12,12 +13,12 @@ router.post('/exercises', ExerciseController.create);
 router.put('/exercises/:id', ExerciseController.update);
 router.delete('/exercises/:id', ExerciseController.delete);
 
-// Workouts routes
-router.get('/workouts', WorkoutController.getAll);
-router.get('/workouts/:id', WorkoutController.getById);
-router.post('/workouts', WorkoutController.create);
-router.put('/workouts/:id', WorkoutController.update);
-router.delete('/workouts/:id', WorkoutController.delete);
+// Workouts routes (требуют аутентификации)
+router.get('/workouts', authMiddleware, WorkoutController.getAll);
+router.get('/workouts/:id', authMiddleware, WorkoutController.getById);
+router.post('/workouts', authMiddleware, WorkoutController.create);
+router.put('/workouts/:id', authMiddleware, WorkoutController.update);
+router.delete('/workouts/:id', authMiddleware, WorkoutController.delete);
 
 // Auth routes
 router.post('/auth/telegram', AuthController.initTelegram);

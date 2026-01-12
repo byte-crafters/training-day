@@ -40,7 +40,6 @@ const darkTheme = createTheme({
 
 function App() {
     const dispatch = useAppDispatch();
-    const initDataRaw = useRawInitData();
 
     const fetchWorkouts = async () => {
         try {
@@ -64,12 +63,10 @@ function App() {
         }
     };
 
-    useEffect(() => {
-        // Отправка данных инициализации Telegram Mini App на сервер
-        // initDataRaw и initData получены на верхнем уровне модуля,
-        // так как они доступны сразу при загрузке страницы через window.Telegram.WebApp.initData
-        console.log("Telegram Mini App init data:", initDataRaw);
+    const initDataRaw = useRawInitData();
 
+    useEffect(() => {
+        // Отправляем данные авторизации Telegram на сервер
         if (initDataRaw && typeof initDataRaw === "string") {
             sendTelegramInitData(initDataRaw).catch((error) => {
                 console.error(
@@ -81,7 +78,7 @@ function App() {
 
         fetchWorkouts();
         fetchExercises();
-    }, []);
+    }, [initDataRaw]);
 
     return (
         <ThemeProvider theme={darkTheme}>
