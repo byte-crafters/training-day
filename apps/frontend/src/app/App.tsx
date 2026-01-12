@@ -13,6 +13,7 @@ import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
 import { toast } from "../utils/toast";
+import { getAccessToken } from "../utils/cookies";
 
 // Инициализация Telegram Mini App
 // retrieveLaunchParams() читает данные из window.Telegram.WebApp.initData,
@@ -74,13 +75,50 @@ function App() {
             // Сначала авторизуемся, чтобы получить токены в cookies
             if (initDataRaw && typeof initDataRaw === "string") {
                 try {
-                    await sendTelegramInitData(initDataRaw);
+                    const authResponse = await sendTelegramInitData(initDataRaw);
+                    
+                    // Небольшая задержка для установки cookies в браузере
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    
+                    // Получаем данные пользователя из ответа
+                    if (authResponse.user) {
+                        const { username, firstName, id, telegramUserId } = authResponse.user;
+                        const displayName = username || firstName || `User ${telegramUserId}`;
+                        
+                        // Получаем access token для отладки (пробуем несколько раз с задержкой)
+                        let accessToken = getAccessToken();
+                        if (!accessToken) {
+                            await new Promise(resolve => setTimeout(resolve, 200));
+                            accessToken = getAccessToken();
+                        }
+                        
+                        const tokenPreview = accessToken 
+                            ? `${accessToken.substring(0, 30)}...${accessToken.substring(accessToken.length - 15)}`
+                            : 'не найден';
+                        
+                        // Показываем уведомление с данными пользователя
+                        const message = `Вход выполнен как: ${displayName}\nID: ${id.substring(0, 8)}...\nTG ID: ${telegramUserId}\nToken: ${tokenPreview}`;
+                        toast.success(message, 8000);
+                        
+                        // Логируем полный токен в консоль для отладки
+                        console.log('🔑 Access Token (full):', accessToken);
+                        console.log('👤 User:', authResponse.user);
+                        console.log('🍪 All cookies:', document.cookie);
+                    }
+                    
                     // После успешной авторизации загружаем данные
                     fetchWorkouts();
                     fetchExercises();
                 } catch (error) {
                     // Ошибка уже показывается в api.ts
                     console.error("Failed to send Telegram init data:", error);
+                    
+                    // Проверяем, есть ли токен (на случай, если авторизация была раньше)
+                    const accessToken = getAccessToken();
+                    if (accessToken) {
+                        console.log('⚠️ Авторизация не удалась, но токен найден:', accessToken.substring(0, 20) + '...');
+                    }
+                    
                     // Все равно пытаемся загрузить данные (на случай, если токены уже есть)
                     fetchWorkouts();
                     fetchExercises();
