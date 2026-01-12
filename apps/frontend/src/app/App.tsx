@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SnackbarProvider } from "notistack";
 import WorkoutTracker from "../pages/WorkoutTracker";
 import SelectExercises from "../pages/SelectExercises";
 import MyWorkout from "../pages/MyWorkout";
@@ -11,6 +12,7 @@ import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
+import { toast } from "../utils/toast";
 
 // Инициализация Telegram Mini App
 // retrieveLaunchParams() читает данные из window.Telegram.WebApp.initData,
@@ -45,9 +47,10 @@ function App() {
         try {
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
+            toast.info(`Загружено тренировок: ${workouts.length}`);
         } catch (error) {
-            console.error("Failed to fetch workouts:", error);
-            // Можно добавить уведомление пользователю или установить пустой массив
+            const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить тренировки";
+            toast.error(`Ошибка загрузки тренировок: ${errorMessage}`);
             dispatch(setWorkouts([]));
         }
     };
@@ -56,9 +59,10 @@ function App() {
         try {
             const exercises = await getExercises();
             dispatch(setExercises(exercises));
+            toast.info(`Загружено упражнений: ${exercises.length}`);
         } catch (error) {
-            console.error("Failed to fetch exercises:", error);
-            // Можно добавить уведомление пользователю или установить пустой массив
+            const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить упражнения";
+            toast.error(`Ошибка загрузки упражнений: ${errorMessage}`);
             dispatch(setExercises([]));
         }
     };
@@ -69,10 +73,8 @@ function App() {
         // Отправляем данные авторизации Telegram на сервер
         if (initDataRaw && typeof initDataRaw === "string") {
             sendTelegramInitData(initDataRaw).catch((error) => {
-                console.error(
-                    "Failed to send Telegram init data to server:",
-                    error
-                );
+                // Ошибка уже показывается в api.ts
+                console.error("Failed to send Telegram init data:", error);
             });
         }
 
@@ -83,22 +85,31 @@ function App() {
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<WorkoutTracker />} />
-                    <Route
-                        path="/select-exercises"
-                        element={<SelectExercises />}
-                    />
-                    <Route path="/my-workout" element={<MyWorkout />} />
-                    <Route
-                        path="/exercise-detail"
-                        element={<ExerciseDetail />}
-                    />
-                    <Route path="/edit-set" element={<EditSet />} />
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </BrowserRouter>
+            <SnackbarProvider
+                maxSnack={5}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                autoHideDuration={4000}
+            >
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<WorkoutTracker />} />
+                        <Route
+                            path="/select-exercises"
+                            element={<SelectExercises />}
+                        />
+                        <Route path="/my-workout" element={<MyWorkout />} />
+                        <Route
+                            path="/exercise-detail"
+                            element={<ExerciseDetail />}
+                        />
+                        <Route path="/edit-set" element={<EditSet />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </BrowserRouter>
+            </SnackbarProvider>
         </ThemeProvider>
     );
 }

@@ -15,13 +15,17 @@ export class WorkoutController {
         try {
             const userId = res.locals.userId;
             if (!userId) {
+                console.log('❌ WorkoutController.getAll: No userId in res.locals');
                 return res.status(401).json({ error: 'Unauthorized' });
             }
 
+            console.log('📋 WorkoutController.getAll: Fetching workouts for userId:', userId);
             const workouts = await WorkoutService.getAll(userId);
+            console.log(`✅ WorkoutController.getAll: Found ${workouts.length} workouts for userId:`, userId);
             res.json(workouts);
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error';
+            console.error('❌ WorkoutController.getAll error:', message);
             res.status(500).json({ error: message });
         }
     }

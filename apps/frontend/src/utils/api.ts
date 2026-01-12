@@ -1,4 +1,5 @@
 import { Workout } from "@training-day/shared";
+import { toast } from "./toast";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -23,7 +24,8 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
         
         return await response.json();
     } catch (error) {
-        console.error(`Failed to fetch ${endpoint}:`, error);
+        const errorMessage = error instanceof Error ? error.message : `Ошибка запроса к ${endpoint}`;
+        toast.error(errorMessage);
         throw error;
     }
 }
@@ -64,8 +66,6 @@ export const createWorkout = async (workout: Workout) => {
         // Нормализуем данные перед отправкой
         const normalizedWorkout = normalizeWorkoutForAPI(workout);
         
-        console.log('Sending workout to backend:', JSON.stringify(normalizedWorkout, null, 2));
-        
         const response = await fetch(`${API_BASE_URL}/workouts`, {
             method: 'POST',
             credentials: 'include', // Отправляем cookies
@@ -77,13 +77,23 @@ export const createWorkout = async (workout: Workout) => {
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Backend error response:', errorText);
+            let errorMessage = `Ошибка создания тренировки: ${response.status} ${response.statusText}`;
+            try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.error || errorMessage;
+            } catch {
+                errorMessage = errorText || errorMessage;
+            }
+            toast.error(errorMessage);
             throw new Error(`API Error: ${response.status} ${response.statusText}`);
         }
         
+        toast.success('Тренировка успешно создана');
         return await response.json();
     } catch (error) {
-        console.error('Failed to create workout:', error);
+        if (error instanceof Error && !error.message.includes('API Error')) {
+            toast.error(`Ошибка создания тренировки: ${error.message}`);
+        }
         throw error;
     }
 };
@@ -103,12 +113,17 @@ export const updateWorkout = async (id: string, workout: Workout) => {
         });
         
         if (!response.ok) {
+            const errorMessage = `Ошибка обновления тренировки: ${response.status} ${response.statusText}`;
+            toast.error(errorMessage);
             throw new Error(`API Error: ${response.status} ${response.statusText}`);
         }
         
+        toast.success('Тренировка успешно обновлена');
         return await response.json();
     } catch (error) {
-        console.error('Failed to update workout:', error);
+        if (error instanceof Error && !error.message.includes('API Error')) {
+            toast.error(`Ошибка обновления тренировки: ${error.message}`);
+        }
         throw error;
     }
 };
@@ -124,10 +139,16 @@ export const deleteWorkout = async (id: string) => {
         });
         
         if (!response.ok) {
+            const errorMessage = `Ошибка удаления тренировки: ${response.status} ${response.statusText}`;
+            toast.error(errorMessage);
             throw new Error(`API Error: ${response.status} ${response.statusText}`);
         }
+        
+        toast.success('Тренировка успешно удалена');
     } catch (error) {
-        console.error('Failed to delete workout:', error);
+        if (error instanceof Error && !error.message.includes('API Error')) {
+            toast.error(`Ошибка удаления тренировки: ${error.message}`);
+        }
         throw error;
     }
 };
@@ -147,13 +168,22 @@ export const sendTelegramInitData = async (initDataRaw: string) => {
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('Backend error response:', errorText);
+            let errorMessage = `Ошибка авторизации: ${response.status} ${response.statusText}`;
+            try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.error || errorJson.details || errorMessage;
+            } catch {
+                errorMessage = errorText || errorMessage;
+            }
+            toast.error(errorMessage);
             throw new Error(`API Error: ${response.status} ${response.statusText}`);
         }
         
         return await response.json();
     } catch (error) {
-        console.error('Failed to send Telegram init data:', error);
+        if (error instanceof Error && !error.message.includes('API Error')) {
+            toast.error(`Ошибка авторизации: ${error.message}`);
+        }
         throw error;
     }
 };
