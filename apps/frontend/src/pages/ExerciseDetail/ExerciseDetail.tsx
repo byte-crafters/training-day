@@ -31,8 +31,8 @@ function ExerciseDetail() {
     // Используем activity если есть, иначе fallback на exerciseFromState
     const exercise = activity || exerciseFromState;
 
-    const [reps, setReps] = useState(15);
-    const [weight, setWeight] = useState<number | "">(0);
+    const [reps, setReps] = useState<number | "">(15);
+    const [weight, setWeight] = useState<number | "">("");
     const [note, setNote] = useState("");
     const [savedSets, setSavedSets] = useState<Set[]>([]);
 
@@ -48,18 +48,48 @@ function ExerciseDetail() {
         return null;
     }
 
-    const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (value === "" || (!isNaN(Number(value)) && Number(value) >= 0)) {
-            setReps(value === "" ? 0 : Number(value));
+    // Единая функция обработки изменения значения
+    const handleValueChange = (
+        value: string,
+        setter: (val: number | "") => void
+    ) => {
+        const trimmedValue = value.trim();
+        if (trimmedValue === "" || trimmedValue === "-") {
+            setter("");
+        } else if (!isNaN(Number(trimmedValue)) && Number(trimmedValue) >= 0) {
+            setter(Number(trimmedValue));
         }
     };
 
+    const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleValueChange(e.target.value, setReps);
+    };
+
     const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (value === "" || (!isNaN(Number(value)) && Number(value) >= 0)) {
-            setWeight(value === "" ? "" : Number(value));
-        }
+        handleValueChange(e.target.value, setWeight);
+    };
+
+    // Функции для увеличения/уменьшения значений (steppers)
+    const incrementReps = () => {
+        setReps((prev) => (prev === "" ? 1 : Math.max(0, prev + 1)));
+    };
+
+    const decrementReps = () => {
+        setReps((prev) => {
+            if (prev === "" || prev === 0) return "";
+            return Math.max(0, prev - 1);
+        });
+    };
+
+    const incrementWeight = () => {
+        setWeight((prev) => (prev === "" ? 1 : prev + 1));
+    };
+
+    const decrementWeight = () => {
+        setWeight((prev) => {
+            if (prev === "" || prev === 0) return "";
+            return Math.max(0, prev - 1);
+        });
     };
 
     const handleSaveSet = () => {
@@ -67,10 +97,16 @@ function ExerciseDetail() {
             return;
         }
 
+        // Валидация: reps должен быть больше 0
+        const repsValue = reps === "" ? 0 : reps;
+        if (repsValue <= 0) {
+            return;
+        }
+
         const newSet: Set = {
             id: Date.now().toString(),
-            reps: reps,
-            weight: weight || 0,
+            reps: repsValue,
+            weight: weight === "" ? 0 : weight,
             note: note || null,
         };
 
@@ -81,7 +117,7 @@ function ExerciseDetail() {
 
         // Сброс полей после сохранения
         setReps(15);
-        setWeight(0);
+        setWeight("");
         setNote("");
     };
 
@@ -140,32 +176,137 @@ function ExerciseDetail() {
                             <Typography className="exercise-detail__input-label">
                                 Reps
                             </Typography>
-                            <TextField
-                                type="number"
-                                className="exercise-detail__compact-input"
-                                value={reps}
-                                onChange={handleRepsChange}
-                                inputProps={{
-                                    min: 0,
-                                }}
-                            />
+                            <Box className="exercise-detail__input-with-steppers">
+                                <IconButton
+                                    className="exercise-detail__stepper-button"
+                                    onClick={decrementReps}
+                                    disabled={reps === "" || reps === 0}
+                                    aria-label="Decrease reps"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M5 12h14" />
+                                    </svg>
+                                </IconButton>
+                                <TextField
+                                    type="number"
+                                    className="exercise-detail__compact-input"
+                                    value={reps === "" ? "" : reps}
+                                    onChange={handleRepsChange}
+                                    placeholder="15"
+                                    inputProps={{
+                                        min: 0,
+                                        style: {
+                                            MozAppearance: 'textfield',
+                                        },
+                                    }}
+                                    sx={{
+                                        '& input[type=number]': {
+                                            MozAppearance: 'textfield',
+                                            '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
+                                                WebkitAppearance: 'none',
+                                                margin: 0,
+                                                display: 'none',
+                                            },
+                                        },
+                                    }}
+                                />
+                                <IconButton
+                                    className="exercise-detail__stepper-button"
+                                    onClick={incrementReps}
+                                    aria-label="Increase reps"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M12 5v14M5 12h14" />
+                                    </svg>
+                                </IconButton>
+                            </Box>
                         </Box>
 
                         <Box className="exercise-detail__input-group">
                             <Typography className="exercise-detail__input-label">
                                 Weight (kg)
                             </Typography>
-                            <TextField
-                                type="number"
-                                className="exercise-detail__compact-input"
-                                value={weight}
-                                onChange={handleWeightChange}
-                                placeholder="0"
-                                inputProps={{
-                                    min: 0,
-                                    step: 1,
-                                }}
-                            />
+                            <Box className="exercise-detail__input-with-steppers">
+                                <IconButton
+                                    className="exercise-detail__stepper-button"
+                                    onClick={decrementWeight}
+                                    disabled={weight === "" || weight === 0}
+                                    aria-label="Decrease weight"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M5 12h14" />
+                                    </svg>
+                                </IconButton>
+                                <TextField
+                                    type="number"
+                                    className="exercise-detail__compact-input"
+                                    value={weight === "" ? "" : weight}
+                                    onChange={handleWeightChange}
+                                    placeholder="0"
+                                    inputProps={{
+                                        min: 0,
+                                        step: 1,
+                                        style: {
+                                            MozAppearance: 'textfield',
+                                        },
+                                    }}
+                                    sx={{
+                                        '& input[type=number]': {
+                                            MozAppearance: 'textfield',
+                                            '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
+                                                WebkitAppearance: 'none',
+                                                margin: 0,
+                                                display: 'none',
+                                            },
+                                        },
+                                    }}
+                                />
+                                <IconButton
+                                    className="exercise-detail__stepper-button"
+                                    onClick={incrementWeight}
+                                    aria-label="Increase weight"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M12 5v14M5 12h14" />
+                                    </svg>
+                                </IconButton>
+                            </Box>
                         </Box>
                     </Box>
 
@@ -188,7 +329,7 @@ function ExerciseDetail() {
                         fullWidth
                         className="exercise-detail__add-set-button"
                         onClick={handleSaveSet}
-                        disabled={reps <= 0}
+                        disabled={reps === "" || reps <= 0}
                     >
                         Add Set
                     </Button>
