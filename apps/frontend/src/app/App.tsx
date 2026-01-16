@@ -51,26 +51,26 @@ function App() {
     // Мемоизируем функции загрузки данных
     const fetchWorkouts = useCallback(async () => {
         try {
-            const workouts = await getWorkouts();
-            dispatch(setWorkouts(workouts));
+        const workouts = await getWorkouts();
+        dispatch(setWorkouts(workouts));
             toast.info(`Загружено тренировок: ${workouts.length}`);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить тренировки";
             toast.error(`Ошибка загрузки тренировок: ${errorMessage}`);
             dispatch(setWorkouts([]));
-        }
+    }
     }, [dispatch]);
 
     const fetchExercises = useCallback(async () => {
         try {
-            const exercises = await getExercises();
-            dispatch(setExercises(exercises));
+        const exercises = await getExercises();
+        dispatch(setExercises(exercises));
             toast.info(`Загружено упражнений: ${exercises.length}`);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить упражнения";
             toast.error(`Ошибка загрузки упражнений: ${errorMessage}`);
             dispatch(setExercises([]));
-        }
+    }
     }, [dispatch]);
 
     useEffect(() => {
@@ -182,22 +182,22 @@ function App() {
 
                 {/* Основное приложение */}
                 {!isAuthenticating && !authError && (
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path="/" element={<WorkoutTracker />} />
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<WorkoutTracker />} />
                             <Route
                                 path="/select-exercises"
                                 element={<SelectExercises />}
                             />
-                            <Route path="/my-workout" element={<MyWorkout />} />
+                    <Route path="/my-workout" element={<MyWorkout />} />
                             <Route
                                 path="/exercise-detail"
                                 element={<ExerciseDetail />}
                             />
-                            <Route path="/edit-set" element={<EditSet />} />
+                    <Route path="/edit-set" element={<EditSet />} />
                             <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </BrowserRouter>
+                </Routes>
+            </BrowserRouter>
                 )}
             </SnackbarProvider>
         </ThemeProvider>

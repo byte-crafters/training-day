@@ -121,14 +121,14 @@ function normalizeWorkoutForAPI(workout: Workout) {
  * Создать тренировку
  */
 export const createWorkout = async (workout: Workout) => {
-    // Нормализуем данные перед отправкой
-    const normalizedWorkout = normalizeWorkoutForAPI(workout);
-    
+        // Нормализуем данные перед отправкой
+        const normalizedWorkout = normalizeWorkoutForAPI(workout);
+        
     const result = await fetchAPI('/workouts', {
-        method: 'POST',
-        body: JSON.stringify(normalizedWorkout),
-    });
-    
+            method: 'POST',
+            body: JSON.stringify(normalizedWorkout),
+        });
+        
     toast.success('Тренировка успешно создана');
     return result;
 };
@@ -138,10 +138,10 @@ export const createWorkout = async (workout: Workout) => {
  */
 export const updateWorkout = async (id: string, workout: Workout) => {
     const result = await fetchAPI(`/workouts/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(workout),
-    });
-    
+            method: 'PUT',
+            body: JSON.stringify(workout),
+        });
+        
     toast.success('Тренировка успешно обновлена');
     return result;
 };
@@ -151,9 +151,9 @@ export const updateWorkout = async (id: string, workout: Workout) => {
  */
 export const deleteWorkout = async (id: string) => {
     await fetchAPI(`/workouts/${id}`, {
-        method: 'DELETE',
-    });
-    
+            method: 'DELETE',
+        });
+        
     toast.success('Тренировка успешно удалена');
 };
 
