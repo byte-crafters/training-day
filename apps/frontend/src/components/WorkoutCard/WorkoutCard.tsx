@@ -8,7 +8,7 @@ export interface WorkoutCardProps {
 }
 
 function WorkoutCard({ name, date, duration }: WorkoutCardProps) {
-    // Извлекаем дату для отображения
+    
     const workoutDate = new Date(date);
     const formattedDate = workoutDate.toLocaleDateString('en-US', {
         weekday: 'short',
