@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import React, { ReactElement } from 'react';
 import { Set, Exercise, ExerciseType } from '@training-day/shared';
 import EditSet from './EditSet';
 

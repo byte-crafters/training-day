@@ -22,20 +22,6 @@ const createMockExercises = (): Exercise[] => [
   createMockExercise('8', 'Chest Fly', ExerciseType.CHEST),
 ];
 
-const createMockWorkout = (name: string, exerciseIds: string[]): Workout => ({
-  id: 'workout-1',
-  name,
-  date: new Date().toISOString(),
-  duration: '0',
-  exercises: exerciseIds.map((id, index) => ({
-    id,
-    name: `Exercise ${index + 1}`,
-    strength: true,
-    type: ExerciseType.CHEST,
-    sets: [],
-  })),
-});
-
 const meta = {
   component: SelectExercises,
   decorators: [
