@@ -18,7 +18,7 @@ import {
 } from "../../store";
 import { createWorkout, exerciseToActivity } from "../../utils/helpers";
 
-type Category = "All" | "Chest" | "Back" | "Legs" | "Cardio";
+type Category = "All" | ExerciseType;
 
 function SelectExercises() {
     const navigate = useNavigate();
@@ -47,7 +47,11 @@ function SelectExercises() {
         }
     }, [currentWorkout]);
 
-    const categories: Category[] = ["All", "Chest", "Back", "Legs", "Cardio"];
+    // Получаем уникальные типы упражнений из данных
+    const categories: Category[] = [
+        "All",
+        ...Array.from(new Set(exercisesFromStore.map((ex) => ex.type))),
+    ];
 
     const handleToggleExercise = (id: string) => {
         setSelectedExerciseIds((prev) => {
@@ -60,18 +64,18 @@ function SelectExercises() {
     };
 
     const getCategoryType = (category: Category): ExerciseType | null => {
-        switch (category) {
-            case "Chest":
-                return ExerciseType.CHEST;
-            case "Back":
-                return ExerciseType.BACK;
-            case "Legs":
-                return ExerciseType.LEGS;
-            case "Cardio":
-                return ExerciseType.CARDIO;
-            default:
-                return null;
+        if (category === "All") {
+            return null;
         }
+        return category as ExerciseType;
+    };
+
+    const getCategoryLabel = (category: Category): string => {
+        if (category === "All") {
+            return "All";
+        }
+        // Просто делаем первую букву заглавной
+        return category.charAt(0).toUpperCase() + category.slice(1);
     };
 
     const filteredExercises = exercisesFromStore.filter((exercise) => {
@@ -151,7 +155,7 @@ function SelectExercises() {
                     </svg>
                 </IconButton>
                 <Typography variant="h4" className="select-exercises__title">
-                    Choose your exercises
+                    Choose exercises
                 </Typography>
                 <Box className="select-exercises__header-spacer" />
             </Box>
@@ -196,7 +200,7 @@ function SelectExercises() {
                             }`}
                             onClick={() => setSelectedCategory(category)}
                         >
-                            {category}
+                            {getCategoryLabel(category)}
                         </Button>
                     ))}
                 </Box>
