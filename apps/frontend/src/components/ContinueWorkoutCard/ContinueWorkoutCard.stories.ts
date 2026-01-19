@@ -42,30 +42,3 @@ export const Default: Story = {
     onDelete: () => console.log('Workout deleted'),
   },
 };
-
-export const SingleExercise: Story = {
-  args: {
-    workout: createWorkout('Quick Workout', 1),
-    onDismiss: () => console.log('Workout dismissed'),
-    onDelete: () => console.log('Workout deleted'),
-  },
-};
-
-export const ManyExercises: Story = {
-  args: {
-    workout: createWorkout('Full Body Workout', 5),
-    onDismiss: () => console.log('Workout dismissed'),
-    onDelete: () => console.log('Workout deleted'),
-  },
-};
-
-export const LongName: Story = {
-  args: {
-    workout: {
-      ...createWorkout('Very Long Workout Name That Might Wrap', 2),
-      name: 'Very Long Workout Name That Might Wrap',
-    },
-    onDismiss: () => console.log('Workout dismissed'),
-    onDelete: () => console.log('Workout deleted'),
-  },
-};

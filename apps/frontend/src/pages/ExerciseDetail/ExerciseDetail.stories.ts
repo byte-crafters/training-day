@@ -1,22 +1,24 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React, { ReactElement } from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { store, setCurrentWorkout } from '../../store/index';
 import { Workout, ExerciseType } from '@training-day/shared';
 import ExerciseDetail from './ExerciseDetail';
 
+const defaultExercise = {
+  id: '1',
+  name: 'Bench Press',
+  icon: '💪',
+  totalSets: 4,
+  completedSets: 0,
+  currentSet: 1,
+};
+
 const meta = {
   component: ExerciseDetail,
   decorators: [
-    (Story): ReactElement => {
-      const exercise = {
-        id: '1',
-        name: 'Bench Press',
-        icon: '💪',
-        totalSets: 4,
-        completedSets: 0,
-        currentSet: 1,
-      };
+    (Story, context): ReactElement => {
+      // Получаем exercise из args story, если есть
+      const exercise = (context.args as { exercise?: any })?.exercise || defaultExercise;
 
       // Инициализируем currentWorkout в store с Activity, который имеет такой же id
       store.dispatch(
@@ -27,30 +29,29 @@ const meta = {
           duration: '0',
           exercises: [
             {
-              id: '1', // Важно: id должен совпадать с exercise.id
-              name: 'Bench Press',
+              id: exercise.id,
+              name: exercise.name,
               strength: true,
               type: ExerciseType.CHEST,
-              sets: [], // Можно добавить предзаполненные сеты для разных stories
+              sets: [],
             },
           ],
         } as Workout)
       );
 
-      return React.createElement(
-        MemoryRouter,
-        {
-          initialEntries: [
-            {
-              pathname: '/exercise-detail',
-              state: { exercise },
-            },
-          ],
-        },
-        React.createElement(Story)
-      );
+      return React.createElement(Story);
     },
   ],
+  parameters: {
+    router: {
+      initialEntries: [
+        {
+          pathname: '/exercise-detail',
+          state: { exercise: defaultExercise },
+        },
+      ],
+    },
+  },
 } satisfies Meta<typeof ExerciseDetail>;
 
 export default meta;
@@ -59,13 +60,16 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    exercise: {
-      id: '1',
-      name: 'Bench Press',
-      icon: '💪',
-      totalSets: 4,
-      completedSets: 0,
-      currentSet: 1,
+    exercise: defaultExercise,
+  },
+  parameters: {
+    router: {
+      initialEntries: [
+        {
+          pathname: '/exercise-detail',
+          state: { exercise: defaultExercise },
+        },
+      ],
     },
   },
 };

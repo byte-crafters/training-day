@@ -23,17 +23,16 @@ const preview: Preview = {
     },
     
     decorators: [
-        (Story, context): ReactElement => {
+        (Story, context) => {
             // Проверяем, есть ли routerInitialEntries в параметрах story
             const initialEntries = (context.parameters?.router as { initialEntries?: any[] })?.initialEntries;
             
-            return React.createElement(
-                Provider,
-                { store, children: React.createElement(
-                    MemoryRouter,
-                    initialEntries ? { initialEntries } : {},
-                    React.createElement(Story)
-                ) }
+            return (
+                <Provider store={store}>
+                    <MemoryRouter {...(initialEntries ? { initialEntries } : {})}>
+                        <Story />
+                    </MemoryRouter>
+                </Provider>
             );
         },
     ],
