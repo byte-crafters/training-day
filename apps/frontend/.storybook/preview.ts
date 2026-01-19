@@ -3,6 +3,7 @@ import React, { ReactElement } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "../src/store/index";
+import { MINIMAL_VIEWPORTS } from 'storybook/viewport';
 import "../src/index.css";
 
 const preview: Preview = {
@@ -19,6 +20,20 @@ const preview: Preview = {
             // 'error' - fail CI on a11y violations
             // 'off' - skip a11y checks entirely
             test: "todo",
+        },
+
+        viewport: {
+            options: {
+                ...MINIMAL_VIEWPORTS,
+                oneplus: {
+                    name: 'OnePlus',
+                    styles: {
+                        width: '412px',
+                        height: '915px',
+                    },
+                    type: 'mobile',
+                },
+            }
         },
     },
     

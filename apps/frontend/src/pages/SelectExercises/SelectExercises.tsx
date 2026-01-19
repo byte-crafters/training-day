@@ -155,7 +155,7 @@ function SelectExercises() {
                     </svg>
                 </IconButton>
                 <Typography variant="h4" className="select-exercises__title">
-                    Choose your exercises
+                    Choose exercises
                 </Typography>
                 <Box className="select-exercises__header-spacer" />
             </Box>

@@ -39,7 +39,7 @@
         flex: 1;
         padding: 0 24px;
         overflow-y: auto;
-        padding-bottom: 120px;
+        padding-bottom: 140px; // Для кнопок внизу
     }
 
     &__card {
@@ -125,6 +125,18 @@
             width: 20px;
             height: 20px;
         }
+
+        &--large {
+            min-width: 50px !important;
+            width: 50px !important;
+        }
+    }
+
+    &__stepper-button-text {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #ffffff !important;
+        line-height: 1 !important;
     }
 
     &__compact-input {
@@ -227,7 +239,7 @@
         border-radius: 12px !important;
         background-color: #0066ff !important;
         color: #ffffff !important;
-        margin-top: 24px !important;
+        margin-top: 0 !important;
 
         &:hover {
             background-color: #0052cc !important;
@@ -312,6 +324,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+        z-index: 100;
     }
 
     &__save-button {
@@ -357,6 +370,64 @@
 
         &:hover {
             background-color: #0052cc !important;
+        }
+    }
+
+    &__form-drawer {
+        display: flex;
+        flex-direction: column;
+        padding: 0 24px 24px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    &__form-drawer-handle {
+        width: 40px;
+        height: 4px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        margin: 12px auto;
+        cursor: grab;
+    }
+
+    &__form-drawer-content {
+        padding-bottom: 24px;
+    }
+
+    &__empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh;
+        padding: 48px 24px;
+        text-align: center;
+    }
+
+    &__empty-state-text {
+        font-size: 20px;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 8px;
+    }
+
+    &__empty-state-hint {
+        font-size: 14px;
+        color: #b0b0b0;
+    }
+
+    &__add-set-button-bottom {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        background-color: transparent !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+        color: #ffffff !important;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
         }
     }
 }
