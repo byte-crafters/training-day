@@ -129,6 +129,9 @@
         &--large {
             min-width: 50px !important;
             width: 50px !important;
+            height: 40px !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
         }
     }
 
@@ -248,6 +251,21 @@
         &:disabled {
             background-color: #3a3a3a !important;
             color: #888888 !important;
+        }
+    }
+
+    &__delete-set-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        margin-top: 12px !important;
+        border-color: rgba(255, 0, 0, 0.5) !important;
+        color: #ff4444 !important;
+
+        &:hover {
+            border-color: rgba(255, 0, 0, 0.7) !important;
+            background-color: rgba(255, 0, 0, 0.1) !important;
         }
     }
 
