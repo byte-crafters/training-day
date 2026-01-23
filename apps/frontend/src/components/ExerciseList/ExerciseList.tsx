@@ -13,20 +13,6 @@ export interface Exercise {
     currentSet: number;
 }
 
-// Маппинг имен упражнений на иконки
-const exerciseIcons: Record<string, string> = {
-    "Push-Ups": "💪",
-    "Dumbbell Bench Press": "🏋️",
-    "Pull-Ups": "🔼",
-    "Lat Pulldown": "🔽",
-    "Squats": "🦵",
-    "Lunges": "🚶",
-    "Plank": "🧘",
-    "Bench Press": "💪",
-    "Deadlift": "🏋️",
-    "Running": "🏃",
-};
-
 // Маппинг имен упражнений на количество сетов по умолчанию
 const defaultSets: Record<string, number> = {
     "Push-Ups": 3,
@@ -50,7 +36,7 @@ function ExerciseList() {
     const exercises: Exercise[] = activities.map((activity) => ({
         id: activity.id,
         name: activity.name,
-        icon: exerciseIcons[activity.name] || "💪",
+        icon: "",
         totalSets: defaultSets[activity.name] || 3,
         completedSets: activity.sets.length,
         currentSet: activity.sets.length > 0 ? activity.sets.length + 1 : 1,

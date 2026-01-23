@@ -105,6 +105,12 @@ function WorkoutTracker() {
                                 name={workout.name}
                                 date={workout.date}
                                 duration={workout.duration}
+                                onClick={() => {
+                                    // Загружаем выбранную тренировку в currentWorkout
+                                    dispatch(setCurrentWorkout(workout));
+                                    // Переходим на страницу MyWorkout
+                                    navigate("/my-workout");
+                                }}
                             />
                         ))}
                     </Box>

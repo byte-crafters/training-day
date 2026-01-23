@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, Typography, IconButton, Button, TextField } from "@mui/material";
+import { Box, Typography, IconButton, Button } from "@mui/material";
 import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
-import { addSet, RootState, useAppDispatch, useAppSelector } from "../../store";
+import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector } from "../../store";
+import SetForm from "./SetForm";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
@@ -31,10 +32,10 @@ function ExerciseDetail() {
     // Используем activity если есть, иначе fallback на exerciseFromState
     const exercise = activity || exerciseFromState;
 
-    const [reps, setReps] = useState(15);
-    const [weight, setWeight] = useState<number | "">(0);
-    const [note, setNote] = useState("");
     const [savedSets, setSavedSets] = useState<Set[]>([]);
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [editingSet, setEditingSet] = useState<Set | null>(null);
+    const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
 
     // Синхронизируем savedSets с sets из activity
     useEffect(() => {
@@ -48,58 +49,66 @@ function ExerciseDetail() {
         return null;
     }
 
-    const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (value === "" || (!isNaN(Number(value)) && Number(value) >= 0)) {
-            setReps(value === "" ? 0 : Number(value));
-        }
+    const handleOpenForm = () => {
+        // Если есть сохраненные сеты, используем последний сет для предзаполнения
+        const lastSet = savedSets.length > 0 ? savedSets[savedSets.length - 1] : null;
+        setEditingSet(lastSet);
+        setFormMode('add');
+        setIsFormOpen(true);
     };
 
-    const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (value === "" || (!isNaN(Number(value)) && Number(value) >= 0)) {
-            setWeight(value === "" ? "" : Number(value));
-        }
+    const handleCloseForm = () => {
+        setIsFormOpen(false);
+        setEditingSet(null);
     };
 
-    const handleSaveSet = () => {
+    const handleSaveSet = (set: Set) => {
         if (!activity) {
             return;
         }
 
-        const newSet: Set = {
-            id: Date.now().toString(),
-            reps: reps,
-            weight: weight || 0,
-            note: note || null,
-        };
-
-        dispatch(addSet({ exerciseId: activity.id, set: newSet }));
-
-        // Обновляем локальное состояние для немедленного отображения
-        setSavedSets((prev) => [...prev, newSet]);
-
-        // Сброс полей после сохранения
-        setReps(15);
-        setWeight(0);
-        setNote("");
+        if (formMode === 'edit' && editingSet) {
+            // Обновляем существующий сет
+            dispatch(updateSet({ 
+                exerciseId: activity.id, 
+                setId: editingSet.id, 
+                set 
+            }));
+            // Обновляем локальное состояние
+            setSavedSets((prev) =>
+                prev.map((s) => (s.id === editingSet.id ? set : s))
+            );
+        } else {
+            // Добавляем новый сет
+            dispatch(addSet({ exerciseId: activity.id, set }));
+            // Обновляем локальное состояние
+            setSavedSets((prev) => [...prev, set]);
+        }
     };
 
     const handleEditSet = (set: Set) => {
-        console.log(set);
-        // navigate("/edit-set", {
-        //     state: {
-        //         set: _setToEdit,
-        //         exercise: exercise,
-        //         onSave: (updatedSet: Set) => {
-        //             setSavedSets((prevSets) =>
-        //                 prevSets.map((set) =>
-        //                     set.id === updatedSet.id ? updatedSet : set
-        //                 )
-        //             );
-        //         },
-        //     },
-        // });
+        setEditingSet(set);
+        setFormMode('edit');
+        setIsFormOpen(true);
+    };
+
+    const handleDeleteSet = () => {
+        if (!activity || !editingSet) {
+            return;
+        }
+
+        // Удаляем сет из Redux store
+        dispatch(deleteSet({ 
+            exerciseId: activity.id, 
+            setId: editingSet.id 
+        }));
+
+        // Обновляем локальное состояние
+        setSavedSets((prev) => prev.filter((s) => s.id !== editingSet.id));
+
+        // Закрываем форму после удаления
+        setIsFormOpen(false);
+        setEditingSet(null);
     };
 
     return (
@@ -130,71 +139,7 @@ function ExerciseDetail() {
             </Box>
 
             <Box component="main" className="exercise-detail__main">
-                <Box className="exercise-detail__card">
-                    <Typography className="exercise-detail__add-set-title">
-                        Add set
-                    </Typography>
-
-                    <Box className="exercise-detail__inputs-row">
-                        <Box className="exercise-detail__input-group">
-                            <Typography className="exercise-detail__input-label">
-                                Reps
-                            </Typography>
-                            <TextField
-                                type="number"
-                                className="exercise-detail__compact-input"
-                                value={reps}
-                                onChange={handleRepsChange}
-                                inputProps={{
-                                    min: 0,
-                                }}
-                            />
-                        </Box>
-
-                        <Box className="exercise-detail__input-group">
-                            <Typography className="exercise-detail__input-label">
-                                Weight (kg)
-                            </Typography>
-                            <TextField
-                                type="number"
-                                className="exercise-detail__compact-input"
-                                value={weight}
-                                onChange={handleWeightChange}
-                                placeholder="0"
-                                inputProps={{
-                                    min: 0,
-                                    step: 1,
-                                }}
-                            />
-                        </Box>
-                    </Box>
-
-                    <Box className="exercise-detail__note-section">
-                        <Typography className="exercise-detail__note-label">
-                            Note (optional)
-                        </Typography>
-                        <TextField
-                            className="exercise-detail__note-input"
-                            placeholder="Add note..."
-                            value={note}
-                            onChange={(e) => setNote(e.target.value)}
-                            multiline
-                            rows={2}
-                        />
-                    </Box>
-
-                    <Button
-                        variant="contained"
-                        fullWidth
-                        className="exercise-detail__add-set-button"
-                        onClick={handleSaveSet}
-                        disabled={reps <= 0}
-                    >
-                        Add Set
-                    </Button>
-                </Box>
-
-                {savedSets.length > 0 && (
+                {savedSets.length > 0 ? (
                     <Box className="exercise-detail__card">
                         <Box className="exercise-detail__previous-sets">
                             <Typography className="exercise-detail__previous-sets-title">
@@ -230,10 +175,46 @@ function ExerciseDetail() {
                             ))}
                         </Box>
                     </Box>
+                ) : (
+                    <Box className="exercise-detail__empty-state">
+                        <Box className="exercise-detail__empty-state-icon">
+                            <svg
+                                width="64"
+                                height="64"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                {/* Левая гантель */}
+                                <rect x="2" y="8" width="4" height="8" rx="1" />
+                                {/* Правая гантель */}
+                                <rect x="18" y="8" width="4" height="8" rx="1" />
+                                {/* Ручка */}
+                                <line x1="6" y1="12" x2="18" y2="12" strokeWidth="2" />
+                            </svg>
+                        </Box>
+                        <Typography className="exercise-detail__empty-state-text">
+                            No sets yet
+                        </Typography>
+                        <Typography className="exercise-detail__empty-state-hint">
+                            Tap the button below to add your first set of {exercise.name}
+                        </Typography>
+                    </Box>
                 )}
             </Box>
 
             <Box className="exercise-detail__footer">
+                <Button
+                    variant="outlined"
+                    fullWidth
+                    className="exercise-detail__add-set-button-bottom"
+                    onClick={handleOpenForm}
+                >
+                    Add Set
+                </Button>
                 <Button
                     variant="contained"
                     fullWidth
@@ -243,6 +224,15 @@ function ExerciseDetail() {
                     Finish Exercise
                 </Button>
             </Box>
+
+            <SetForm
+                open={isFormOpen}
+                onClose={handleCloseForm}
+                onSave={handleSaveSet}
+                onDelete={handleDeleteSet}
+                initialSet={editingSet}
+                mode={formMode}
+            />
         </Box>
     );
 }

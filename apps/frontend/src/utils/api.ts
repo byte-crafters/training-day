@@ -1,21 +1,90 @@
 import { Workout } from "@training-day/shared";
+import { toast } from "./toast";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 /**
- * Базовый fetch с обработкой ошибок
+ * Получить initData из sessionStorage
+ * Используем initDataRaw из useRawInitData(), который сохраняется в sessionStorage['initData']
+ * Это гарантирует, что hash параметр присутствует и валидация пройдет успешно
  */
-async function fetchAPI(endpoint: string) {
+function getInitData(): string | null {
     try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`);
+        // Используем initDataRaw, сохраненный в App.tsx из useRawInitData()
+        // Это гарантирует полный initData с hash параметром
+        const initData = sessionStorage.getItem('initData');
+        if (initData && initData.length > 0) {
+            // Проверяем наличие hash для отладки
+            if (initData.includes('hash=')) {
+                return initData;
+            } else {
+                console.warn('⚠️ getInitData: initData found but hash parameter missing');
+                return initData;
+            }
+        }
+    } catch (e) {
+        console.warn('Failed to read initData from sessionStorage:', e);
+    }
+    
+    return null;
+}
+
+/**
+ * Базовый fetch с обработкой ошибок
+ * Автоматически добавляет initData в заголовок Authorization для авторизации
+ */
+async function fetchAPI(endpoint: string, options: RequestInit = {}) {
+    try {
+        // Преобразуем options.headers в объект для удобной работы
+        const existingHeaders = options.headers as Record<string, string> | undefined;
+        
+        // Используем Record<string, string> для корректной типизации заголовков
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+            ...existingHeaders,
+        };
+        
+        // Добавляем Authorization заголовок с initData, только если он еще не установлен
+        // Это позволяет переопределить initData, передав Authorization в options.headers
+        if (!headers['Authorization']) {
+            const initData = getInitData();
+            if (initData) {
+                headers['Authorization'] = `tma ${initData}`;
+            }
+        }
+        
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            ...options,
+            headers,
+            // credentials больше не нужен, так как не используем cookies
+            // credentials: 'include',
+        });
         
         if (!response.ok) {
+            const errorText = await response.text();
+            let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+            try {
+                const errorJson = JSON.parse(errorText);
+                errorMessage = errorJson.error || errorJson.details || errorMessage;
+            } catch {
+                errorMessage = errorText || errorMessage;
+            }
+            
+            // Для 401 ошибок показываем более понятное сообщение
+            if (response.status === 401) {
+                errorMessage = 'Требуется авторизация. Пожалуйста, обновите страницу.';
+            }
+            
+            toast.error(errorMessage);
             throw new Error(`API Error: ${response.status} ${response.statusText}`);
         }
         
         return await response.json();
     } catch (error) {
-        console.error(`Failed to fetch ${endpoint}:`, error);
+        if (error instanceof Error && !error.message.includes('API Error')) {
+            const errorMessage = error.message || `Ошибка запроса к ${endpoint}`;
+            toast.error(errorMessage);
+        }
         throw error;
     }
 }
@@ -52,71 +121,52 @@ function normalizeWorkoutForAPI(workout: Workout) {
  * Создать тренировку
  */
 export const createWorkout = async (workout: Workout) => {
-    try {
         // Нормализуем данные перед отправкой
         const normalizedWorkout = normalizeWorkoutForAPI(workout);
         
-        console.log('Sending workout to backend:', JSON.stringify(normalizedWorkout, null, 2));
-        
-        const response = await fetch(`${API_BASE_URL}/workouts`, {
+    const result = await fetchAPI('/workouts', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify(normalizedWorkout),
         });
         
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Backend error response:', errorText);
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error('Failed to create workout:', error);
-        throw error;
-    }
+    toast.success('Тренировка успешно создана');
+    return result;
 };
 
 /**
  * Обновить тренировку
  */
 export const updateWorkout = async (id: string, workout: Workout) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/workouts/${id}`, {
+    const result = await fetchAPI(`/workouts/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify(workout),
         });
         
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
-        }
-        
-        return await response.json();
-    } catch (error) {
-        console.error('Failed to update workout:', error);
-        throw error;
-    }
+    toast.success('Тренировка успешно обновлена');
+    return result;
 };
 
 /**
  * Удалить тренировку
  */
 export const deleteWorkout = async (id: string) => {
-    try {
-        const response = await fetch(`${API_BASE_URL}/workouts/${id}`, {
+    await fetchAPI(`/workouts/${id}`, {
             method: 'DELETE',
         });
         
-        if (!response.ok) {
-            throw new Error(`API Error: ${response.status} ${response.statusText}`);
-        }
-    } catch (error) {
-        console.error('Failed to delete workout:', error);
-        throw error;
-    }
+    toast.success('Тренировка успешно удалена');
+};
+
+/**
+ * Отправить данные инициализации Telegram Mini App на сервер
+ * Используется для создания/обновления пользователя в БД
+ * Обычно вызывается один раз при инициализации приложения
+ */
+export const sendTelegramInitData = async (initDataRaw: string) => {
+    return fetchAPI('/auth/telegram', {
+        method: 'POST',
+        headers: {
+            Authorization: `tma ${initDataRaw}`,
+        },
+    });
 };

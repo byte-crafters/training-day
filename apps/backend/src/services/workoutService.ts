@@ -8,13 +8,14 @@ import { v4 as uuidv4 } from 'uuid';
  */
 export class WorkoutService {
     /**
-     * Получить все тренировки с упражнениями и сетами
+     * Получить все тренировки с упражнениями и сетами для конкретного пользователя
      */
-    static async getAll(): Promise<Workout[]> {
-        // Получаем все тренировки, сортируем по дате создания (сначала новые), затем по created_at
+    static async getAll(userId: string): Promise<Workout[]> {
+        // Получаем все тренировки пользователя, сортируем по дате создания (сначала новые), затем по created_at
         const { data: workouts, error: workoutsError } = await supabase
             .from('workouts')
             .select('*')
+            .eq('user_id', userId)
             .order('date', { ascending: false })
             .order('created_at', { ascending: false });
 
@@ -45,13 +46,15 @@ export class WorkoutService {
 
     /**
      * Получить тренировку по ID с упражнениями и сетами
+     * Проверяет, что тренировка принадлежит пользователю
      */
-    static async getById(id: string): Promise<Workout | null> {
-        // Получаем тренировку
+    static async getById(id: string, userId: string): Promise<Workout | null> {
+        // Получаем тренировку с проверкой принадлежности пользователю
         const { data: workout, error: workoutError } = await supabase
             .from('workouts')
             .select('*')
             .eq('id', id)
+            .eq('user_id', userId)
             .single();
 
         if (workoutError) {
@@ -125,7 +128,7 @@ export class WorkoutService {
     /**
      * Создать новую тренировку с упражнениями и сетами
      */
-    static async create(workout: Workout): Promise<Workout> {
+    static async create(workout: Workout, userId: string): Promise<Workout> {
         // Начинаем транзакцию (Supabase не поддерживает транзакции напрямую,
         // поэтому делаем последовательные операции)
         
@@ -139,6 +142,7 @@ export class WorkoutService {
                 name: workout.name,
                 date: workout.date, // Время создания тренировки
                 duration: workout.duration, // Длительность тренировки
+                user_id: userId, // Привязываем к пользователю
             })
             .select()
             .single();
@@ -199,13 +203,14 @@ export class WorkoutService {
         }
 
         // Возвращаем полную тренировку
-        return this.getById(workout.id) as Promise<Workout>;
+        return this.getById(workout.id, userId) as Promise<Workout>;
     }
 
     /**
      * Обновить тренировку
+     * Проверяет, что тренировка принадлежит пользователю
      */
-    static async update(id: string, updates: Partial<Workout>): Promise<Workout> {
+    static async update(id: string, updates: Partial<Workout>, userId: string): Promise<Workout> {
         const updateData: any = {};
         if (updates.name !== undefined) updateData.name = updates.name;
         if (updates.date !== undefined) updateData.date = updates.date;
@@ -215,24 +220,30 @@ export class WorkoutService {
             .from('workouts')
             .update(updateData)
             .eq('id', id)
+            .eq('user_id', userId) // Проверяем принадлежность пользователю
             .select()
             .single();
 
         if (error) {
+            if (error.code === 'PGRST116') {
+                throw new Error('Workout not found or access denied');
+            }
             throw new Error(`Failed to update workout: ${error.message}`);
         }
 
-        return this.getById(id) as Promise<Workout>;
+        return this.getById(id, userId) as Promise<Workout>;
     }
 
     /**
      * Удалить тренировку (каскадно удалятся activities и sets)
+     * Проверяет, что тренировка принадлежит пользователю
      */
-    static async delete(id: string): Promise<void> {
+    static async delete(id: string, userId: string): Promise<void> {
         const { error } = await supabase
             .from('workouts')
             .delete()
-            .eq('id', id);
+            .eq('id', id)
+            .eq('user_id', userId); // Проверяем принадлежность пользователю
 
         if (error) {
             throw new Error(`Failed to delete workout: ${error.message}`);

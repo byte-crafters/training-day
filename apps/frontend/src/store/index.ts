@@ -37,6 +37,25 @@ const currentWorkoutSlice = createSlice({
                 exercise.sets.push(set);
             }
         },
+        updateSet(state, action: PayloadAction<{ exerciseId: string; setId: string; set: Set }>) {
+            if (!state) return;
+            const { exerciseId, setId, set } = action.payload;
+            const exercise = state.exercises.find((ex) => ex.id === exerciseId);
+            if (exercise) {
+                const setIndex = exercise.sets.findIndex((s) => s.id === setId);
+                if (setIndex !== -1) {
+                    exercise.sets[setIndex] = set;
+                }
+            }
+        },
+        deleteSet(state, action: PayloadAction<{ exerciseId: string; setId: string }>) {
+            if (!state) return;
+            const { exerciseId, setId } = action.payload;
+            const exercise = state.exercises.find((ex) => ex.id === exerciseId);
+            if (exercise) {
+                exercise.sets = exercise.sets.filter((s) => s.id !== setId);
+            }
+        },
     }
 });
 
@@ -60,7 +79,9 @@ const saveWorkoutMiddleware: Middleware = (store) => (next) => (action) => {
     if (
         currentWorkoutSlice.actions.setCurrentWorkout.match(action) ||
         currentWorkoutSlice.actions.updateWorkoutName.match(action) ||
-        currentWorkoutSlice.actions.addSet.match(action)
+        currentWorkoutSlice.actions.addSet.match(action) ||
+        currentWorkoutSlice.actions.updateSet.match(action) ||
+        currentWorkoutSlice.actions.deleteSet.match(action)
     ) {
         const state = store.getState();
         saveCurrentWorkout(state.currentWorkout);
@@ -88,4 +109,4 @@ export {store};
 
 export const {setWorkouts} = workoutsSlice.actions;
 export const {setExercises} = exercisesSlice.actions;
-export const {setCurrentWorkout, updateWorkoutName, addSet} = currentWorkoutSlice.actions;
+export const {setCurrentWorkout, updateWorkoutName, addSet, updateSet, deleteSet} = currentWorkoutSlice.actions;
