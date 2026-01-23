@@ -22,7 +22,6 @@ function ExerciseCard({ exercise }: ExerciseCardProps) {
 
     return (
         <Box className="exercise-card" onClick={handleClick} sx={{ cursor: "pointer" }}>
-            <Box className="exercise-card__icon">{exercise.icon}</Box>
             <Box className="exercise-card__content">
                 <Typography className="exercise-card__name">
                     {exercise.name}

@@ -14,7 +14,7 @@ export const Default: Story = {
         exercise: {
             id: "1",
             name: "Bench Press",
-            icon: "💪",
+            icon: "",
             totalSets: 4,
             completedSets: 0,
             currentSet: 1,

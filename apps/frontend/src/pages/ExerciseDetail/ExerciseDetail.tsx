@@ -177,11 +177,30 @@ function ExerciseDetail() {
                     </Box>
                 ) : (
                     <Box className="exercise-detail__empty-state">
+                        <Box className="exercise-detail__empty-state-icon">
+                            <svg
+                                width="64"
+                                height="64"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                {/* Левая гантель */}
+                                <rect x="2" y="8" width="4" height="8" rx="1" />
+                                {/* Правая гантель */}
+                                <rect x="18" y="8" width="4" height="8" rx="1" />
+                                {/* Ручка */}
+                                <line x1="6" y1="12" x2="18" y2="12" strokeWidth="2" />
+                            </svg>
+                        </Box>
                         <Typography className="exercise-detail__empty-state-text">
                             No sets yet
                         </Typography>
                         <Typography className="exercise-detail__empty-state-hint">
-                            Tap the button below to add your first set
+                            Tap the button below to add your first set of {exercise.name}
                         </Typography>
                     </Box>
                 )}

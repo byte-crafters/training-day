@@ -422,6 +422,23 @@
         text-align: center;
     }
 
+    &__empty-state-icon {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: #2a2a2a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+
+        svg {
+            width: 64px;
+            height: 64px;
+            color: #888888;
+        }
+    }
+
     &__empty-state-text {
         font-size: 20px;
         font-weight: 600;

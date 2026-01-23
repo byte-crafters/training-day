@@ -59,3 +59,13 @@ export const WithWorkouts: Story = {
     currentWorkout: null,
   },
 };
+
+export const WithContinueWorkout: Story = {
+  args: {
+    workouts: [
+      createMockWorkout('Morning Workout', 3),
+      createMockWorkout('Evening Workout', 5),
+    ],
+    currentWorkout: createMockWorkout('Current Workout', 2),
+  },
+};
