@@ -160,7 +160,7 @@ function SelectExercises() {
                 <Box className="select-exercises__header-spacer" />
             </Box>
 
-            <Box component="main" className="select-exercises__main">
+            <Box className="select-exercises__sticky-section">
                 <Box sx={{ marginBottom: "20px" }}>
                     <TextField
                         className="select-exercises__search"
@@ -204,7 +204,9 @@ function SelectExercises() {
                         </Button>
                     ))}
                 </Box>
+            </Box>
 
+            <Box component="main" className="select-exercises__main">
                 <Box className="select-exercises__list">
                     {filteredExercises.map((exercise) => {
                         const isSelected = selectedExerciseIds.includes(

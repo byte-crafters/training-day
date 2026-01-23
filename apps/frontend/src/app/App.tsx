@@ -6,7 +6,6 @@ import WorkoutTracker from "../pages/WorkoutTracker";
 import SelectExercises from "../pages/SelectExercises";
 import MyWorkout from "../pages/MyWorkout";
 import ExerciseDetail from "../pages/ExerciseDetail";
-import EditSet from "../pages/EditSet";
 import NotFound from "../pages/NotFound";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { setExercises, setWorkouts, useAppDispatch } from "../store";
@@ -194,7 +193,6 @@ function App() {
                                 path="/exercise-detail"
                                 element={<ExerciseDetail />}
                             />
-                    <Route path="/edit-set" element={<EditSet />} />
                             <Route path="*" element={<NotFound />} />
                 </Routes>
             </BrowserRouter>
