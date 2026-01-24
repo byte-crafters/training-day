@@ -175,7 +175,7 @@
         flex: 1;
         padding: 0 24px;
         overflow-y: auto;
-        padding-bottom: 100px;
+        padding-bottom: calc(100px + 64px); // 64px для панели навигации
     }
 
     &__timer-section {
@@ -221,7 +221,7 @@
 
     &__footer {
         position: fixed;
-        bottom: 0;
+        bottom: 0px;
         left: 0;
         right: 0;
         padding: 16px 24px;

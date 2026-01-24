@@ -12,65 +12,91 @@ interface ContinueWorkoutCardProps {
 function ContinueWorkoutCard({ workout, onDismiss, onDelete }: ContinueWorkoutCardProps) {
     const navigate = useNavigate();
 
-    // Берем максимум 3 упражнения
-    const exercisesToShow = workout.exercises.slice(0, 3);
-    const exerciseNames = exercisesToShow.map((ex) => ex.name);
+    // Вычисляем количество оставшихся упражнений
+    const completedExercises = workout.exercises?.filter(
+        (ex) => ex.sets && ex.sets.length > 0
+    ).length || 0;
+    const totalExercises = workout.exercises?.length || 0;
+    const remainingExercises = totalExercises - completedExercises;
+
+    // Вычисляем время (пока заглушка)
+    const elapsedTime = "45 mins";
 
     return (
         <Box className="continue-workout-card">
             <Box className="continue-workout-card__card">
-                <IconButton
-                    className="continue-workout-card__close-button"
-                    onClick={onDismiss}
-                    aria-label="Dismiss"
-                >
-                    <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                <Box className="continue-workout-card__accent-line" />
+                <Box className="continue-workout-card__header">
+                    <Typography variant="h4" color='main' className="continue-workout-card__name">
+                        {workout.name}
+                    </Typography>
+                    <IconButton
+                        className="continue-workout-card__close-button"
+                        onClick={onDismiss}
+                        aria-label="Close"
                     >
-                        <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                </IconButton>
-                <Typography className="continue-workout-card__title">
-                    Unfinished Business
-                </Typography>
-                <Typography className="continue-workout-card__name">
-                    {workout.name}
-                </Typography>
-                <Box className="continue-workout-card__exercises">
-                    {exerciseNames.map((name, index) => (
-                        <Box key={index} className="continue-workout-card__exercise-item">
-                            <Typography className="continue-workout-card__exercise-name">
-                                {name}
-                            </Typography>
-                            {index < exerciseNames.length - 1 && (
-                                <Typography className="continue-workout-card__exercise-separator">
-                                    •
-                                </Typography>
-                            )}
-                        </Box>
-                    ))}
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                    </IconButton>
                 </Box>
+                <Typography variant="body2" color='text.secondary' className="continue-workout-card__info">
+                    {elapsedTime} elapsed • {remainingExercises} exercises left
+                </Typography>
                 <Box className="continue-workout-card__buttons">
                     <Button
                         variant="contained"
+                        size="small"
+                        color="info"
+                        sx={{fontSize: "0.7rem", textTransform: "none", fontWeight: 600}}
                         className="continue-workout-card__continue-button"
                         onClick={() => navigate("/my-workout")}
+                        startIcon={
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                        }
                     >
                         Continue
                     </Button>
                     <Button
-                        variant="outlined"
+                        variant="contained"
+                        size="small"
+                        color="error"
                         className="continue-workout-card__delete-button"
                         onClick={onDelete}
+                        sx={{
+                            display: 'flex',
+                            padding: '15px 10px',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                        startIcon={
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                            >
+                                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            </svg>
+                        }
                     >
-                        Delete
                     </Button>
                 </Box>
             </Box>

@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
@@ -7,38 +7,18 @@ import SelectExercises from "../pages/SelectExercises";
 import MyWorkout from "../pages/MyWorkout";
 import ExerciseDetail from "../pages/ExerciseDetail";
 import NotFound from "../pages/NotFound";
+import BottomNavigationLayout from "../components/BottomNavigationLayout";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect, useState, useCallback } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
 import { toast } from "../utils/toast";
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { darkTheme } from "../theme";
 
 // Инициализация Telegram Mini App
 // retrieveLaunchParams() читает данные из window.Telegram.WebApp.initData,
 // которые доступны сразу при загрузке страницы (до загрузки React)
-
-const darkTheme = createTheme({
-    palette: {
-        mode: "dark",
-        primary: {
-            main: "#0066ff",
-            dark: "#0052cc",
-        },
-        background: {
-            default: "#1a1a1a",
-            paper: "#2a2a2a",
-        },
-        text: {
-            primary: "#ffffff",
-            secondary: "#b0b0b0",
-        },
-    },
-    typography: {
-        fontFamily:
-            '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-    },
-});
 
 function App() {
     const dispatch = useAppDispatch();
@@ -50,26 +30,26 @@ function App() {
     // Мемоизируем функции загрузки данных
     const fetchWorkouts = useCallback(async () => {
         try {
-        const workouts = await getWorkouts();
-        dispatch(setWorkouts(workouts));
+            const workouts = await getWorkouts();
+            dispatch(setWorkouts(workouts));
             toast.info(`Загружено тренировок: ${workouts.length}`);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить тренировки";
             toast.error(`Ошибка загрузки тренировок: ${errorMessage}`);
             dispatch(setWorkouts([]));
-    }
+        }
     }, [dispatch]);
 
     const fetchExercises = useCallback(async () => {
         try {
-        const exercises = await getExercises();
-        dispatch(setExercises(exercises));
+            const exercises = await getExercises();
+            dispatch(setExercises(exercises));
             toast.info(`Загружено упражнений: ${exercises.length}`);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить упражнения";
             toast.error(`Ошибка загрузки упражнений: ${errorMessage}`);
             dispatch(setExercises([]));
-    }
+        }
     }, [dispatch]);
 
     useEffect(() => {
@@ -93,16 +73,16 @@ function App() {
             } catch (e) {
                 console.warn('Failed to save initData to sessionStorage:', e);
             }
-            
+
             // Создаем/обновляем пользователя в БД - это обязательный шаг перед любыми запросами
             try {
                 const authResponse = await sendTelegramInitData(initDataRaw);
-                
+
                 // Получаем данные пользователя из ответа
                 if (authResponse.user) {
                     const { username, firstName, telegramUserId } = authResponse.user;
                     const displayName = username || firstName || `User ${telegramUserId}`;
-                    
+
                     // Показываем уведомление о успешном входе
                     toast.success(`Вход выполнен как: ${displayName}`, 4000);
                 }
@@ -149,7 +129,7 @@ function App() {
                     >
                         <CircularProgress />
                         <Typography variant="body1" color="text.secondary">
-                            Авторизация...
+                            Authorization...
                         </Typography>
                     </Box>
                 )}
@@ -181,21 +161,25 @@ function App() {
 
                 {/* Основное приложение */}
                 {!isAuthenticating && !authError && (
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<WorkoutTracker />} />
-                            <Route
-                                path="/select-exercises"
-                                element={<SelectExercises />}
-                            />
-                    <Route path="/my-workout" element={<MyWorkout />} />
+                    <BrowserRouter>
+                        <Routes>
+                            <Route element={<BottomNavigationLayout />}>
+                                <Route path="/" element={<WorkoutTracker />} />
+                                <Route path="/progress" element={<NotFound />} />
+                                <Route path="/profile" element={<NotFound />} />
+                                <Route
+                                    path="/select-exercises"
+                                    element={<SelectExercises />}
+                                />
+                            </Route>
+                            <Route path="/my-workout" element={<MyWorkout />} />
                             <Route
                                 path="/exercise-detail"
                                 element={<ExerciseDetail />}
                             />
                             <Route path="*" element={<NotFound />} />
-                </Routes>
-            </BrowserRouter>
+                        </Routes>
+                    </BrowserRouter>
                 )}
             </SnackbarProvider>
         </ThemeProvider>

@@ -1,42 +1,68 @@
 .workout-card {
     background-color: #2a2a2a;
-    border-radius: 12px;
-    padding: 12px 16px;
+    border-radius: 16px;
+    padding: 16px;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    align-items: center;
+    gap: 5px;
     transition: background-color 0.2s ease, transform 0.1s ease;
 
     &:hover {
-        background-color: #3a3a3a;
+        background-color: #333333;
     }
 
     &:active {
         transform: scale(0.98);
     }
 
-    &__date {
-        font-size: 14px;
-        color: #888888;
-        font-weight: 500;
+    &__icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #00E5FF;
+        flex-shrink: 0;
     }
 
     &__content {
+        flex: 3;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        gap: 4px;
     }
 
     &__name {
         font-size: 16px;
-        font-weight: 600;
+        font-weight: 700;
         color: #ffffff;
+        margin: 0;
+    }
+
+    &__date {
+        font-size: 13px;
+        color: #b0b0b0;
+        font-weight: 400;
+        margin: 0;
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
     }
 
     &__duration {
         font-size: 14px;
-        color: #b0b0b0;
+        color: #ffffff;
         font-weight: 500;
+    }
+
+    &__right svg {
+        color: #b0b0b0;
+        width: 20px;
+        height: 20px;
     }
 }
 

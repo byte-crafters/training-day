@@ -39,7 +39,7 @@
         flex: 1;
         padding: 0 24px;
         overflow-y: auto;
-        padding-bottom: 140px; // Для кнопок внизу
+        padding-bottom: calc(140px + 64px); // 64px для панели навигации + 140px для кнопок внизу
     }
 
     &__card {
@@ -333,7 +333,7 @@
 
     &__footer {
         position: fixed;
-        bottom: 0;
+        bottom: 64px; // Выше панели навигации
         left: 0;
         right: 0;
         padding: 16px 24px;

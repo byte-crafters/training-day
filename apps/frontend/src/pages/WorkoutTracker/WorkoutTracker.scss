@@ -4,28 +4,24 @@
     color: #ffffff;
 
     &__header {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 48px 24px 24px;
+        padding: 20px 24px 20px;
+    }
+
+    &__hub-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #00E5FF;
+        margin-bottom: 8px;
     }
 
     &__title {
-        font-size: 24px;
-        font-weight: 600;
-        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
         color: #ffffff;
-    }
-
-    &__menu-button {
-        position: absolute;
-        right: 24px;
-        color: #ffffff;
-
-        &:hover {
-            opacity: 0.8;
-        }
+        margin: 0;
+        line-height: 1.2;
     }
 
     &__main {
@@ -33,64 +29,91 @@
     }
 
     &__welcome-section {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-
-    &__greeting {
-        font-weight: 600;
-        color: #ffffff;
-        padding-bottom: 15px;
-    }
-
-    &__subtitle {
-        font-size: 16px;
-        color: #b0b0b0;
+        margin-bottom: 32px;
     }
 
     &__start-button {
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        border-radius: 12px !important;
-        background-color: #0066ff !important;
-        box-shadow: 0 4px 14px 0 rgba(0, 102, 255, 0.3) !important;
+        width: 100%;
+        padding: 16px 0;
+        background-color: #00E5FF;
+        color: #000000;
+        border-radius: 20px;
+        font-size: 18px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 14px 0 rgba(0, 229, 255, 0.4);
+        border: none;
 
         &:hover {
-            background-color: #0052cc !important;
-            box-shadow: 0 4px 14px 0 rgba(0, 102, 255, 0.4) !important;
+            background-color: #ffffff;
+            box-shadow: 0 4px 14px 0 rgba(0, 229, 255, 0.5);
+        }
+
+        &:active {
+            transform: scale(0.96);
+        }
+
+        .MuiButton-startIcon {
+            margin: 0;
+            color: #000000;
+        }
+
+        svg {
+            width: 24px;
+            height: 24px;
+            color: #000000;
+        }
+    }
+
+    &__in-progress-section {
+        margin-bottom: 20px;
+    }
+
+    &__section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 5px;
+    }
+
+    &__section-title {
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    &__status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #00E5FF;
+    }
+
+    &__see-all {
+        font-size: 13px;
+        font-weight: 600;
+        color: #00E5FF;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+        text-transform: uppercase;
+
+        &:hover {
+            opacity: 0.8;
         }
     }
 
     &__workouts-section {
-        margin-bottom: 32px;
-    }
-
-    &__section-title {
-        font-size: 20px;
-        font-weight: 600;
-        color: #ffffff;
-        padding: 10px;
     }
 
     &__workouts-list {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-    }
-
-    &__stats-button {
-        padding: 16px !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        border-radius: 12px !important;
-        border: 2px solid #0066ff !important;
-        color: #0066ff !important;
-
-        &:hover {
-            background-color: rgba(0, 102, 255, 0.1) !important;
-            border: 2px solid #0066ff !important;
-        }
+        gap: 12px;
     }
 }
 
