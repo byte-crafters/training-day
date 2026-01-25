@@ -1,5 +1,5 @@
 .select-exercises {
-    height: 100vh;
+    height: 100%;
     background-color: #1a1a1a;
     color: #ffffff;
     display: flex;
@@ -62,7 +62,6 @@
     &__main {
         flex: 1;
         padding: 0 24px;
-        padding-bottom: 100px; // Отступ для фиксированного footer
         overflow-y: auto;
         overflow-x: hidden;
         min-height: 0;
@@ -146,10 +145,7 @@
     }
 
     &__footer {
-        position: fixed;
-        bottom: 0px; 
-        left: 0;
-        right: 0;
+        flex-shrink: 0;
         padding: 16px 24px;
         background-color: #1a1a1a;
         border-top: 1px solid rgba(255, 255, 255, 0.1);

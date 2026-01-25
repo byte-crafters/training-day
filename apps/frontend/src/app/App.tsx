@@ -6,6 +6,7 @@ import WorkoutTracker from "../pages/WorkoutTracker";
 import SelectExercises from "../pages/SelectExercises";
 import MyWorkout from "../pages/MyWorkout";
 import ExerciseDetail from "../pages/ExerciseDetail";
+import WorkoutResults from "../pages/WorkoutResults";
 import NotFound from "../pages/NotFound";
 import BottomNavigationLayout from "../components/BottomNavigationLayout";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
@@ -176,6 +177,10 @@ function App() {
                             <Route
                                 path="/exercise-detail"
                                 element={<ExerciseDetail />}
+                            />
+                            <Route
+                                path="/workout-results"
+                                element={<WorkoutResults />}
                             />
                             <Route path="*" element={<NotFound />} />
                         </Routes>

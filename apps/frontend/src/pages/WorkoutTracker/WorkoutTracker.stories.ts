@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { store, setWorkouts, setCurrentWorkout } from '../../store/index';
 import { Workout, ExerciseType } from '@training-day/shared';
 import WorkoutTracker from './WorkoutTracker';
-import BottomNavigation from '../../components/BottomNavigation';
+import BottomNavigation from '../../components/BottomNavigationLayout/BottomNavigation';
 
 const createMockWorkout = (name: string, exerciseCount: number): Workout => {
   const exercises = [];
@@ -46,7 +46,7 @@ const meta = {
 
       return React.createElement(
         Box,
-        { sx: { paddingBottom: '50px', minHeight: '100vh', position: 'relative' } },
+        { sx: { paddingBottom: '64px', minHeight: '100vh', position: 'relative' } },
         React.createElement(Story),
         React.createElement(BottomNavigation)
       );

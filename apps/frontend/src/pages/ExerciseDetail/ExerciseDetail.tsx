@@ -4,7 +4,7 @@ import { Box, Typography, IconButton, Button, Card } from "@mui/material";
 import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
 import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector } from "../../store";
-import SetForm from "./SetForm";
+import SetForm from "../../components/SetForm";
 
 function ExerciseDetail() {
     const navigate = useNavigate();

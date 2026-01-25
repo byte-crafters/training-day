@@ -129,8 +129,7 @@ function WorkoutTracker() {
                                 date={workout.date}
                                 duration={workout.duration}
                                 onClick={() => {
-                                    dispatch(setCurrentWorkout(workout));
-                                    navigate("/my-workout");
+                                    navigate("/workout-results", { state: { workout } });
                                 }}
                             />
                         ))}

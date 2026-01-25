@@ -13,8 +13,8 @@
 
     // Переопределяем стили Material-UI - используем более специфичный селектор
     &.MuiBottomNavigation-root.MuiBottomNavigation-root {
-        background-color: #1a1a1a;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: #000000;
+        border-top: none;
         position: fixed;
         bottom: 0;
         left: 0;
@@ -27,7 +27,7 @@
 
     // Дополнительная специфичность для переопределения theme.palette.background.paper
     &[class*="MuiBottomNavigation-root"][class*="MuiBottomNavigation-root"] {
-        background-color: #1a1a1a;
+        background-color: #000000;
     }
 
     // Стили для активной вкладки
