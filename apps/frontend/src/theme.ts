@@ -211,6 +211,18 @@ export const darkTheme = createTheme({
         },
         MuiCssBaseline: {
             styleOverrides: {
+                ":root": {
+                    "--mui-palette-primary-main": "#00E5FF",
+                    "--mui-palette-primary-dark": "#00B8CC",
+                    "--mui-palette-primary-light": "#00E5FF",
+                    "--mui-palette-secondary-main": "#00E5FF",
+                    "--mui-palette-background-default": "#0A0A0A",
+                    "--mui-palette-background-paper": "#161618",
+                    "--mui-palette-text-primary": "#ffffff",
+                    "--mui-palette-text-secondary": "#a1a1aa",
+                    "--mui-palette-divider": "rgba(255, 255, 255, 0.05)",
+                    "--mui-palette-action-hover": "rgba(255, 255, 255, 0.1)",
+                },
                 body: {
                     backgroundColor: "#0A0A0A", // bg-dark
                     color: "#ffffff",

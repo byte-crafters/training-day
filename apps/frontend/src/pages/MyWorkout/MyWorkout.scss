@@ -14,11 +14,20 @@
     }
 
     &__back-button {
-        color: #ffffff;
+        color: #ffffff !important;
         padding: 8px;
 
         &:hover {
             opacity: 0.8;
+        }
+
+        svg {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+
+        &.MuiIconButton-root {
+            color: #ffffff !important;
         }
     }
 
@@ -78,7 +87,7 @@
         min-width: 28px !important;
 
         &:hover {
-            color: #0066ff !important;
+            color: var(--mui-palette-primary-main) !important;
         }
 
         svg {
@@ -205,13 +214,9 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
-        border: 2px solid #0066ff !important;
-        color: #0066ff !important;
         background-color: transparent !important;
 
         &:hover {
-            background-color: rgba(0, 102, 255, 0.1) !important;
-            border-color: #0052cc !important;
         }
     }
 

@@ -130,6 +130,7 @@ function MyWorkout() {
                     className="my-workout__back-button"
                     onClick={() => navigate(-1)}
                     aria-label="Back"
+                    sx={{ color: '#ffffff' }}
                 >
                     <svg
                         width="24"
@@ -228,6 +229,7 @@ function MyWorkout() {
                     <Box className="my-workout__add-exercises-section">
                         <Button
                             variant="outlined"
+                            color="primary"
                             fullWidth
                             className="my-workout__add-exercises-button"
                             onClick={() => navigate("/select-exercises")}
@@ -245,6 +247,8 @@ function MyWorkout() {
             <Box className="my-workout__footer">
                 <Button
                     variant="contained"
+                    size="large"
+                    color="error"
                     fullWidth
                     className="my-workout__finish-button"
                     onClick={handleFinishWorkout}

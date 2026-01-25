@@ -110,14 +110,14 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
         };
 
         onSave(set);
-        
+
         // Сброс полей после сохранения (только в режиме добавления)
         if (mode === 'add') {
             setReps(15);
             setWeight("");
             setNote("");
         }
-        
+
         onClose();
     };
 
@@ -128,24 +128,25 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
             onClose={onClose}
             PaperProps={{
                 sx: {
-                    backgroundColor: '#2a2a2a',
+                    backgroundColor: '#000000',
                     borderTopLeftRadius: '24px',
                     borderTopRightRadius: '24px',
                     maxHeight: '90vh',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
                 },
             }}
         >
             <Box className="exercise-detail__form-drawer">
                 <Box className="exercise-detail__form-drawer-handle" />
-                
+
                 <Box className="exercise-detail__form-drawer-content">
-                    <Typography className="exercise-detail__add-set-title">
+                    <Typography variant="h4" color="text.secondary" className="exercise-detail__add-set-title">
                         {mode === 'edit' ? 'Edit set' : 'Add set'}
                     </Typography>
 
                     <Box className="exercise-detail__inputs-row">
                         <Box className="exercise-detail__input-group">
-                            <Typography className="exercise-detail__input-label">
+                            <Typography variant="h4" className="exercise-detail__input-label">
                                 Reps
                             </Typography>
                             <Box className="exercise-detail__input-with-steppers">
@@ -213,11 +214,12 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                         </Box>
 
                         <Box className="exercise-detail__input-group">
-                            <Typography className="exercise-detail__input-label">
+                            <Typography variant="h4" className="exercise-detail__input-label">
                                 Weight (kg)
                             </Typography>
                             <Box className="exercise-detail__input-with-steppers">
                                 <IconButton
+
                                     className="exercise-detail__stepper-button exercise-detail__stepper-button--large"
                                     onClick={decrementWeightBy5}
                                     disabled={weight === "" || weight === 0}
@@ -298,8 +300,8 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                     </Box>
 
                     <Box className="exercise-detail__note-section">
-                        <Typography className="exercise-detail__note-label">
-                            Note (optional)
+                        <Typography variant="h4" className="exercise-detail__note-label">
+                            Note
                         </Typography>
                         <TextField
                             className="exercise-detail__note-input"

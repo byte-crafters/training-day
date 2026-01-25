@@ -17,6 +17,7 @@ import {
     useAppSelector,
 } from "../../store";
 import { createWorkout, exerciseToActivity } from "../../utils/helpers";
+import ExerciseListItem from "../../components/ExerciseListItem";
 
 type Category = "All" | ExerciseType;
 
@@ -140,6 +141,7 @@ function SelectExercises() {
                     className="select-exercises__back-button"
                     onClick={() => navigate(-1)}
                     aria-label="Back"
+                    sx={{ color: '#ffffff' }}
                 >
                     <svg
                         width="24"
@@ -164,7 +166,7 @@ function SelectExercises() {
                 <Box sx={{ marginBottom: "20px" }}>
                     <TextField
                         className="select-exercises__search"
-                        placeholder="Search exercises..."
+                        placeholder="Search 200+ exercises"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         InputProps={{
@@ -193,17 +195,24 @@ function SelectExercises() {
                     {categories.map((category) => (
                         <Button
                             key={category}
-                            className={`select-exercises__category ${
-                                selectedCategory === category
-                                    ? "select-exercises__category--active"
-                                    : ""
-                            }`}
+                            variant="text"
+                            sx={{ fontSize: 12, fontWeight: 700, padding: "6px 15px", minWidth: "auto" }}
+                            className={`select-exercises__category ${selectedCategory === category
+                                ? "select-exercises__category--active"
+                                : ""
+                                }`}
                             onClick={() => setSelectedCategory(category)}
                         >
                             {getCategoryLabel(category)}
                         </Button>
                     ))}
                 </Box>
+            </Box>
+
+            <Box className="select-exercises__section-title">
+                <Typography variant="h5" color='text.secondary' sx={{ textTransform: "uppercase" }}>
+                    Recommended
+                </Typography>
             </Box>
 
             <Box component="main" className="select-exercises__main">
@@ -213,33 +222,12 @@ function SelectExercises() {
                             exercise.id
                         );
                         return (
-                            <Box
+                            <ExerciseListItem
                                 key={exercise.id}
-                                className="select-exercises__exercise-item"
-                                onClick={() =>
-                                    handleToggleExercise(exercise.id)
-                                }
-                            >
-                                <Typography className="select-exercises__exercise-name">
-                                    {exercise.name}
-                                </Typography>
-                                {isSelected && (
-                                    <Box className="select-exercises__checkmark">
-                                        <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="3"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    </Box>
-                                )}
-                            </Box>
+                                exercise={exercise}
+                                isSelected={isSelected}
+                                onClick={() => handleToggleExercise(exercise.id)}
+                            />
                         );
                     })}
                 </Box>
@@ -248,6 +236,7 @@ function SelectExercises() {
             <Box className="select-exercises__footer">
                 <Button
                     variant="contained"
+                    size="large"
                     fullWidth
                     className="select-exercises__begin-button"
                     onClick={handleBeginWorkout}

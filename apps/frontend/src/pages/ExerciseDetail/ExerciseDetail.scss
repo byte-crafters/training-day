@@ -14,11 +14,20 @@
     }
 
     &__back-button {
-        color: #ffffff;
+        color: #ffffff !important;
         padding: 8px;
 
         &:hover {
             opacity: 0.8;
+        }
+
+        svg {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+
+        &.MuiIconButton-root {
+            color: #ffffff !important;
         }
     }
 
@@ -39,7 +48,6 @@
         flex: 1;
         padding: 0 24px;
         overflow-y: auto;
-        padding-bottom: calc(140px + 64px); // 64px для панели навигации + 140px для кнопок внизу
     }
 
     &__card {
@@ -80,7 +88,7 @@
     &__input-label {
         font-size: 14px;
         font-weight: 500;
-        color: #b0b0b0;
+        color: #a1a1aa;
         margin-bottom: 8px;
         text-align: center;
         width: 100%;
@@ -92,7 +100,7 @@
         justify-content: center;
         gap: 8px;
         width: 100%;
-        max-width: 300px;
+        min-width: 300px;
     }
 
     &__stepper-button {
@@ -100,16 +108,15 @@
         padding: 8px !important;
         min-width: 40px !important;
         width: 40px !important;
-        height: 40px !important;
-        background-color: #2a2a2a !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 8px !important;
+        height: 56px !important;
+        background-color: #161618 !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 12px !important;
         transition: all 0.2s ease !important;
 
         &:hover:not(:disabled) {
-            background-color: #3a3a3a !important;
-            border-color: rgba(255, 255, 255, 0.2) !important;
-            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
         }
 
         &:active:not(:disabled) {
@@ -124,12 +131,13 @@
         svg {
             width: 20px;
             height: 20px;
+            color: #ffffff !important;
         }
 
         &--large {
             min-width: 50px !important;
             width: 50px !important;
-            height: 40px !important;
+            height: 56px !important;
             font-size: 16px !important;
             font-weight: 600 !important;
         }
@@ -147,34 +155,52 @@
         min-width: 0; // Позволяет инпуту сжиматься меньше
 
         .MuiOutlinedInput-root {
-            background-color: #1a1a1a;
+            background-color: #161618;
             border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             color: #ffffff;
             padding: 0 !important; // Убираем padding у корневого элемента
+            height: 56px !important;
+            min-height: 56px !important;
+            box-shadow: none !important;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
 
             fieldset {
-                border-color: rgba(255, 255, 255, 0.1);
+                border: none !important;
+                display: none !important;
             }
 
-            &:hover fieldset {
-                border-color: rgba(255, 255, 255, 0.2);
+            &:hover {
+                border-color: rgba(255, 255, 255, 0.05) !important;
+                
+                fieldset {
+                    border: none !important;
+                }
             }
 
-            &.Mui-focused fieldset {
-                border-color: #0066ff;
+            &.Mui-focused {
+                border-color: var(--mui-palette-primary-main) !important;
+                box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2), 0 0 20px rgba(0, 229, 255, 0.3) !important;
+                
+                fieldset {
+                    border: none !important;
+                }
             }
 
             input {
                 color: #ffffff;
-                padding: 10px 8px !important; // Уменьшенный padding
-                font-size: 20px;
+                padding: 12px 16px !important;
+                font-size: 24px;
                 font-weight: 600;
                 text-align: center;
                 width: 100%;
-                min-width: 50px; // Минимальная ширина для видимости числа
+                min-width: 60px; // Минимальная ширина для видимости числа
+                height: 100% !important;
+                box-sizing: border-box !important;
+                cursor: default !important;
 
                 &::placeholder {
-                    color: #888888;
+                    color: #a1a1aa;
                 }
             }
 
@@ -200,7 +226,8 @@
 
     &__note-label {
         font-size: 14px;
-        color: #b0b0b0;
+        font-weight: 500;
+        color: #a1a1aa;
         margin-bottom: 8px;
     }
 
@@ -208,27 +235,34 @@
         width: 100%;
 
         .MuiOutlinedInput-root {
-            background-color: #1a1a1a;
+            background-color: #161618;
             border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             color: #ffffff;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
 
             fieldset {
-                border-color: rgba(255, 255, 255, 0.1);
+                border-color: transparent;
             }
 
             &:hover fieldset {
-                border-color: rgba(255, 255, 255, 0.2);
+                border-color: transparent;
             }
 
-            &.Mui-focused fieldset {
-                border-color: #0066ff;
+            &.Mui-focused {
+                border-color: var(--mui-palette-primary-main) !important;
+                box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2), 0 0 20px rgba(0, 229, 255, 0.3) !important;
+                
+                fieldset {
+                    border-color: var(--mui-palette-primary-main);
+                }
             }
 
             textarea {
                 color: #ffffff;
 
                 &::placeholder {
-                    color: #888888;
+                    color: #a1a1aa;
                     opacity: 1;
                 }
             }
@@ -240,17 +274,19 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
-        background-color: #0066ff !important;
-        color: #ffffff !important;
+        background-color: var(--mui-palette-primary-main) !important;
+        color: #000000 !important;
         margin-top: 0 !important;
+        margin-bottom: 12px !important;
 
         &:hover {
-            background-color: #0052cc !important;
+            background-color: #ffffff !important;
         }
 
         &:disabled {
-            background-color: #3a3a3a !important;
-            color: #888888 !important;
+            background-color: #161618 !important;
+            color: #a1a1aa !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
         }
     }
 
@@ -259,13 +295,14 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
-        margin-top: 12px !important;
-        border-color: rgba(255, 0, 0, 0.5) !important;
-        color: #ff4444 !important;
+        margin-top: 0 !important;
+        border: 1px solid rgba(239, 68, 68, 0.3) !important;
+        color: #ef4444 !important;
+        background-color: transparent !important;
 
         &:hover {
-            border-color: rgba(255, 0, 0, 0.7) !important;
-            background-color: rgba(255, 0, 0, 0.1) !important;
+            border-color: #ef4444 !important;
+            background-color: rgba(239, 68, 68, 0.1) !important;
         }
     }
 
@@ -280,35 +317,33 @@
     }
 
     &__previous-set-item {
-        background-color: #1a1a1a;
-        border-radius: 12px;
+        background-color: #161618;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
         padding: 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 12px;
-        transition: background-color 0.2s ease, transform 0.1s ease;
+        transition: background-color 0.2s ease;
 
         &:hover {
-            background-color: #222222;
-            transform: translateY(-1px);
-        }
-
-        &:active {
-            transform: translateY(0);
+            background-color: rgba(255, 255, 255, 0.05);
         }
     }
 
     &__previous-set-text {
-        font-size: 15px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 600;
         color: #ffffff;
+        margin: 0;
     }
 
     &__arrow {
-        color: #ffffff;
+        color: var(--mui-palette-primary-main);
         width: 20px;
         height: 20px;
+        flex-shrink: 0;
     }
 
     &__save-message {
@@ -333,7 +368,7 @@
 
     &__footer {
         position: fixed;
-        bottom: 64px; // Выше панели навигации
+        bottom: 0px;
         left: 0;
         right: 0;
         padding: 16px 24px;
@@ -383,12 +418,6 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
-        background-color: #0066ff !important;
-        color: #ffffff !important;
-
-        &:hover {
-            background-color: #0052cc !important;
-        }
     }
 
     &__form-drawer {
@@ -402,7 +431,7 @@
     &__form-drawer-handle {
         width: 40px;
         height: 4px;
-        background-color: rgba(255, 255, 255, 0.3);
+        background-color: rgba(255, 255, 255, 0.2);
         border-radius: 2px;
         margin: 12px auto;
         cursor: grab;
@@ -427,6 +456,7 @@
         height: 120px;
         border-radius: 50%;
         background-color: #2a2a2a;
+        border: 2px solid var(--mui-palette-primary-main);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -456,14 +486,6 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
-        background-color: transparent !important;
-        border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        color: #ffffff !important;
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            border-color: rgba(255, 255, 255, 0.5) !important;
-        }
     }
 }
 

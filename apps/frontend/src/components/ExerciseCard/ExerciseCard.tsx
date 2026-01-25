@@ -30,8 +30,8 @@ function ExerciseCard({ exercise }: ExerciseCardProps) {
                     {exercise.completedSets} sets completed
                 </Typography>
             </Box>
-            <Box className="exercise-card__progress">
-                <Typography className="exercise-card__progress-text">
+            <Box className="exercise-card__action">
+                <Typography className="exercise-card__action-text">
                     {exercise.completedSets > 0 ? "Continue" : "Start"}
                 </Typography>
                 <svg
@@ -45,7 +45,7 @@ function ExerciseCard({ exercise }: ExerciseCardProps) {
                     strokeLinejoin="round"
                     className="exercise-card__arrow"
                 >
-                    <path d="M9 18l6-6-6-6" />
+                    <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
             </Box>
         </Box>

@@ -1,0 +1,40 @@
+.exercise-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    &__name {
+        flex: 1;
+        font-size: 16px;
+        font-weight: 500;
+        color: #ffffff;
+    }
+
+    &__icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--mui-palette-primary-main);
+        margin-left: 16px;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+
+        &--selected {
+            background-color: var(--mui-palette-primary-main);
+            border-color: var(--mui-palette-primary-main);
+            color: #000000;
+        }
+    }
+}
