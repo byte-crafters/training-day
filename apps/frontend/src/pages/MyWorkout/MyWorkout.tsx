@@ -123,84 +123,83 @@ function MyWorkout() {
                         <path d="M19 12H5M12 19l-7-7 7-7" />
                     </svg>
                 </IconButton>
+                {hasExercises && (
+                    <Box className="my-workout__name-section">
+                        {isEditingName ? (
+                            <Box className="my-workout__name-edit">
+                                <TextField
+                                    className="my-workout__name-input"
+                                    value={editedName}
+                                    onChange={(e) => setEditedName(e.target.value)}
+                                    sx={
+                                        textWidth ? { width: `${textWidth}px` } : {}
+                                    }
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleSaveName();
+                                        } else if (e.key === "Escape") {
+                                            handleCancelEditName();
+                                        }
+                                    }}
+                                    autoFocus
+                                    variant="standard"
+                                    InputProps={{
+                                        disableUnderline: true,
+                                    }}
+                                />
+                                <IconButton
+                                    className="my-workout__save-button"
+                                    onClick={handleSaveName}
+                                    aria-label="Save"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </IconButton>
+                            </Box>
+                        ) : (
+                            <Box className="my-workout__name-display">
+                                <Typography
+                                    style={{ fontSize: "20px" }}
+                                    ref={textRef}
+                                    className="my-workout__name-text"
+                                >
+                                    {workoutName}
+                                </Typography>
+                                <IconButton
+                                    className="my-workout__edit-button"
+                                    onClick={handleStartEditName}
+                                    aria-label="Edit"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </IconButton>
+                            </Box>
+                        )}
+                    </Box>
+                )}
                 <Box className="my-workout__header-spacer" />
             </Box>
-
-            {hasExercises && (
-                <Box className="my-workout__name-section">
-                    {isEditingName ? (
-                        <Box className="my-workout__name-edit">
-                            <TextField
-                                className="my-workout__name-input"
-                                value={editedName}
-                                onChange={(e) => setEditedName(e.target.value)}
-                                sx={
-                                    textWidth ? { width: `${textWidth}px` } : {}
-                                }
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        handleSaveName();
-                                    } else if (e.key === "Escape") {
-                                        handleCancelEditName();
-                                    }
-                                }}
-                                autoFocus
-                                variant="standard"
-                                InputProps={{
-                                    disableUnderline: true,
-                                }}
-                            />
-                            <IconButton
-                                className="my-workout__save-button"
-                                onClick={handleSaveName}
-                                aria-label="Save"
-                            >
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </IconButton>
-                        </Box>
-                    ) : (
-                        <Box className="my-workout__name-display">
-                            <Typography
-                                style={{ fontSize: "20px" }}
-                                ref={textRef}
-                                className="my-workout__name-text"
-                            >
-                                {workoutName}
-                            </Typography>
-                            <IconButton
-                                className="my-workout__edit-button"
-                                onClick={handleStartEditName}
-                                aria-label="Edit"
-                            >
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </IconButton>
-                        </Box>
-                    )}
-                </Box>
-            )}
 
             {hasExercises && (
                 <Box component="main" className="my-workout__main">

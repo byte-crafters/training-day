@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { store, setWorkouts, setCurrentWorkout } from '../../store/index';
 import { Workout, ExerciseType } from '@training-day/shared';
 import WorkoutTracker from './WorkoutTracker';
-import BottomNavigation from '../../components/BottomNavigationLayout/BottomNavigation';
+import BottomNavigation from '../../components/NavigationLayout/BottomNavigation';
 
 const createMockWorkout = (name: string, exerciseCount: number): Workout => {
   const exercises = [];

@@ -8,7 +8,7 @@ import MyWorkout from "../pages/MyWorkout";
 import ExerciseDetail from "../pages/ExerciseDetail";
 import WorkoutResults from "../pages/WorkoutResults";
 import NotFound from "../pages/NotFound";
-import BottomNavigationLayout from "../components/BottomNavigationLayout";
+import NavigationLayout from "../components/NavigationLayout";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect, useState, useCallback } from "react";
@@ -153,7 +153,7 @@ function App() {
                 {!isAuthenticating && !authError && (
                     <BrowserRouter>
                         <Routes>
-                            <Route element={<BottomNavigationLayout />}>
+                            <Route element={<NavigationLayout />}>
                                 <Route path="/" element={<WorkoutTracker />} />
                                 <Route path="/progress" element={<NotFound />} />
                                 <Route path="/profile" element={<NotFound />} />

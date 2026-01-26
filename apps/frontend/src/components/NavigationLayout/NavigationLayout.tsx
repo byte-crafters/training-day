@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
 import BottomNavigation from "./BottomNavigation";
 
-function BottomNavigationLayout() {
+function NavigationLayout() {
     return (
         <>
             <Box sx={{ height: "calc(100vh - 64px)", overflow: "hidden", position: "relative" }}>
@@ -13,4 +13,4 @@ function BottomNavigationLayout() {
     );
 }
 
-export default BottomNavigationLayout;
+export default NavigationLayout;

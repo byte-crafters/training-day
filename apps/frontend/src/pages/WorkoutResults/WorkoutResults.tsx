@@ -36,11 +36,11 @@ const getMuscleGroupName = (type: ExerciseType): string => {
 function WorkoutResults() {
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     // Получаем тренировку из location.state или из store
     const workoutFromState = (location.state as { workout?: Workout })?.workout;
     const currentWorkout = useAppSelector((state: RootState) => state.currentWorkout);
-    
+
     const [workout, _setWorkout] = useState<Workout | null>(workoutFromState || currentWorkout);
 
     useEffect(() => {
@@ -79,34 +79,16 @@ function WorkoutResults() {
                             <path d="M19 12H5M12 19l-7-7 7-7" />
                         </svg>
                     </IconButton>
-                    <Box className="workout-results__header-spacer" />
-                </Box>
-
-                <Box className="workout-results__title-section">
                     <Box className="workout-results__title-row">
                         <Typography variant="h4" className="workout-results__title">
                             {workout.name}
                         </Typography>
-                        <IconButton
-                            className="workout-results__edit-button"
-                            aria-label="Edit"
-                            sx={{ color: 'var(--mui-palette-primary-main)' }}
-                        >
-                            <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
-                        </IconButton>
+
                     </Box>
+                    <Box className="workout-results__header-spacer" />
+                </Box>
+
+                <Box className="workout-results__title-section">
                     <Box className="workout-results__metadata">
                         <Typography variant="body2" className="workout-results__start-time">
                             Started at {startTime}
@@ -133,7 +115,7 @@ function WorkoutResults() {
                                 {getMuscleGroupName(exercise.type)}
                             </Typography>
                         </Box>
-                        
+
                         {exercise.sets.length > 0 && (
                             <>
                                 <Box className="workout-results__sets-header">
@@ -147,7 +129,7 @@ function WorkoutResults() {
                                         Weight
                                     </Typography>
                                 </Box>
-                                
+
                                 <Box className="workout-results__sets-list">
                                     {exercise.sets.map((set, index) => (
                                         <Box key={set.id} className="workout-results__set-row">
