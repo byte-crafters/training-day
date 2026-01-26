@@ -14,7 +14,6 @@ import {
     setCurrentWorkout,
     setWorkouts,
     updateWorkoutName,
-    store,
     useAppDispatch,
     useAppSelector,
     RootState,
@@ -23,7 +22,6 @@ import {
     createWorkout as createWorkoutAPI,
     getWorkouts,
 } from "../../utils/api";
-import { saveCurrentWorkout } from "../../utils/storage";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -33,7 +31,7 @@ function MyWorkout() {
     const currentWorkout = useAppSelector(
         (state: RootState) => state.currentWorkout
     );
-    const workoutName = currentWorkout?.name || "My Workout";
+    const workoutName = currentWorkout?.name || "Untitled Workout";
     const hasExercises =
         currentWorkout?.exercises?.length &&
         currentWorkout.exercises.length > 0;
@@ -42,13 +40,6 @@ function MyWorkout() {
     const [editedName, setEditedName] = useState(workoutName);
     const textRef = useRef<HTMLDivElement>(null);
     const [textWidth, setTextWidth] = useState<number | undefined>(undefined);
-
-    // Если нет текущей тренировки или упражнений, перенаправляем обратно
-    useEffect(() => {
-        // if (!currentWorkout || !hasExercises) {
-        //     navigate("/select-exercises");
-        // }
-    }, [hasExercises, navigate]);
 
     // Синхронизируем editedName с workoutName
     useEffect(() => {
@@ -89,35 +80,19 @@ function MyWorkout() {
 
         setIsSaving(true);
         try {
-            // Получаем актуальную версию currentWorkout из store перед сохранением
-            const state: RootState = store.getState();
-            const actualWorkout = state.currentWorkout;
+            const savedWorkout = await createWorkoutAPI(currentWorkout);
 
-            if (!actualWorkout) {
-                setIsSaving(false);
-                return;
+            if (!savedWorkout) {
+                throw new Error("Failed to save workout");
             }
 
-            // Сохраняем тренировку в базу данных
-            await createWorkoutAPI(actualWorkout);
-
-            // Обновляем список тренировок
-            const workouts = await getWorkouts();
+            const workouts = await getWorkouts();//надо ли тут?
             dispatch(setWorkouts(workouts));
+            dispatch(setCurrentWorkout(null));//тут очищаем currentWorkout из localStorage
 
-            // Очищаем currentWorkout в Redux store
-            // Middleware автоматически очистит localStorage при setCurrentWorkout(null)
-            dispatch(setCurrentWorkout(null));
-
-            // Явно очищаем localStorage для гарантии
-            saveCurrentWorkout(null);
-
-            // Переходим на главную страницу после успешного сохранения и очистки
             navigate("/");
         } catch (error) {
             console.error("Failed to finish workout:", error);
-            // При ошибке не очищаем данные, чтобы пользователь мог попробовать снова
-            // Можно добавить уведомление об ошибке
         } finally {
             setIsSaving(false);
         }

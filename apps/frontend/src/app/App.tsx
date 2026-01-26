@@ -17,10 +17,6 @@ import { toast } from "../utils/toast";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { darkTheme } from "../theme";
 
-// Инициализация Telegram Mini App
-// retrieveLaunchParams() читает данные из window.Telegram.WebApp.initData,
-// которые доступны сразу при загрузке страницы (до загрузки React)
-
 function App() {
     const dispatch = useAppDispatch();
     const [isAuthenticating, setIsAuthenticating] = useState(true);
@@ -28,7 +24,6 @@ function App() {
 
     const initDataRaw = useRawInitData();
 
-    // Мемоизируем функции загрузки данных
     const fetchWorkouts = useCallback(async () => {
         try {
             const workouts = await getWorkouts();
@@ -45,10 +40,10 @@ function App() {
         try {
             const exercises = await getExercises();
             dispatch(setExercises(exercises));
-            toast.info(`Загружено упражнений: ${exercises.length}`);
+            toast.info(`Got ${exercises.length} new exercises`);
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить упражнения";
-            toast.error(`Ошибка загрузки упражнений: ${errorMessage}`);
+            toast.error(`Error loading exercises: ${errorMessage}`);
             dispatch(setExercises([]));
         }
     }, [dispatch]);
@@ -60,7 +55,7 @@ function App() {
 
             // Проверяем наличие initData
             if (!initDataRaw || typeof initDataRaw !== "string") {
-                const errorMsg = "Не удалось получить данные авторизации. Пожалуйста, откройте приложение через Telegram.";
+                const errorMsg = "Failed to get authorization data. Please open the application through Telegram.";
                 setAuthError(errorMsg);
                 toast.error(errorMsg);
                 setIsAuthenticating(false);
@@ -85,26 +80,23 @@ function App() {
                     const displayName = username || firstName || `User ${telegramUserId}`;
 
                     // Показываем уведомление о успешном входе
-                    toast.success(`Вход выполнен как: ${displayName}`, 4000);
+                    toast.success(`Logged in as: ${displayName}`);
                 }
 
-                // Только после успешной авторизации загружаем данные
                 setIsAuthenticating(false);
                 await Promise.all([fetchWorkouts(), fetchExercises()]);
             } catch (error) {
-                // Ошибка уже показывается в api.ts через toast
+
                 const errorMessage = error instanceof Error ? error.message : "Ошибка авторизации";
                 setAuthError(errorMessage);
                 setIsAuthenticating(false);
                 console.error("Failed to authenticate:", error);
-                // Не загружаем данные при ошибке авторизации
             }
         };
 
         initializeApp();
     }, [initDataRaw, fetchWorkouts, fetchExercises]);
 
-    // Обертываем все в SnackbarProvider с самого начала, чтобы toast работал во всех состояниях
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
@@ -116,7 +108,6 @@ function App() {
                 }}
                 autoHideDuration={4000}
             >
-                {/* Показываем загрузку во время авторизации */}
                 {isAuthenticating && (
                     <Box
                         sx={{
@@ -130,12 +121,11 @@ function App() {
                     >
                         <CircularProgress />
                         <Typography variant="body1" color="text.secondary">
-                            Authorization...
+                            Authorizing...
                         </Typography>
                     </Box>
                 )}
 
-                {/* Показываем ошибку авторизации */}
                 {authError && !isAuthenticating && (
                     <Box
                         sx={{
@@ -149,18 +139,17 @@ function App() {
                         }}
                     >
                         <Typography variant="h6" color="error" align="center">
-                            Ошибка авторизации
+                            Authorization error
                         </Typography>
                         <Typography variant="body2" color="text.secondary" align="center">
                             {authError}
                         </Typography>
                         <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-                            Пожалуйста, перезагрузите страницу
+                            Please reload the page
                         </Typography>
                     </Box>
                 )}
 
-                {/* Основное приложение */}
                 {!isAuthenticating && !authError && (
                     <BrowserRouter>
                         <Routes>

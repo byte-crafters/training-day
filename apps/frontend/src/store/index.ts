@@ -15,11 +15,21 @@ const workoutsSlice = createSlice({
     }
 });
 
-const initialCurrentWorkout: Workout | null = loadCurrentWorkout();
+// При инициализации: если есть currentWorkout в localStorage, перемещаем его в unsavedWorkout
+// и обнуляем currentWorkout (это означает, что пользователь вышел без сохранения)
+const loadedCurrentWorkout = loadCurrentWorkout();
+if (loadedCurrentWorkout) {
+    // Перемещаем currentWorkout в unsavedWorkout
+    saveUnsavedWorkout(loadedCurrentWorkout);
+    // Очищаем currentWorkout
+    saveCurrentWorkout(null);
+}
+
+const initialCurrentWorkout: Workout | null = null;
 
 const currentWorkoutSlice = createSlice({
     name: 'currentWorkout',
-    initialState: initialCurrentWorkout,
+    initialState: initialCurrentWorkout as Workout | null,
     reducers: {
         setCurrentWorkout(_state, action: PayloadAction<Workout | null>) {
             return action.payload;
@@ -95,7 +105,7 @@ const saveWorkoutMiddleware: Middleware = (store) => (next) => (action) => {
             saveUnsavedWorkout(prevWorkout);
         }
         
-        // Сохраняем currentWorkout
+        // Сохраняем currentWorkout в localStorage
         saveCurrentWorkout(currentWorkout);
     }
     

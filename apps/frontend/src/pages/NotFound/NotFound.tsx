@@ -12,17 +12,17 @@ function NotFound() {
                     404
                 </Typography>
                 <Typography variant="h5" className="not-found__subtitle">
-                    Страница не найдена
+                    Page not found
                 </Typography>
                 <Typography variant="body1" className="not-found__description">
-                    К сожалению, запрашиваемая страница не существует.
+                    Unfortunately, the requested page does not exist.
                 </Typography>
                 <Button
                     variant="contained"
                     onClick={() => navigate("/")}
                     className="not-found__button"
                 >
-                    Вернуться на главную
+                    Return to the main page
                 </Button>
             </Box>
         </Box>

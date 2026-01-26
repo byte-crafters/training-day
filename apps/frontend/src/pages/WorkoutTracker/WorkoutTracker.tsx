@@ -8,55 +8,56 @@ import {
     getWorkouts,
     createWorkout as createWorkoutAPI,
 } from "../../utils/api";
-import { setWorkouts, setCurrentWorkout, useAppSelector, useAppDispatch, RootState } from "../../store";
+import { setWorkouts, useAppSelector, useAppDispatch, RootState } from "../../store";
 import { Workout } from "@training-day/shared";
+import { loadUnsavedWorkout, saveUnsavedWorkout } from "../../utils/storage";
 
 function WorkoutTracker() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const [isDismissed, setIsDismissed] = useState(false);
+    const [unsavedWorkout, setUnsavedWorkout] = useState<Workout | null>(null);
 
     const workouts = useAppSelector((state: RootState) => {
         return state.workouts.slice(0, 2);
     });
 
-    const currentWorkout = useAppSelector((state: RootState) => {
-        return state.currentWorkout;
-    });
-
+    // Загружаем unsavedWorkout из localStorage при монтировании
     useEffect(() => {
-        console.log(workouts);
-
-        console.log(currentWorkout);
-    }, [currentWorkout, workouts]);
+        const workout = loadUnsavedWorkout();
+        setUnsavedWorkout(workout);
+    }, []);
 
     const handleDeleteWorkout = () => {
-        dispatch(setCurrentWorkout(null));
+        saveUnsavedWorkout(null);
+        setUnsavedWorkout(null);
         setIsDismissed(true);
     };
 
     const handleDismissAndSave = async () => {
-        if (!currentWorkout) {
+        if (!unsavedWorkout) {
             return;
         }
 
-        // Сохраняем ссылку на тренировку перед очисткой
-        const workoutToSave = currentWorkout;
-
-        // Скрываем карточку и очищаем currentWorkout сразу
+        // Скрываем карточку
         setIsDismissed(true);
-        dispatch(setCurrentWorkout(null));
 
         try {
             // Сохраняем тренировку в базу данных
-            await createWorkoutAPI(workoutToSave);
+            await createWorkoutAPI(unsavedWorkout);
 
             // Обновляем список тренировок
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
+
+            // Очищаем unsavedWorkout только после успешного сохранения
+            saveUnsavedWorkout(null);
+            setUnsavedWorkout(null);
         } catch (error) {
             console.error("Failed to save workout:", error);
+            // При ошибке показываем карточку снова, чтобы пользователь мог попробовать еще раз
+            setIsDismissed(false);
             // Можно добавить уведомление об ошибке
         }
     };
@@ -94,8 +95,8 @@ function WorkoutTracker() {
                     </Button>
                 </Box>
 
-                {currentWorkout &&
-                    currentWorkout.exercises?.length > 0 &&
+                {unsavedWorkout &&
+                    unsavedWorkout.exercises?.length > 0 &&
                     !isDismissed && (
                         <Box className="workout-tracker__in-progress-section">
                             <Box className="workout-tracker__section-header">
@@ -105,7 +106,7 @@ function WorkoutTracker() {
                                 <Box className="workout-tracker__status-dot" />
                             </Box>
                             <ContinueWorkoutCard
-                                workout={currentWorkout}
+                                workout={unsavedWorkout}
                                 onDismiss={handleDismissAndSave}
                                 onDelete={handleDeleteWorkout}
                             />
