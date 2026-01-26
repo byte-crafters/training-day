@@ -22,6 +22,7 @@ import {
     createWorkout as createWorkoutAPI,
     getWorkouts,
 } from "../../utils/api";
+import { saveCurrentWorkout } from "../../utils/storage";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -88,7 +89,9 @@ function MyWorkout() {
 
             const workouts = await getWorkouts();//надо ли тут?
             dispatch(setWorkouts(workouts));
-            dispatch(setCurrentWorkout(null));//тут очищаем currentWorkout из localStorage
+
+            dispatch(setCurrentWorkout(null));
+            saveCurrentWorkout(null);
 
             navigate("/");
         } catch (error) {

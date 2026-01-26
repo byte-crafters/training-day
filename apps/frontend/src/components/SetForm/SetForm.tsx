@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, IconButton, Button, TextField, Drawer } from "@mui/material";
 import { Set } from "@training-day/shared";
+import { v4 as uuidv4 } from 'uuid';
 import "./SetForm.scss";
 
 interface SetFormProps {
@@ -103,7 +104,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
         }
 
         const set: Set = {
-            id: initialSet?.id || Date.now().toString(),
+            id: uuidv4(),
             reps: repsValue,
             weight: weight === "" ? 0 : weight,
             note: note || null,

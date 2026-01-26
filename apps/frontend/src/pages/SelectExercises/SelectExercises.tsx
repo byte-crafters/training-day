@@ -18,6 +18,7 @@ import {
 } from "../../store";
 import { createWorkout, exerciseToActivity } from "../../utils/helpers";
 import ExerciseListItem from "../../components/ExerciseListItem";
+import { saveCurrentWorkout } from "../../utils/storage";
 
 type Category = "All" | ExerciseType;
 
@@ -126,9 +127,12 @@ function SelectExercises() {
             };
 
             dispatch(setCurrentWorkout(updatedWorkout));
+            saveCurrentWorkout(updatedWorkout);
         } else {
             // Создаем новую тренировку
-            dispatch(setCurrentWorkout(createWorkout(selectedExercises)));
+            const newWorkout = createWorkout(selectedExercises);
+            dispatch(setCurrentWorkout(newWorkout));
+            saveCurrentWorkout(newWorkout);
         }
 
         navigate("/my-workout", { state: { exercises: selectedExercises } });

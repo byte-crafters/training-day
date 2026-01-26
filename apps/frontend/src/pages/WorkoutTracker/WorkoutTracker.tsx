@@ -1,42 +1,36 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import WorkoutCard from "../../components/WorkoutCard";
 import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
 import "./WorkoutTracker.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     getWorkouts,
     createWorkout as createWorkoutAPI,
 } from "../../utils/api";
-import { setWorkouts, useAppSelector, useAppDispatch, RootState } from "../../store";
+import { setWorkouts, setCurrentWorkout, useAppSelector, useAppDispatch, RootState } from "../../store";
 import { Workout } from "@training-day/shared";
-import { loadUnsavedWorkout, saveUnsavedWorkout } from "../../utils/storage";
 
 function WorkoutTracker() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const [isDismissed, setIsDismissed] = useState(false);
-    const [unsavedWorkout, setUnsavedWorkout] = useState<Workout | null>(null);
+    const [showStartDialog, setShowStartDialog] = useState(false);
 
     const workouts = useAppSelector((state: RootState) => {
         return state.workouts.slice(0, 2);
     });
 
-    // Загружаем unsavedWorkout из localStorage при монтировании
-    useEffect(() => {
-        const workout = loadUnsavedWorkout();
-        setUnsavedWorkout(workout);
-    }, []);
+    const currentWorkout = useAppSelector((state: RootState) => state.currentWorkout);
 
     const handleDeleteWorkout = () => {
-        saveUnsavedWorkout(null);
-        setUnsavedWorkout(null);
+        dispatch(setCurrentWorkout(null));
         setIsDismissed(true);
     };
 
     const handleDismissAndSave = async () => {
-        if (!unsavedWorkout) {
+        if (!currentWorkout) {
             return;
         }
 
@@ -45,21 +39,41 @@ function WorkoutTracker() {
 
         try {
             // Сохраняем тренировку в базу данных
-            await createWorkoutAPI(unsavedWorkout);
+            await createWorkoutAPI(currentWorkout);
 
             // Обновляем список тренировок
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
 
-            // Очищаем unsavedWorkout только после успешного сохранения
-            saveUnsavedWorkout(null);
-            setUnsavedWorkout(null);
+            // Очищаем currentWorkout только после успешного сохранения
+            dispatch(setCurrentWorkout(null));
         } catch (error) {
             console.error("Failed to save workout:", error);
             // При ошибке показываем карточку снова, чтобы пользователь мог попробовать еще раз
             setIsDismissed(false);
             // Можно добавить уведомление об ошибке
         }
+    };
+
+    const handleStartTraining = () => {
+        // Если есть текущая тренировка, показываем диалог выбора
+        if (currentWorkout && currentWorkout.exercises?.length > 0) {
+            setShowStartDialog(true);
+        } else {
+            // Если нет текущей тренировки, сразу переходим к выбору упражнений
+            navigate("/select-exercises");
+        }
+    };
+
+    const handleContinueWorkout = () => {
+        setShowStartDialog(false);
+        navigate("/my-workout");
+    };
+
+    const handleCreateNewWorkout = () => {
+        setShowStartDialog(false);
+        dispatch(setCurrentWorkout(null));
+        navigate("/select-exercises");
     };
 
     return (
@@ -79,7 +93,7 @@ function WorkoutTracker() {
                         variant="contained"
                         size="large"
                         className="workout-tracker__start-button"
-                        onClick={() => navigate("/select-exercises")}
+                        onClick={handleStartTraining}
                         startIcon={
                             <svg
                                 width="20"
@@ -95,8 +109,8 @@ function WorkoutTracker() {
                     </Button>
                 </Box>
 
-                {unsavedWorkout &&
-                    unsavedWorkout.exercises?.length > 0 &&
+                {currentWorkout &&
+                    currentWorkout.exercises?.length > 0 &&
                     !isDismissed && (
                         <Box className="workout-tracker__in-progress-section">
                             <Box className="workout-tracker__section-header">
@@ -106,7 +120,7 @@ function WorkoutTracker() {
                                 <Box className="workout-tracker__status-dot" />
                             </Box>
                             <ContinueWorkoutCard
-                                workout={unsavedWorkout}
+                                workout={currentWorkout}
                                 onDismiss={handleDismissAndSave}
                                 onDelete={handleDeleteWorkout}
                             />
@@ -137,6 +151,59 @@ function WorkoutTracker() {
                     </Box>
                 </Box>
             </Box>
+
+            <Dialog
+                open={showStartDialog}
+                onClose={() => setShowStartDialog(false)}
+                PaperProps={{
+                    sx: {
+                        backgroundColor: '#1a1a1a',
+                        color: '#ffffff',
+                    }
+                }}
+            >
+                <DialogTitle sx={{ color: '#ffffff' }}>
+                    You have an unfinished workout
+                </DialogTitle>
+                <DialogContent>
+                    <Typography sx={{ color: '#ffffff', mb: 2 }}>
+                        Do you want to continue the current workout or create a new one?
+                    </Typography>
+                    {currentWorkout && (
+                        <Typography variant="body2" sx={{ color: '#aaaaaa' }}>
+                            Current workout: {currentWorkout.name || 'No name'}
+                        </Typography>
+                    )}
+                </DialogContent>
+                <DialogActions sx={{ p: 2, gap: 1 }}>
+                    <Button
+                        onClick={handleCreateNewWorkout}
+                        variant="outlined"
+                        sx={{
+                            color: '#ffffff',
+                            borderColor: '#ffffff',
+                            '&:hover': {
+                                borderColor: '#ffffff',
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            },
+                        }}
+                    >
+                        Start a new one
+                    </Button>
+                    <Button
+                        onClick={handleContinueWorkout}
+                        variant="contained"
+                        sx={{
+                            backgroundColor: '#1976d2',
+                            '&:hover': {
+                                backgroundColor: '#1565c0',
+                            },
+                        }}
+                    >
+                        Continue
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }

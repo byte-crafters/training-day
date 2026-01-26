@@ -1,6 +1,6 @@
 import { createSlice, configureStore, Middleware, PayloadAction } from '@reduxjs/toolkit';
 import { Exercise, Set, Workout } from '@training-day/shared';
-import { saveCurrentWorkout, loadCurrentWorkout, saveUnsavedWorkout } from '../utils/storage';
+import { saveCurrentWorkout, loadCurrentWorkout } from '../utils/storage';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 const initialWorkouts: Workout[] = [];
@@ -15,17 +15,7 @@ const workoutsSlice = createSlice({
     }
 });
 
-// При инициализации: если есть currentWorkout в localStorage, перемещаем его в unsavedWorkout
-// и обнуляем currentWorkout (это означает, что пользователь вышел без сохранения)
-const loadedCurrentWorkout = loadCurrentWorkout();
-if (loadedCurrentWorkout) {
-    // Перемещаем currentWorkout в unsavedWorkout
-    saveUnsavedWorkout(loadedCurrentWorkout);
-    // Очищаем currentWorkout
-    saveCurrentWorkout(null);
-}
-
-const initialCurrentWorkout: Workout | null = null;
+const initialCurrentWorkout: Workout | null = loadCurrentWorkout();
 
 const currentWorkoutSlice = createSlice({
     name: 'currentWorkout',
@@ -83,10 +73,6 @@ const exercisesSlice = createSlice({
 
 // Middleware для автоматического сохранения currentWorkout в localStorage
 const saveWorkoutMiddleware: Middleware = (store) => (next) => (action) => {
-    // Получаем текущее состояние перед действием
-    const prevState = store.getState();
-    const prevWorkout = prevState.currentWorkout;
-    
     const result = next(action);
     
     // Сохраняем currentWorkout после любых действий, которые могут его изменить
@@ -99,13 +85,6 @@ const saveWorkoutMiddleware: Middleware = (store) => (next) => (action) => {
     ) {
         const state = store.getState();
         const currentWorkout = state.currentWorkout;
-        
-        // Если currentWorkout устанавливается в null, сохраняем предыдущую тренировку в unsavedWorkout
-        if (currentWorkoutSlice.actions.setCurrentWorkout.match(action) && currentWorkout === null && prevWorkout) {
-            saveUnsavedWorkout(prevWorkout);
-        }
-        
-        // Сохраняем currentWorkout в localStorage
         saveCurrentWorkout(currentWorkout);
     }
     
