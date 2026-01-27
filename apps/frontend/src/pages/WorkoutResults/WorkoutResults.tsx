@@ -4,6 +4,7 @@ import { Activity, Workout, ExerciseType } from "@training-day/shared";
 import "./WorkoutResults.scss";
 import { useAppSelector, RootState } from "../../store";
 import { useEffect, useState } from "react";
+import FeedbackButton from "../../components/FeedbackButton";
 
 // Функция для форматирования времени начала тренировки
 const formatStartTime = (dateString: string): string => {
@@ -172,6 +173,8 @@ function WorkoutResults() {
                     CONTINUE WORKOUT
                 </Button>
             </Box>
+
+            <FeedbackButton />
         </Box>
     );
 }

@@ -19,6 +19,7 @@ import {
 import { createWorkout, exerciseToActivity } from "../../utils/helpers";
 import ExerciseListItem from "../../components/ExerciseListItem";
 import { saveCurrentWorkout } from "../../utils/storage";
+import FeedbackButton from "../../components/FeedbackButton";
 
 type Category = "All" | ExerciseType;
 
@@ -249,6 +250,8 @@ function SelectExercises() {
                     {currentWorkout ? "Continue Workout" : "Begin Workout"}
                 </Button>
             </Box>
+
+            <FeedbackButton />
         </Box>
     );
 }

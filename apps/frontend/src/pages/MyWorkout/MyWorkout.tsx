@@ -23,6 +23,7 @@ import {
     getWorkouts,
 } from "../../utils/api";
 import { saveCurrentWorkout } from "../../utils/storage";
+import FeedbackButton from "../../components/FeedbackButton";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -245,6 +246,8 @@ function MyWorkout() {
                     )}
                 </Button>
             </Box>
+
+            <FeedbackButton />
         </Box>
     );
 }

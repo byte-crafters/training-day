@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import "./NotFound.scss";
+import FeedbackButton from "../../components/FeedbackButton";
 
 function NotFound() {
     const navigate = useNavigate();
@@ -25,6 +26,8 @@ function NotFound() {
                     Return to the main page
                 </Button>
             </Box>
+
+            <FeedbackButton />
         </Box>
     );
 }

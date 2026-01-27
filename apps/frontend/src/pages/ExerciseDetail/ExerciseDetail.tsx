@@ -5,6 +5,7 @@ import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
 import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector } from "../../store";
 import SetForm from "../../components/SetForm";
+import FeedbackButton from "../../components/FeedbackButton";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
@@ -239,6 +240,8 @@ function ExerciseDetail() {
                 initialSet={editingSet}
                 mode={formMode}
             />
+
+            <FeedbackButton />
         </Box>
     );
 }
