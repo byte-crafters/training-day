@@ -9,10 +9,4 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {
-    onClick: () => {
-      console.log('FeedbackButton clicked');
-    },
-  },
-};
+export const Default: Story = {};

@@ -170,3 +170,14 @@ export const sendTelegramInitData = async (initDataRaw: string) => {
         },
     });
 };
+
+/**
+ * Отправить feedback на сервер
+ * Сервер отправит сообщение в Telegram админу
+ */
+export const sendFeedback = async (message: string) => {
+    return fetchAPI('/feedback', {
+        method: 'POST',
+        body: JSON.stringify({ message }),
+    });
+};

@@ -7,9 +7,11 @@ import {
     Button,
     IconButton,
 } from "@mui/material";
-import "./FeedBackPage.scss";
+import "./FeedbackPage.scss";
+import { sendFeedback } from "../../utils/api";
+import { toast } from "../../utils/toast";
 
-function FeedBackPage() {
+function FeedbackPage() {
     const navigate = useNavigate();
     const [feedback, setFeedback] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,16 +26,13 @@ function FeedBackPage() {
         setIsSubmitting(true);
         
         try {
-            // TODO: Реализовать отправку обратной связи на сервер
-            console.log("Feedback submitted:", feedback);
-            
-            // Имитация отправки
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            
-            // После успешной отправки можно вернуться назад или показать сообщение
+            await sendFeedback(feedback);
+            toast.success("Feedback sent successfully!");
+            setFeedback("");
             navigate(-1);
         } catch (error) {
             console.error("Failed to submit feedback:", error);
+            // Ошибка уже обработана в fetchAPI и показана через toast
         } finally {
             setIsSubmitting(false);
         }
@@ -75,7 +74,7 @@ function FeedBackPage() {
 
                     <TextField
                         multiline
-                        rows={10}
+                        rows={8}
                         fullWidth
                         value={feedback}
                         onChange={(e) => setFeedback(e.target.value)}
@@ -112,6 +111,17 @@ function FeedBackPage() {
                         fullWidth
                         disabled={!feedback.trim() || isSubmitting}
                         className="feedback-page__submit-button"
+                        sx={{
+                            backgroundColor: '#00d4ff',
+                            color: '#000000',
+                            '&:hover': {
+                                backgroundColor: '#00e5ff',
+                            },
+                            '&:disabled': {
+                                backgroundColor: 'rgba(0, 212, 255, 0.3)',
+                                color: 'rgba(255, 255, 255, 0.5)',
+                            },
+                        }}
                     >
                         {isSubmitting ? "Sending..." : "Send Feedback"}
                     </Button>
@@ -121,4 +131,4 @@ function FeedBackPage() {
     );
 }
 
-export default FeedBackPage;
+export default FeedbackPage;

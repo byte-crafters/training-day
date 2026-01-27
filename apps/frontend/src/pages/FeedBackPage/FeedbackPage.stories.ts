@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import FeedbackPage from './FeedBackPage';
+import FeedbackPage from './FeedbackPage';
 
 const meta = {
   component: FeedbackPage,

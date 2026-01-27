@@ -1,1 +1,1 @@
-export { default } from "./FeedBackPage";
+export { default } from "./FeedbackPage";

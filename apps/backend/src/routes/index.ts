@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { ExerciseController } from '../controllers/exerciseController.js';
 import { WorkoutController } from '../controllers/workoutController.js';
 import { AuthController } from '../controllers/authController.js';
+import { FeedbackController } from '../controllers/feedbackController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = Router();
@@ -22,6 +23,9 @@ router.delete('/workouts/:id', authMiddleware, WorkoutController.delete);
 
 // Auth routes
 router.post('/auth/telegram', AuthController.initTelegram);
+
+// Feedback routes (требуют аутентификации)
+router.post('/feedback', authMiddleware, FeedbackController.create);
 
 // Health check
 router.get('/health', (_req, res) => {
