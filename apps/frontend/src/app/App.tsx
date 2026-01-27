@@ -154,14 +154,15 @@ function App() {
                 {!isAuthenticating && !authError && (
                     <BrowserRouter>
                         <Routes>
+                            <Route
+                                path="/select-exercises"
+                                element={<SelectExercises />}
+                            />
                             <Route element={<NavigationLayout />}>
                                 <Route path="/" element={<WorkoutTracker />} />
                                 <Route path="/progress" element={<NotFound />} />
                                 <Route path="/profile" element={<NotFound />} />
-                                <Route
-                                    path="/select-exercises"
-                                    element={<SelectExercises />}
-                                />
+
                             </Route>
                             <Route path="/my-workout" element={<MyWorkout />} />
                             <Route

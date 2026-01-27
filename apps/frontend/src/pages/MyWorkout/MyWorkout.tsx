@@ -174,7 +174,7 @@ function MyWorkout() {
                                     ref={textRef}
                                     className="my-workout__name-text"
                                 >
-                                    {workoutName}
+                                    {workoutName.slice(0, 10)}...
                                 </Typography>
                                 <IconButton
                                     className="my-workout__edit-button"

@@ -105,7 +105,7 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
-        padding-bottom: 100px; // Отступ для footer с кнопкой (16px padding + 16px padding + ~68px высота кнопки)
+        padding-bottom: 100px;
         overflow-y: auto;
         overflow-x: hidden;
         min-height: 0; // Важно для flex-скролла
@@ -206,19 +206,13 @@
 
     &__footer {
         position: fixed;
-        bottom: 64px; // Высота BottomNavigation
-        padding: 16px 24px;
+        bottom: 0;
         left: 0;
         right: 0;
-        background: transparent;
-        z-index: 100;
-        pointer-events: none;
-        border: none;
-        box-shadow: none;
-        
-        * {
-            pointer-events: auto;
-        }
+        padding: 16px 24px;
+        background-color: transparent;
+        z-index: 1000;
+        pointer-events: auto;
     }
 
     &__continue-button {
@@ -226,5 +220,22 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
+        background-color: #1a1a1a !important;
+        color: #00d4ff !important;
+        border: 1px solid #00d4ff !important;
+        position: relative !important;
+        z-index: 1001 !important;
+
+        &:hover {
+            background-color: #1a1a1a !important;
+            border-color: #00e5ff !important;
+            color: #00e5ff !important;
+        }
+
+        &:disabled {
+            background-color: #1a1a1a !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+            color: rgba(0, 212, 255, 0.3) !important;
+        }
     }
 }

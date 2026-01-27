@@ -16,9 +16,7 @@ function FeedBackPage() {
     const [feedback, setFeedback] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        
+    const submitFeedback = async () => {
         if (!feedback.trim()) {
             return;
         }
@@ -36,6 +34,11 @@ function FeedBackPage() {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        submitFeedback();
     };
 
     return (
@@ -103,29 +106,20 @@ function FeedBackPage() {
                             },
                         }}
                     />
-
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        size="large"
-                        fullWidth
-                        disabled={!feedback.trim() || isSubmitting}
-                        className="feedback-page__submit-button"
-                        sx={{
-                            backgroundColor: '#00d4ff',
-                            color: '#000000',
-                            '&:hover': {
-                                backgroundColor: '#00e5ff',
-                            },
-                            '&:disabled': {
-                                backgroundColor: 'rgba(0, 212, 255, 0.3)',
-                                color: 'rgba(255, 255, 255, 0.5)',
-                            },
-                        }}
-                    >
-                        {isSubmitting ? "Sending..." : "Send Feedback"}
-                    </Button>
                 </form>
+            </Box>
+
+            <Box className="feedback-page__footer">
+                <Button
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                    disabled={!feedback.trim() || isSubmitting}
+                    className="feedback-page__submit-button"
+                    onClick={submitFeedback}
+                >
+                    {isSubmitting ? "Sending..." : "Send Feedback"}
+                </Button>
             </Box>
         </Box>
     );

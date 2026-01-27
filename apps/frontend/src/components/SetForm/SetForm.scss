@@ -233,19 +233,22 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
-        background-color: var(--mui-palette-primary-main) !important;
+        background-color: #00d4ff !important;
         color: #000000 !important;
+        border: 1px solid #00d4ff !important;
         margin-top: 0 !important;
         margin-bottom: 12px !important;
 
         &:hover {
-            background-color: #ffffff !important;
+            background-color: #00e5ff !important;
+            border-color: #00e5ff !important;
+            color: #000000 !important;
         }
 
         &:disabled {
-            background-color: #161618 !important;
-            color: #a1a1aa !important;
-            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            background-color: rgba(0, 212, 255, 0.3) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
         }
     }
 

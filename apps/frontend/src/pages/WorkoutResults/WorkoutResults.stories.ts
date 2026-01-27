@@ -1,10 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React, { ReactElement } from 'react';
-import { Box } from '@mui/material';
 import { store, setCurrentWorkout } from '../../store/index';
 import { Workout, ExerciseType } from '@training-day/shared';
 import WorkoutResults from './WorkoutResults';
-import BottomNavigation from '../../components/NavigationLayout/BottomNavigation';
 
 const createMockWorkout = (name: string, exerciseCount: number, setsPerExercise: number = 2): Workout => {
   const exercises = [];
@@ -59,12 +57,7 @@ const meta = {
         store.dispatch(setCurrentWorkout(null));
       }
 
-      return React.createElement(
-        Box,
-        { sx: { paddingBottom: '64px', minHeight: '100vh', position: 'relative' } },
-        React.createElement(Story),
-        React.createElement(BottomNavigation)
-      );
+      return React.createElement(Story);
     },
   ],
   parameters: {

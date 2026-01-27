@@ -32,8 +32,8 @@ const preview: Preview = {
                 oneplus: {
                     name: 'OnePlus',
                     styles: {
-                        width: '412px',
-                        height: '915px',
+                        width: '360px',
+                        height: '710px',
                     },
                     type: 'mobile',
                 },
