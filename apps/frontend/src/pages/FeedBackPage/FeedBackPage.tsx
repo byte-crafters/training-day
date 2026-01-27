@@ -7,11 +7,11 @@ import {
     Button,
     IconButton,
 } from "@mui/material";
-import "./FeedbackPage.scss";
+import "./FeedBackPage.scss";
 import { sendFeedback } from "../../utils/api";
 import { toast } from "../../utils/toast";
 
-function FeedbackPage() {
+function FeedBackPage() {
     const navigate = useNavigate();
     const [feedback, setFeedback] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -131,4 +131,4 @@ function FeedbackPage() {
     );
 }
 
-export default FeedbackPage;
+export default FeedBackPage;

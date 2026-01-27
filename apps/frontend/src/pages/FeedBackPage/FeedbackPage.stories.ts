@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import FeedbackPage from './FeedbackPage';
+import FeedBackPage from './FeedBackPage';
 
 const meta = {
-  component: FeedbackPage,
-} satisfies Meta<typeof FeedbackPage>;
+  component: FeedBackPage,
+} satisfies Meta<typeof FeedBackPage>;
 
 export default meta;
 
