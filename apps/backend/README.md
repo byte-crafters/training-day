@@ -23,7 +23,7 @@ Backend сервер для Training Day приложения, использу�
 ```env
 SUPABASE_URL=your-project-url-here
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
-TELEGRAM_BOT_TOKEN=your-telegram-bot-token-here
+TELEGRAM_BETA_BOT_TOKEN=your-telegram-beta-bot-token-here
 JWT_SECRET=your-jwt-secret-key-here
 JWT_REFRESH_SECRET=your-jwt-refresh-secret-key-here
 PORT=3001
