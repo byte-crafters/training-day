@@ -1,0 +1,70 @@
+/* Черный фон для Storybook */
+html,
+body,
+#storybook-root {
+    background-color: #1a1a1a !important;
+}
+
+/* Убираем padding и margin у Storybook контейнеров */
+.sb-show-main {
+    padding: 0 !important;
+    margin: 0 !important;
+    background-color: #1a1a1a !important;
+}
+
+.sb-main-padded {
+    padding: 0 !important;
+}
+
+#storybook-root {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+}
+
+/* Убираем полосы по бокам */
+.os-host {
+    width: 100% !important;
+}
+
+/* Убираем padding у основного контейнера Storybook */
+.sb-main {
+    padding: 0 !important;
+    overflow-y: hidden !important;
+}
+
+/* Скрываем скроллбар, но оставляем возможность прокрутки */
+* {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE и Edge */
+}
+
+*::-webkit-scrollbar {
+    display: none !important; /* Chrome, Safari, Opera */
+}
+
+/* Для контейнеров Storybook */
+.sb-show-main,
+.sb-main-padded,
+#storybook-root,
+.sb-main,
+.os-host {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+.sb-show-main::-webkit-scrollbar,
+.sb-main-padded::-webkit-scrollbar,
+#storybook-root::-webkit-scrollbar,
+.sb-main::-webkit-scrollbar,
+.os-host::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Убеждаемся, что контейнер Storybook не мешает позиционированию */
+#storybook-root {
+    position: relative !important;
+    min-height: 100vh !important;
+}

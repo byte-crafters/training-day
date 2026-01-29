@@ -19,7 +19,7 @@ const initialCurrentWorkout: Workout | null = loadCurrentWorkout();
 
 const currentWorkoutSlice = createSlice({
     name: 'currentWorkout',
-    initialState: initialCurrentWorkout,
+    initialState: initialCurrentWorkout as Workout | null,
     reducers: {
         setCurrentWorkout(_state, action: PayloadAction<Workout | null>) {
             return action.payload;
@@ -84,7 +84,8 @@ const saveWorkoutMiddleware: Middleware = (store) => (next) => (action) => {
         currentWorkoutSlice.actions.deleteSet.match(action)
     ) {
         const state = store.getState();
-        saveCurrentWorkout(state.currentWorkout);
+        const currentWorkout = state.currentWorkout;
+        saveCurrentWorkout(currentWorkout);
     }
     
     return result;

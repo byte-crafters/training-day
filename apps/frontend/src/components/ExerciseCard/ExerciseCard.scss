@@ -1,10 +1,17 @@
 .exercise-card {
-    background-color: #2a2a2a;
-    border-radius: 12px;
+    background-color: #161618;
+    border-radius: 16px;
     padding: 16px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
 
     &__content {
         flex: 1;
@@ -17,27 +24,31 @@
         font-size: 16px;
         font-weight: 600;
         color: #ffffff;
+        margin: 0;
     }
 
     &__status {
         font-size: 14px;
-        color: #b0b0b0;
+        color: #a1a1aa;
+        margin: 0;
     }
 
-    &__progress {
+    &__action {
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-shrink: 0;
     }
 
-    &__progress-text {
+    &__action-text {
         font-size: 14px;
         font-weight: 500;
-        color: #60a5fa;
+        color: #ffffff;
+        margin: 0;
     }
 
     &__arrow {
-        color: #ffffff;
+        color: var(--mui-palette-primary-main);
         width: 20px;
         height: 20px;
         flex-shrink: 0;

@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material"; 
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import "./WorkoutCard.scss";
 
 export interface WorkoutCardProps {
@@ -9,7 +10,7 @@ export interface WorkoutCardProps {
 }
 
 function WorkoutCard({ name, date, duration, onClick }: WorkoutCardProps) {
-    
+
     const workoutDate = new Date(date);
     const formattedDate = workoutDate.toLocaleDateString('en-US', {
         weekday: 'short',
@@ -17,18 +18,41 @@ function WorkoutCard({ name, date, duration, onClick }: WorkoutCardProps) {
         day: 'numeric'
     });
 
+    const formatDuration = (duration: string) => {
+        const minutes = parseInt(duration, 10);
+        if (isNaN(minutes)) return duration;
+        return `${minutes}m`;
+    };
+
     return (
-        <Box 
-            className="workout-card" 
+        <Box
+            className="workout-card"
             onClick={onClick}
-            sx={{ cursor: onClick ? 'pointer' : 'default' }}
+            sx={{ cursor: "pointer" }}
         >
-            <Typography className="workout-card__date">{formattedDate}</Typography>
+            <Box className="workout-card__icon">
+               <FitnessCenterIcon />
+            </Box>
             <Box className="workout-card__content">
-                <Typography className="workout-card__name">{name}</Typography>
-                <Typography className="workout-card__duration">
-                    {duration}
+                <Typography variant="h4" className="workout-card__name">{name}</Typography>
+                <Typography variant="body2" className="workout-card__date">{formattedDate}</Typography>
+            </Box>
+            <Box className="workout-card__right">
+                <Typography variant="body2" color='text.secondary' className="workout-card__duration">
+                    {formatDuration(duration)}
                 </Typography>
+                <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M9 18l6-6-6-6" />
+                </svg>
             </Box>
         </Box>
     );

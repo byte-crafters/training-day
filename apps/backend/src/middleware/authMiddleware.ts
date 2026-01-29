@@ -24,9 +24,9 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         }
 
         // Получаем токен бота из переменных окружения
-        const botToken = process.env.TELEGRAM_BOT_TOKEN;
+        const botToken = process.env.TELEGRAM_BETA_BOT_TOKEN;
         if (!botToken) {
-            console.error('❌ Auth middleware: TELEGRAM_BOT_TOKEN is not set');
+            console.error('❌ Auth middleware: TELEGRAM_BETA_BOT_TOKEN is not set');
             return res.status(500).json({ 
                 error: 'Server configuration error: bot token is missing' 
             });

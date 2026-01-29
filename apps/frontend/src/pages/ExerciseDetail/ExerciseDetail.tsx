@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, Typography, IconButton, Button } from "@mui/material";
+import { Box, Typography, IconButton, Button, Card } from "@mui/material";
 import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
 import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector } from "../../store";
-import SetForm from "./SetForm";
+import SetForm from "../../components/SetForm";
+import FeedbackButton from "../../components/FeedbackButton";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
@@ -69,10 +70,10 @@ function ExerciseDetail() {
 
         if (formMode === 'edit' && editingSet) {
             // Обновляем существующий сет
-            dispatch(updateSet({ 
-                exerciseId: activity.id, 
-                setId: editingSet.id, 
-                set 
+            dispatch(updateSet({
+                exerciseId: activity.id,
+                setId: editingSet.id,
+                set
             }));
             // Обновляем локальное состояние
             setSavedSets((prev) =>
@@ -98,9 +99,9 @@ function ExerciseDetail() {
         }
 
         // Удаляем сет из Redux store
-        dispatch(deleteSet({ 
-            exerciseId: activity.id, 
-            setId: editingSet.id 
+        dispatch(deleteSet({
+            exerciseId: activity.id,
+            setId: editingSet.id
         }));
 
         // Обновляем локальное состояние
@@ -118,6 +119,7 @@ function ExerciseDetail() {
                     className="exercise-detail__back-button"
                     onClick={() => navigate(-1)}
                     aria-label="Back"
+                    sx={{ color: '#ffffff' }}
                 >
                     <svg
                         width="24"
@@ -140,40 +142,41 @@ function ExerciseDetail() {
 
             <Box component="main" className="exercise-detail__main">
                 {savedSets.length > 0 ? (
-                    <Box className="exercise-detail__card">
-                        <Box className="exercise-detail__previous-sets">
-                            <Typography className="exercise-detail__previous-sets-title">
-                                Previous Sets
-                            </Typography>
-                            {savedSets.map((set, index) => (
-                                <Box
-                                    key={set.id}
-                                    className="exercise-detail__previous-set-item"
-                                    onClick={() => handleEditSet(set)}
-                                    sx={{ cursor: "pointer" }}
+                    <Box className="exercise-detail__previous-sets">
+                        <Typography variant="h5"
+                            color="text.secondary" sx={{ textTransform: "uppercase" }}
+                            className="exercise-detail__previous-sets-title">
+                            Previous Sets
+                        </Typography>
+                        {savedSets.map((set, index) => (
+                            <Card
+                                key={set.id}
+                                variant="outlined"
+                                className="exercise-detail__previous-set-item"
+                                onClick={() => handleEditSet(set)}
+                                sx={{ padding: "26px", borderRadius: "16px", margin: "10px 0", cursor: "pointer" }}
+                            >
+                                <Typography className="exercise-detail__previous-set-text">
+                                    Set {index + 1}: {set.reps} reps
+                                    {set.weight !== undefined &&
+                                        set.weight > 0 &&
+                                        ` • ${set.weight} kg`}
+                                </Typography>
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="exercise-detail__arrow"
                                 >
-                                    <Typography className="exercise-detail__previous-set-text">
-                                        Set {index + 1}: {set.reps} reps
-                                        {set.weight !== undefined &&
-                                            set.weight > 0 &&
-                                            ` • ${set.weight} kg`}
-                                    </Typography>
-                                    <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="exercise-detail__arrow"
-                                    >
-                                        <path d="M9 18l6-6-6-6" />
-                                    </svg>
-                                </Box>
-                            ))}
-                        </Box>
+                                    <path d="M5 12h14M12 5l7 7-7 7" />
+                                </svg>
+                            </Card>
+                        ))}
                     </Box>
                 ) : (
                     <Box className="exercise-detail__empty-state">
@@ -196,10 +199,10 @@ function ExerciseDetail() {
                                 <line x1="6" y1="12" x2="18" y2="12" strokeWidth="2" />
                             </svg>
                         </Box>
-                        <Typography className="exercise-detail__empty-state-text">
+                        <Typography variant="h4" color="text.secondary" className="exercise-detail__empty-state-text">
                             No sets yet
                         </Typography>
-                        <Typography className="exercise-detail__empty-state-hint">
+                        <Typography variant="h4" color="text.secondary" className="exercise-detail__empty-state-hint">
                             Tap the button below to add your first set of {exercise.name}
                         </Typography>
                     </Box>
@@ -208,7 +211,9 @@ function ExerciseDetail() {
 
             <Box className="exercise-detail__footer">
                 <Button
-                    variant="outlined"
+                    variant="contained"
+                    color="primary"
+                    size="large"
                     fullWidth
                     className="exercise-detail__add-set-button-bottom"
                     onClick={handleOpenForm}
@@ -216,7 +221,9 @@ function ExerciseDetail() {
                     Add Set
                 </Button>
                 <Button
-                    variant="contained"
+                    variant="outlined"
+                    color="primary"
+                    size="large"
                     fullWidth
                     className="exercise-detail__finish-button"
                     onClick={() => navigate("/my-workout")}
@@ -233,6 +240,8 @@ function ExerciseDetail() {
                 initialSet={editingSet}
                 mode={formMode}
             />
+
+            <FeedbackButton />
         </Box>
     );
 }

@@ -59,7 +59,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    currentWorkout: createMockWorkout('My Workout', 3, 0),
+    currentWorkout: createMockWorkout('My Workout', 6, 3),
   },
 };
 

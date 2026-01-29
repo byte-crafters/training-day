@@ -1,0 +1,270 @@
+.set-form {
+    &__drawer {
+        display: flex;
+        flex-direction: column;
+        padding: 0 24px 24px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    &__drawer-handle {
+        width: 40px;
+        height: 4px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        margin: 12px auto;
+        cursor: grab;
+    }
+
+    &__drawer-content {
+        padding-bottom: 24px;
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 20px;
+    }
+
+    &__inputs-row {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+        margin-bottom: 24px;
+        align-items: center !important;
+        width: 100%;
+    }
+
+    &__input-group {
+        width: 100% !important;
+        max-width: 400px;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    &__input-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #a1a1aa;
+        margin-bottom: 8px;
+        text-align: center;
+        width: 100%;
+    }
+
+    &__input-with-steppers {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        min-width: 300px;
+    }
+
+    &__stepper-button {
+        color: #ffffff !important;
+        padding: 8px !important;
+        min-width: 40px !important;
+        width: 40px !important;
+        height: 56px !important;
+        background-color: #161618 !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 12px !important;
+        transition: all 0.2s ease !important;
+
+        &:hover:not(:disabled) {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        &:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        &:disabled {
+            opacity: 0.4 !important;
+            cursor: not-allowed !important;
+        }
+
+        svg {
+            width: 20px;
+            height: 20px;
+            color: #ffffff !important;
+        }
+
+        &--large {
+            min-width: 50px !important;
+            width: 50px !important;
+            height: 56px !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+        }
+    }
+
+    &__stepper-button-text {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #ffffff !important;
+        line-height: 1 !important;
+    }
+
+    &__compact-input {
+        flex: 1;
+        min-width: 0; // Позволяет инпуту сжиматься меньше
+
+        .MuiOutlinedInput-root {
+            background-color: #161618;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            padding: 0 !important; // Убираем padding у корневого элемента
+            height: 56px !important;
+            min-height: 56px !important;
+            box-shadow: none !important;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+            fieldset {
+                border: none !important;
+                display: none !important;
+            }
+
+            &:hover {
+                border-color: rgba(255, 255, 255, 0.05) !important;
+                
+                fieldset {
+                    border: none !important;
+                }
+            }
+
+            &.Mui-focused {
+                border-color: var(--mui-palette-primary-main) !important;
+                box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2), 0 0 20px rgba(0, 229, 255, 0.3) !important;
+                
+                fieldset {
+                    border: none !important;
+                }
+            }
+
+            input {
+                color: #ffffff;
+                padding: 12px 16px !important;
+                font-size: 24px;
+                font-weight: 600;
+                text-align: center;
+                width: 100%;
+                min-width: 60px; // Минимальная ширина для видимости числа
+                height: 100% !important;
+                box-sizing: border-box !important;
+                cursor: default !important;
+
+                &::placeholder {
+                    color: #a1a1aa;
+                }
+            }
+
+            // Скрываем нативные стрелки stepper для input type="number"
+            input[type="number"] {
+                appearance: textfield !important; // Стандартное свойство
+                -moz-appearance: textfield !important; // Firefox
+
+                &::-webkit-outer-spin-button,
+                &::-webkit-inner-spin-button {
+                    appearance: none !important;
+                    -webkit-appearance: none !important; // Chrome, Safari, Edge
+                    margin: 0 !important;
+                    display: none !important;
+                }
+            }
+        }
+    }
+
+    &__note-section {
+        margin-bottom: 32px;
+    }
+
+    &__note-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #a1a1aa;
+        margin-bottom: 8px;
+    }
+
+    &__note-input {
+        width: 100%;
+
+        .MuiOutlinedInput-root {
+            background-color: #161618;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+            fieldset {
+                border-color: transparent;
+            }
+
+            &:hover fieldset {
+                border-color: transparent;
+            }
+
+            &.Mui-focused {
+                border-color: var(--mui-palette-primary-main) !important;
+                box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2), 0 0 20px rgba(0, 229, 255, 0.3) !important;
+                
+                fieldset {
+                    border-color: var(--mui-palette-primary-main);
+                }
+            }
+
+            textarea {
+                color: #ffffff;
+
+                &::placeholder {
+                    color: #a1a1aa;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    &__add-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        background-color: #00d4ff !important;
+        color: #000000 !important;
+        border: 1px solid #00d4ff !important;
+        margin-top: 0 !important;
+        margin-bottom: 12px !important;
+
+        &:hover {
+            background-color: #00e5ff !important;
+            border-color: #00e5ff !important;
+            color: #000000 !important;
+        }
+
+        &:disabled {
+            background-color: rgba(0, 212, 255, 0.3) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+    }
+
+    &__delete-button {
+        padding: 16px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        border-radius: 12px !important;
+        margin-top: 0 !important;
+        border: 1px solid rgba(239, 68, 68, 0.3) !important;
+        color: #ef4444 !important;
+        background-color: transparent !important;
+
+        &:hover {
+            border-color: #ef4444 !important;
+            background-color: rgba(239, 68, 68, 0.1) !important;
+        }
+    }
+}

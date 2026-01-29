@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import "./NotFound.scss";
+import FeedbackButton from "../../components/FeedbackButton";
 
 function NotFound() {
     const navigate = useNavigate();
@@ -12,19 +13,21 @@ function NotFound() {
                     404
                 </Typography>
                 <Typography variant="h5" className="not-found__subtitle">
-                    Страница не найдена
+                    Page not found
                 </Typography>
                 <Typography variant="body1" className="not-found__description">
-                    К сожалению, запрашиваемая страница не существует.
+                    Unfortunately, the requested page does not exist.
                 </Typography>
                 <Button
                     variant="contained"
                     onClick={() => navigate("/")}
                     className="not-found__button"
                 >
-                    Вернуться на главную
+                    Return to the main page
                 </Button>
             </Box>
+
+            <FeedbackButton />
         </Box>
     );
 }

@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import WorkoutCard from "../../components/WorkoutCard";
 import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
+import FeedbackButton from "../../components/FeedbackButton";
 import "./WorkoutTracker.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     getWorkouts,
     createWorkout as createWorkoutAPI,
@@ -16,20 +17,13 @@ function WorkoutTracker() {
     const dispatch = useAppDispatch();
 
     const [isDismissed, setIsDismissed] = useState(false);
+    const [showStartDialog, setShowStartDialog] = useState(false);
 
     const workouts = useAppSelector((state: RootState) => {
-        return state.workouts.slice(0, 2);
-    }); 
-
-    const currentWorkout = useAppSelector((state: RootState) => {
-        return state.currentWorkout;
+        return state.workouts.slice(0, 4);
     });
 
-    useEffect(() => {
-        console.log(workouts);
-
-        console.log(currentWorkout);
-    }, [currentWorkout, workouts]);
+    const currentWorkout = useAppSelector((state: RootState) => state.currentWorkout);
 
     const handleDeleteWorkout = () => {
         dispatch(setCurrentWorkout(null));
@@ -41,31 +35,56 @@ function WorkoutTracker() {
             return;
         }
 
-        // Сохраняем ссылку на тренировку перед очисткой
-        const workoutToSave = currentWorkout;
-
-        // Скрываем карточку и очищаем currentWorkout сразу
+        // Скрываем карточку
         setIsDismissed(true);
-        dispatch(setCurrentWorkout(null));
 
         try {
             // Сохраняем тренировку в базу данных
-            await createWorkoutAPI(workoutToSave);
+            await createWorkoutAPI(currentWorkout);
 
             // Обновляем список тренировок
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
+
+            // Очищаем currentWorkout только после успешного сохранения
+            dispatch(setCurrentWorkout(null));
         } catch (error) {
             console.error("Failed to save workout:", error);
+            // При ошибке показываем карточку снова, чтобы пользователь мог попробовать еще раз
+            setIsDismissed(false);
             // Можно добавить уведомление об ошибке
         }
+    };
+
+    const handleStartTraining = () => {
+        // Если есть текущая тренировка, показываем диалог выбора
+        if (currentWorkout && currentWorkout.exercises?.length > 0) {
+            setShowStartDialog(true);
+        } else {
+            // Если нет текущей тренировки, сразу переходим к выбору упражнений
+            navigate("/select-exercises");
+        }
+    };
+
+    const handleContinueWorkout = () => {
+        setShowStartDialog(false);
+        navigate("/my-workout");
+    };
+
+    const handleCreateNewWorkout = () => {
+        setShowStartDialog(false);
+        dispatch(setCurrentWorkout(null));
+        navigate("/select-exercises");
     };
 
     return (
         <Box className="workout-tracker">
             <Box component="header" className="workout-tracker__header">
+                <Typography variant="h1" color='main' className="workout-tracker__hub-label">
+                    Training Day
+                </Typography>
                 <Typography variant="h2" className="workout-tracker__title">
-                    Workout Tracker
+                    Dashboard
                 </Typography>
             </Box>
 
@@ -75,29 +94,49 @@ function WorkoutTracker() {
                         variant="contained"
                         size="large"
                         className="workout-tracker__start-button"
-                        onClick={() => navigate("/select-exercises")}
+                        onClick={handleStartTraining}
+                        startIcon={
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                        }
                     >
-                        Start Training
+                        Start training
                     </Button>
                 </Box>
 
                 {currentWorkout &&
                     currentWorkout.exercises?.length > 0 &&
                     !isDismissed && (
-                        <ContinueWorkoutCard
-                            workout={currentWorkout}
-                            onDismiss={handleDismissAndSave}
-                            onDelete={handleDeleteWorkout}
-                        />
+                        <Box className="workout-tracker__in-progress-section">
+                            <Box className="workout-tracker__section-header">
+                                <Typography variant="h5" color='text.secondary' className="workout-tracker__section-title">
+                                    In progress
+                                </Typography>
+                                <Box className="workout-tracker__status-dot" />
+                            </Box>
+                            <ContinueWorkoutCard
+                                workout={currentWorkout}
+                                onDismiss={handleDismissAndSave}
+                                onDelete={handleDeleteWorkout}
+                            />
+                        </Box>
                     )}
 
                 <Box className="workout-tracker__workouts-section">
-                    <Typography
-                        variant="h5"
-                        className="workout-tracker__section-title"
-                    >
-                        Recent Workouts
-                    </Typography>
+                    <Box className="workout-tracker__section-header">
+                        <Typography variant="h5" color='text.secondary' className="workout-tracker__section-title">
+                            Recent activity
+                        </Typography>
+                        <Typography variant="h5" color='main' className="workout-tracker__see-all">
+                            See all
+                        </Typography>
+                    </Box>
                     <Box className="workout-tracker__workouts-list">
                         {workouts.map((workout: Workout) => (
                             <WorkoutCard
@@ -106,24 +145,68 @@ function WorkoutTracker() {
                                 date={workout.date}
                                 duration={workout.duration}
                                 onClick={() => {
-                                    // Загружаем выбранную тренировку в currentWorkout
-                                    dispatch(setCurrentWorkout(workout));
-                                    // Переходим на страницу MyWorkout
-                                    navigate("/my-workout");
+                                    navigate("/workout-results", { state: { workout } });
                                 }}
                             />
                         ))}
                     </Box>
                 </Box>
-
-                <Button
-                    variant="outlined"
-                    fullWidth
-                    className="workout-tracker__stats-button"
-                >
-                    View Stats →
-                </Button>
             </Box>
+
+            <FeedbackButton />
+
+            <Dialog
+                open={showStartDialog}
+                onClose={() => setShowStartDialog(false)}
+                PaperProps={{
+                    sx: {
+                        backgroundColor: '#1a1a1a',
+                        color: '#ffffff',
+                    }
+                }}
+            >
+                <DialogTitle sx={{ color: '#ffffff' }}>
+                    You have an unfinished workout
+                </DialogTitle>
+                <DialogContent>
+                    <Typography sx={{ color: '#ffffff', mb: 2 }}>
+                        Do you want to continue the current workout or create a new one?
+                    </Typography>
+                    {currentWorkout && (
+                        <Typography variant="body2" sx={{ color: '#aaaaaa' }}>
+                            Current workout: {currentWorkout.name || 'No name'}
+                        </Typography>
+                    )}
+                </DialogContent>
+                <DialogActions sx={{ p: 2, gap: 1 }}>
+                    <Button
+                        onClick={handleCreateNewWorkout}
+                        variant="outlined"
+                        sx={{
+                            color: '#ffffff',
+                            borderColor: '#ffffff',
+                            '&:hover': {
+                                borderColor: '#ffffff',
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            },
+                        }}
+                    >
+                        Start a new one
+                    </Button>
+                    <Button
+                        onClick={handleContinueWorkout}
+                        variant="contained"
+                        sx={{
+                            backgroundColor: '#1976d2',
+                            '&:hover': {
+                                backgroundColor: '#1565c0',
+                            },
+                        }}
+                    >
+                        Continue
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }

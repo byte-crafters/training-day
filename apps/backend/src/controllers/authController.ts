@@ -35,9 +35,9 @@ export class AuthController {
             }
 
             // Получаем токен бота из переменных окружения
-            const botToken = process.env.TELEGRAM_BOT_TOKEN;
+            const botToken = process.env.TELEGRAM_BETA_BOT_TOKEN;
             if (!botToken) {
-                console.error('TELEGRAM_BOT_TOKEN is not set in environment variables');
+                console.error('TELEGRAM_BETA_BOT_TOKEN is not set in environment variables');
                 return res.status(500).json({ 
                     error: 'Server configuration error: bot token is missing'
                 });

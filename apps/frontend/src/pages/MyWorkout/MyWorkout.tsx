@@ -14,7 +14,6 @@ import {
     setCurrentWorkout,
     setWorkouts,
     updateWorkoutName,
-    store,
     useAppDispatch,
     useAppSelector,
     RootState,
@@ -24,6 +23,7 @@ import {
     getWorkouts,
 } from "../../utils/api";
 import { saveCurrentWorkout } from "../../utils/storage";
+import FeedbackButton from "../../components/FeedbackButton";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ function MyWorkout() {
     const currentWorkout = useAppSelector(
         (state: RootState) => state.currentWorkout
     );
-    const workoutName = currentWorkout?.name || "My Workout";
+    const workoutName = currentWorkout?.name || "Untitled Workout";
     const hasExercises =
         currentWorkout?.exercises?.length &&
         currentWorkout.exercises.length > 0;
@@ -42,13 +42,6 @@ function MyWorkout() {
     const [editedName, setEditedName] = useState(workoutName);
     const textRef = useRef<HTMLDivElement>(null);
     const [textWidth, setTextWidth] = useState<number | undefined>(undefined);
-
-    // Если нет текущей тренировки или упражнений, перенаправляем обратно
-    useEffect(() => {
-        // if (!currentWorkout || !hasExercises) {
-        //     navigate("/select-exercises");
-        // }
-    }, [hasExercises, navigate]);
 
     // Синхронизируем editedName с workoutName
     useEffect(() => {
@@ -89,35 +82,21 @@ function MyWorkout() {
 
         setIsSaving(true);
         try {
-            // Получаем актуальную версию currentWorkout из store перед сохранением
-            const state: RootState = store.getState();
-            const actualWorkout = state.currentWorkout;
+            const savedWorkout = await createWorkoutAPI(currentWorkout);
 
-            if (!actualWorkout) {
-                setIsSaving(false);
-                return;
+            if (!savedWorkout) {
+                throw new Error("Failed to save workout");
             }
 
-            // Сохраняем тренировку в базу данных
-            await createWorkoutAPI(actualWorkout);
-
-            // Обновляем список тренировок
-            const workouts = await getWorkouts();
+            const workouts = await getWorkouts();//надо ли тут?
             dispatch(setWorkouts(workouts));
 
-            // Очищаем currentWorkout в Redux store
-            // Middleware автоматически очистит localStorage при setCurrentWorkout(null)
             dispatch(setCurrentWorkout(null));
-
-            // Явно очищаем localStorage для гарантии
             saveCurrentWorkout(null);
 
-            // Переходим на главную страницу после успешного сохранения и очистки
             navigate("/");
         } catch (error) {
             console.error("Failed to finish workout:", error);
-            // При ошибке не очищаем данные, чтобы пользователь мог попробовать снова
-            // Можно добавить уведомление об ошибке
         } finally {
             setIsSaving(false);
         }
@@ -130,6 +109,7 @@ function MyWorkout() {
                     className="my-workout__back-button"
                     onClick={() => navigate(-1)}
                     aria-label="Back"
+                    sx={{ color: '#ffffff' }}
                 >
                     <svg
                         width="24"
@@ -144,90 +124,90 @@ function MyWorkout() {
                         <path d="M19 12H5M12 19l-7-7 7-7" />
                     </svg>
                 </IconButton>
+                {hasExercises && (
+                    <Box className="my-workout__name-section">
+                        {isEditingName ? (
+                            <Box className="my-workout__name-edit">
+                                <TextField
+                                    className="my-workout__name-input"
+                                    value={editedName}
+                                    onChange={(e) => setEditedName(e.target.value)}
+                                    sx={
+                                        textWidth ? { width: `${textWidth}px` } : {}
+                                    }
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                            handleSaveName();
+                                        } else if (e.key === "Escape") {
+                                            handleCancelEditName();
+                                        }
+                                    }}
+                                    autoFocus
+                                    variant="standard"
+                                    InputProps={{
+                                        disableUnderline: true,
+                                    }}
+                                />
+                                <IconButton
+                                    className="my-workout__save-button"
+                                    onClick={handleSaveName}
+                                    aria-label="Save"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </IconButton>
+                            </Box>
+                        ) : (
+                            <Box className="my-workout__name-display">
+                                <Typography
+                                    style={{ fontSize: "20px" }}
+                                    ref={textRef}
+                                    className="my-workout__name-text"
+                                >
+                                    {workoutName.slice(0, 10)}...
+                                </Typography>
+                                <IconButton
+                                    className="my-workout__edit-button"
+                                    onClick={handleStartEditName}
+                                    aria-label="Edit"
+                                >
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </IconButton>
+                            </Box>
+                        )}
+                    </Box>
+                )}
                 <Box className="my-workout__header-spacer" />
             </Box>
-
-            {hasExercises && (
-                <Box className="my-workout__name-section">
-                    {isEditingName ? (
-                        <Box className="my-workout__name-edit">
-                            <TextField
-                                className="my-workout__name-input"
-                                value={editedName}
-                                onChange={(e) => setEditedName(e.target.value)}
-                                sx={
-                                    textWidth ? { width: `${textWidth}px` } : {}
-                                }
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        handleSaveName();
-                                    } else if (e.key === "Escape") {
-                                        handleCancelEditName();
-                                    }
-                                }}
-                                autoFocus
-                                variant="standard"
-                                InputProps={{
-                                    disableUnderline: true,
-                                }}
-                            />
-                            <IconButton
-                                className="my-workout__save-button"
-                                onClick={handleSaveName}
-                                aria-label="Save"
-                            >
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                            </IconButton>
-                        </Box>
-                    ) : (
-                        <Box className="my-workout__name-display">
-                            <Typography
-                                style={{ fontSize: "20px" }}
-                                ref={textRef}
-                                className="my-workout__name-text"
-                            >
-                                {workoutName}
-                            </Typography>
-                            <IconButton
-                                className="my-workout__edit-button"
-                                onClick={handleStartEditName}
-                                aria-label="Edit"
-                            >
-                                <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                </svg>
-                            </IconButton>
-                        </Box>
-                    )}
-                </Box>
-            )}
 
             {hasExercises && (
                 <Box component="main" className="my-workout__main">
                     <Box className="my-workout__add-exercises-section">
                         <Button
                             variant="outlined"
+                            color="primary"
                             fullWidth
                             className="my-workout__add-exercises-button"
                             onClick={() => navigate("/select-exercises")}
@@ -245,6 +225,8 @@ function MyWorkout() {
             <Box className="my-workout__footer">
                 <Button
                     variant="contained"
+                    size="large"
+                    color="error"
                     fullWidth
                     className="my-workout__finish-button"
                     onClick={handleFinishWorkout}
@@ -264,6 +246,8 @@ function MyWorkout() {
                     )}
                 </Button>
             </Box>
+
+            <FeedbackButton />
         </Box>
     );
 }

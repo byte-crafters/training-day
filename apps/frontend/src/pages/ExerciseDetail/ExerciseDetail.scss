@@ -1,24 +1,35 @@
 .exercise-detail {
-    min-height: 100vh;
+    height: 100vh;
     background-color: #1a1a1a;
     color: #ffffff;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     &__header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 48px 24px 24px;
+        padding: 24px 24px 16px;
         position: relative;
+        flex-shrink: 0;
     }
 
     &__back-button {
-        color: #ffffff;
+        color: #ffffff !important;
         padding: 8px;
 
         &:hover {
             opacity: 0.8;
+        }
+
+        svg {
+            color: #ffffff !important;
+            stroke: #ffffff !important;
+        }
+
+        &.MuiIconButton-root {
+            color: #ffffff !important;
         }
     }
 
@@ -38,8 +49,10 @@
     &__main {
         flex: 1;
         padding: 0 24px;
+        padding-bottom: 150px;
         overflow-y: auto;
-        padding-bottom: 140px; // Для кнопок внизу
+        overflow-x: hidden;
+        min-height: 0;
     }
 
     &__card {
@@ -53,221 +66,6 @@
         }
     }
 
-    &__add-set-title {
-        font-size: 20px;
-        font-weight: 600;
-        color: #ffffff;
-        margin-bottom: 20px;
-    }
-
-    &__inputs-row {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 20px !important;
-        margin-bottom: 24px;
-        align-items: center !important;
-        width: 100%;
-    }
-
-    &__input-group {
-        width: 100% !important;
-        max-width: 400px;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-    }
-
-    &__input-label {
-        font-size: 14px;
-        font-weight: 500;
-        color: #b0b0b0;
-        margin-bottom: 8px;
-        text-align: center;
-        width: 100%;
-    }
-
-    &__input-with-steppers {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        max-width: 300px;
-    }
-
-    &__stepper-button {
-        color: #ffffff !important;
-        padding: 8px !important;
-        min-width: 40px !important;
-        width: 40px !important;
-        height: 40px !important;
-        background-color: #2a2a2a !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 8px !important;
-        transition: all 0.2s ease !important;
-
-        &:hover:not(:disabled) {
-            background-color: #3a3a3a !important;
-            border-color: rgba(255, 255, 255, 0.2) !important;
-            transform: scale(1.05);
-        }
-
-        &:active:not(:disabled) {
-            transform: scale(0.95);
-        }
-
-        &:disabled {
-            opacity: 0.4 !important;
-            cursor: not-allowed !important;
-        }
-
-        svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        &--large {
-            min-width: 50px !important;
-            width: 50px !important;
-            height: 40px !important;
-            font-size: 16px !important;
-            font-weight: 600 !important;
-        }
-    }
-
-    &__stepper-button-text {
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        color: #ffffff !important;
-        line-height: 1 !important;
-    }
-
-    &__compact-input {
-        flex: 1;
-        min-width: 0; // Позволяет инпуту сжиматься меньше
-
-        .MuiOutlinedInput-root {
-            background-color: #1a1a1a;
-            border-radius: 12px;
-            color: #ffffff;
-            padding: 0 !important; // Убираем padding у корневого элемента
-
-            fieldset {
-                border-color: rgba(255, 255, 255, 0.1);
-            }
-
-            &:hover fieldset {
-                border-color: rgba(255, 255, 255, 0.2);
-            }
-
-            &.Mui-focused fieldset {
-                border-color: #0066ff;
-            }
-
-            input {
-                color: #ffffff;
-                padding: 10px 8px !important; // Уменьшенный padding
-                font-size: 20px;
-                font-weight: 600;
-                text-align: center;
-                width: 100%;
-                min-width: 50px; // Минимальная ширина для видимости числа
-
-                &::placeholder {
-                    color: #888888;
-                }
-            }
-
-            // Скрываем нативные стрелки stepper для input type="number"
-            input[type="number"] {
-                appearance: textfield !important; // Стандартное свойство
-                -moz-appearance: textfield !important; // Firefox
-
-                &::-webkit-outer-spin-button,
-                &::-webkit-inner-spin-button {
-                    appearance: none !important;
-                    -webkit-appearance: none !important; // Chrome, Safari, Edge
-                    margin: 0 !important;
-                    display: none !important;
-                }
-            }
-        }
-    }
-
-    &__note-section {
-        margin-bottom: 32px;
-    }
-
-    &__note-label {
-        font-size: 14px;
-        color: #b0b0b0;
-        margin-bottom: 8px;
-    }
-
-    &__note-input {
-        width: 100%;
-
-        .MuiOutlinedInput-root {
-            background-color: #1a1a1a;
-            border-radius: 12px;
-            color: #ffffff;
-
-            fieldset {
-                border-color: rgba(255, 255, 255, 0.1);
-            }
-
-            &:hover fieldset {
-                border-color: rgba(255, 255, 255, 0.2);
-            }
-
-            &.Mui-focused fieldset {
-                border-color: #0066ff;
-            }
-
-            textarea {
-                color: #ffffff;
-
-                &::placeholder {
-                    color: #888888;
-                    opacity: 1;
-                }
-            }
-        }
-    }
-
-    &__add-set-button {
-        padding: 16px !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        border-radius: 12px !important;
-        background-color: #0066ff !important;
-        color: #ffffff !important;
-        margin-top: 0 !important;
-
-        &:hover {
-            background-color: #0052cc !important;
-        }
-
-        &:disabled {
-            background-color: #3a3a3a !important;
-            color: #888888 !important;
-        }
-    }
-
-    &__delete-set-button {
-        padding: 16px !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        border-radius: 12px !important;
-        margin-top: 12px !important;
-        border-color: rgba(255, 0, 0, 0.5) !important;
-        color: #ff4444 !important;
-
-        &:hover {
-            border-color: rgba(255, 0, 0, 0.7) !important;
-            background-color: rgba(255, 0, 0, 0.1) !important;
-        }
-    }
 
     &__previous-sets {
         margin-bottom: 24px;
@@ -280,35 +78,33 @@
     }
 
     &__previous-set-item {
-        background-color: #1a1a1a;
-        border-radius: 12px;
+        background-color: #161618;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
         padding: 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 12px;
-        transition: background-color 0.2s ease, transform 0.1s ease;
+        transition: background-color 0.2s ease;
 
         &:hover {
-            background-color: #222222;
-            transform: translateY(-1px);
-        }
-
-        &:active {
-            transform: translateY(0);
+            background-color: rgba(255, 255, 255, 0.05);
         }
     }
 
     &__previous-set-text {
-        font-size: 15px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 600;
         color: #ffffff;
+        margin: 0;
     }
 
     &__arrow {
-        color: #ffffff;
+        color: var(--mui-palette-primary-main);
         width: 20px;
         height: 20px;
+        flex-shrink: 0;
     }
 
     &__save-message {
@@ -337,12 +133,12 @@
         left: 0;
         right: 0;
         padding: 16px 24px;
-        background-color: #1a1a1a;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: transparent;
         display: flex;
         flex-direction: column;
         gap: 12px;
-        z-index: 100;
+        z-index: 1000;
+        pointer-events: auto;
     }
 
     &__save-button {
@@ -383,34 +179,25 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
-        background-color: #0066ff !important;
-        color: #ffffff !important;
+        background-color: #1a1a1a !important;
+        color: #00d4ff !important;
+        border: 1px solid #00d4ff !important;
+        position: relative !important;
+        z-index: 1001 !important;
 
         &:hover {
-            background-color: #0052cc !important;
+            background-color: #1a1a1a !important;
+            border-color: #00e5ff !important;
+            color: #00e5ff !important;
+        }
+
+        &:disabled {
+            background-color: #1a1a1a !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+            color: rgba(0, 212, 255, 0.3) !important;
         }
     }
 
-    &__form-drawer {
-        display: flex;
-        flex-direction: column;
-        padding: 0 24px 24px;
-        max-height: 90vh;
-        overflow-y: auto;
-    }
-
-    &__form-drawer-handle {
-        width: 40px;
-        height: 4px;
-        background-color: rgba(255, 255, 255, 0.3);
-        border-radius: 2px;
-        margin: 12px auto;
-        cursor: grab;
-    }
-
-    &__form-drawer-content {
-        padding-bottom: 24px;
-    }
 
     &__empty-state {
         display: flex;
@@ -427,6 +214,7 @@
         height: 120px;
         border-radius: 50%;
         background-color: #2a2a2a;
+        border: 2px solid var(--mui-palette-primary-main);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -456,13 +244,22 @@
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
-        background-color: transparent !important;
-        border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        color: #ffffff !important;
+        background-color: #00d4ff !important;
+        color: #000000 !important;
+        border: 1px solid #00d4ff !important;
+        position: relative !important;
+        z-index: 1001 !important;
 
         &:hover {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            border-color: rgba(255, 255, 255, 0.5) !important;
+            background-color: #00e5ff !important;
+            border-color: #00e5ff !important;
+            color: #000000 !important;
+        }
+
+        &:disabled {
+            background-color: rgba(0, 212, 255, 0.3) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+            color: rgba(255, 255, 255, 0.5) !important;
         }
     }
 }

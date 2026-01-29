@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Box, Typography, IconButton, Button, TextField, Drawer } from "@mui/material";
 import { Set } from "@training-day/shared";
-import "./ExerciseDetail.scss";
+import { v4 as uuidv4 } from 'uuid';
+import "./SetForm.scss";
 
 interface SetFormProps {
     open: boolean;
@@ -103,21 +104,21 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
         }
 
         const set: Set = {
-            id: initialSet?.id || Date.now().toString(),
+            id: uuidv4(),
             reps: repsValue,
             weight: weight === "" ? 0 : weight,
             note: note || null,
         };
 
         onSave(set);
-        
+
         // Сброс полей после сохранения (только в режиме добавления)
         if (mode === 'add') {
             setReps(15);
             setWeight("");
             setNote("");
         }
-        
+
         onClose();
     };
 
@@ -128,29 +129,30 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
             onClose={onClose}
             PaperProps={{
                 sx: {
-                    backgroundColor: '#2a2a2a',
+                    backgroundColor: '#000000',
                     borderTopLeftRadius: '24px',
                     borderTopRightRadius: '24px',
                     maxHeight: '90vh',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
                 },
             }}
         >
-            <Box className="exercise-detail__form-drawer">
-                <Box className="exercise-detail__form-drawer-handle" />
-                
-                <Box className="exercise-detail__form-drawer-content">
-                    <Typography className="exercise-detail__add-set-title">
+            <Box className="set-form__drawer">
+                <Box className="set-form__drawer-handle" />
+
+                <Box className="set-form__drawer-content">
+                    <Typography variant="h4" color="text.secondary" className="set-form__title">
                         {mode === 'edit' ? 'Edit set' : 'Add set'}
                     </Typography>
 
-                    <Box className="exercise-detail__inputs-row">
-                        <Box className="exercise-detail__input-group">
-                            <Typography className="exercise-detail__input-label">
+                    <Box className="set-form__inputs-row">
+                        <Box className="set-form__input-group">
+                            <Typography variant="h4" className="set-form__input-label">
                                 Reps
                             </Typography>
-                            <Box className="exercise-detail__input-with-steppers">
+                            <Box className="set-form__input-with-steppers">
                                 <IconButton
-                                    className="exercise-detail__stepper-button"
+                                    className="set-form__stepper-button"
                                     onClick={decrementReps}
                                     disabled={reps === "" || reps === 0}
                                     aria-label="Decrease reps"
@@ -170,7 +172,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                 </IconButton>
                                 <TextField
                                     type="number"
-                                    className="exercise-detail__compact-input"
+                                    className="set-form__compact-input"
                                     value={reps === "" ? "" : reps}
                                     onChange={handleRepsChange}
                                     placeholder="15"
@@ -192,7 +194,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                     }}
                                 />
                                 <IconButton
-                                    className="exercise-detail__stepper-button"
+                                    className="set-form__stepper-button"
                                     onClick={incrementReps}
                                     aria-label="Increase reps"
                                 >
@@ -212,21 +214,22 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                             </Box>
                         </Box>
 
-                        <Box className="exercise-detail__input-group">
-                            <Typography className="exercise-detail__input-label">
+                        <Box className="set-form__input-group">
+                            <Typography variant="h4" className="set-form__input-label">
                                 Weight (kg)
                             </Typography>
-                            <Box className="exercise-detail__input-with-steppers">
+                            <Box className="set-form__input-with-steppers">
                                 <IconButton
-                                    className="exercise-detail__stepper-button exercise-detail__stepper-button--large"
+
+                                    className="set-form__stepper-button set-form__stepper-button--large"
                                     onClick={decrementWeightBy5}
                                     disabled={weight === "" || weight === 0}
                                     aria-label="Decrease weight by 5"
                                 >
-                                    <Typography className="exercise-detail__stepper-button-text">-5</Typography>
+                                    <Typography className="set-form__stepper-button-text">-5</Typography>
                                 </IconButton>
                                 <IconButton
-                                    className="exercise-detail__stepper-button"
+                                    className="set-form__stepper-button"
                                     onClick={decrementWeight}
                                     disabled={weight === "" || weight === 0}
                                     aria-label="Decrease weight"
@@ -246,7 +249,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                 </IconButton>
                                 <TextField
                                     type="number"
-                                    className="exercise-detail__compact-input"
+                                    className="set-form__compact-input"
                                     value={weight === "" ? "" : weight}
                                     onChange={handleWeightChange}
                                     placeholder="0"
@@ -269,7 +272,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                     }}
                                 />
                                 <IconButton
-                                    className="exercise-detail__stepper-button"
+                                    className="set-form__stepper-button"
                                     onClick={incrementWeight}
                                     aria-label="Increase weight"
                                 >
@@ -287,22 +290,22 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                     </svg>
                                 </IconButton>
                                 <IconButton
-                                    className="exercise-detail__stepper-button exercise-detail__stepper-button--large"
+                                    className="set-form__stepper-button set-form__stepper-button--large"
                                     onClick={incrementWeightBy5}
                                     aria-label="Increase weight by 5"
                                 >
-                                    <Typography className="exercise-detail__stepper-button-text">+5</Typography>
+                                    <Typography className="set-form__stepper-button-text">+5</Typography>
                                 </IconButton>
                             </Box>
                         </Box>
                     </Box>
 
-                    <Box className="exercise-detail__note-section">
-                        <Typography className="exercise-detail__note-label">
-                            Note (optional)
+                    <Box className="set-form__note-section">
+                        <Typography variant="h4" className="set-form__note-label">
+                            Note
                         </Typography>
                         <TextField
-                            className="exercise-detail__note-input"
+                            className="set-form__note-input"
                             placeholder="Add note..."
                             value={note}
                             onChange={(e) => setNote(e.target.value)}
@@ -314,7 +317,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                     <Button
                         variant="contained"
                         fullWidth
-                        className="exercise-detail__add-set-button"
+                        className="set-form__add-button"
                         onClick={handleSave}
                         disabled={reps === "" || reps <= 0}
                     >
@@ -325,7 +328,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                         <Button
                             variant="outlined"
                             fullWidth
-                            className="exercise-detail__delete-set-button"
+                            className="set-form__delete-button"
                             onClick={onDelete}
                         >
                             Delete
