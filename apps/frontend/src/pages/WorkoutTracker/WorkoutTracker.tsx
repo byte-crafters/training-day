@@ -6,6 +6,7 @@ import FeedbackButton from "../../components/FeedbackButton";
 import "./WorkoutTracker.scss";
 import { useState, useEffect } from "react";
 import { logAnalyticsEvent } from "../../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 import {
     getWorkouts,
     createWorkout as createWorkoutAPI,
@@ -18,7 +19,7 @@ function WorkoutTracker() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        logAnalyticsEvent("screen_view", { screen_name: "workout_tracker" });
+        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.WORKOUT_TRACKER });
     }, []);
 
     const [isDismissed, setIsDismissed] = useState(false);
@@ -62,6 +63,7 @@ function WorkoutTracker() {
     };
 
     const handleStartTraining = () => {
+        logAnalyticsEvent(ANALYTICS_EVENTS.WORKOUT_START_CLICKED, {});
         // Если есть текущая тренировка, показываем диалог выбора
         if (currentWorkout && currentWorkout.exercises?.length > 0) {
             setShowStartDialog(true);

@@ -11,6 +11,7 @@ import NotFound from "../pages/NotFound";
 import NavigationLayout from "../components/NavigationLayout";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { logAnalyticsEvent } from "../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_PARAMS } from "../utils/analytics";
 import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect, useState, useCallback } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
@@ -68,7 +69,7 @@ function App() {
 
                 // Получаем данные пользователя из ответа
                 if (authResponse.user) {
-                    logAnalyticsEvent("login", { method: "telegram" });
+                    logAnalyticsEvent(ANALYTICS_EVENTS.LOGIN, { [ANALYTICS_PARAMS.METHOD]: "telegram" });
                 }
 
                 setIsAuthenticating(false);

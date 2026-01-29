@@ -10,6 +10,7 @@ import {
 import "./FeedBackPage.scss";
 import { sendFeedback } from "../../utils/api";
 import { logAnalyticsEvent } from "../../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 
 function FeedBackPage() {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ function FeedBackPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        logAnalyticsEvent("screen_view", { screen_name: "feedback" });
+        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.FEEDBACK });
     }, []);
 
     const submitFeedback = async () => {
@@ -29,6 +30,7 @@ function FeedBackPage() {
         
         try {
             await sendFeedback(feedback);
+            logAnalyticsEvent(ANALYTICS_EVENTS.FEEDBACK_SENT, {});
             setFeedback("");
             navigate(-1);
         } catch (error) {

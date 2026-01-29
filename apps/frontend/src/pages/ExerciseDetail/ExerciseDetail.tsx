@@ -7,6 +7,7 @@ import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector
 import SetForm from "../../components/SetForm";
 import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
@@ -48,10 +49,10 @@ function ExerciseDetail() {
 
     useEffect(() => {
         if (exercise) {
-            logAnalyticsEvent("screen_view", {
-                screen_name: "exercise_detail",
-                exercise_id: exercise.id,
-                exercise_name: exercise.name,
+            logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, {
+                [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.EXERCISE_DETAIL,
+                [ANALYTICS_PARAMS.EXERCISE_ID]: exercise.id,
+                [ANALYTICS_PARAMS.EXERCISE_NAME]: exercise.name,
             });
         }
     }, [exercise?.id]);
@@ -95,6 +96,12 @@ function ExerciseDetail() {
             dispatch(addSet({ exerciseId: activity.id, set }));
             // Обновляем локальное состояние
             setSavedSets((prev) => [...prev, set]);
+            const newCount = savedSets.length + 1;
+            logAnalyticsEvent(ANALYTICS_EVENTS.SET_RECORDED, {
+                [ANALYTICS_PARAMS.EXERCISE_ID]: activity.id,
+                [ANALYTICS_PARAMS.EXERCISE_NAME]: activity.name,
+                [ANALYTICS_PARAMS.SETS_COUNT]: newCount,
+            });
         }
     };
 
