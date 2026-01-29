@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { ExerciseType, Activity } from "@training-day/shared";
 import "./SelectExercises.scss";
+import { logAnalyticsEvent } from "../../utils/firebase";
 import {
     RootState,
     setCurrentWorkout,
@@ -26,6 +27,10 @@ type Category = "All" | ExerciseType;
 function SelectExercises() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        logAnalyticsEvent("screen_view", { screen_name: "select_exercises" });
+    }, []);
 
     const [selectedCategory, setSelectedCategory] = useState<Category>("All");
     const [searchQuery, setSearchQuery] = useState("");

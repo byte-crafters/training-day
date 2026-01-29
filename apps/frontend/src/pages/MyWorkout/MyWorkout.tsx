@@ -24,6 +24,7 @@ import {
 } from "../../utils/api";
 import { saveCurrentWorkout } from "../../utils/storage";
 import FeedbackButton from "../../components/FeedbackButton";
+import { logAnalyticsEvent } from "../../utils/firebase";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -38,6 +39,10 @@ function MyWorkout() {
         currentWorkout?.exercises?.length &&
         currentWorkout.exercises.length > 0;
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        logAnalyticsEvent("screen_view", { screen_name: "my_workout" });
+    }, []);
     const [isEditingName, setIsEditingName] = useState(false);
     const [editedName, setEditedName] = useState(workoutName);
     const textRef = useRef<HTMLDivElement>(null);

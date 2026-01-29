@@ -1,7 +1,6 @@
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SnackbarProvider } from "notistack";
 import WorkoutTracker from "../pages/WorkoutTracker";
 import SelectExercises from "../pages/SelectExercises";
 import MyWorkout from "../pages/MyWorkout";
@@ -11,10 +10,10 @@ import FeedBackPage from "../pages/FeedBackPage";
 import NotFound from "../pages/NotFound";
 import NavigationLayout from "../components/NavigationLayout";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
+import { logAnalyticsEvent } from "../utils/firebase";
 import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect, useState, useCallback } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
-import { toast } from "../utils/toast";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { darkTheme } from "../theme";
 
@@ -29,10 +28,7 @@ function App() {
         try {
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
-            toast.info(`Загружено тренировок: ${workouts.length}`);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить тренировки";
-            toast.error(`Ошибка загрузки тренировок: ${errorMessage}`);
             dispatch(setWorkouts([]));
         }
     }, [dispatch]);
@@ -41,10 +37,7 @@ function App() {
         try {
             const exercises = await getExercises();
             dispatch(setExercises(exercises));
-            toast.info(`Got ${exercises.length} new exercises`);
         } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : "Не удалось загрузить упражнения";
-            toast.error(`Error loading exercises: ${errorMessage}`);
             dispatch(setExercises([]));
         }
     }, [dispatch]);
@@ -56,9 +49,7 @@ function App() {
 
             // Проверяем наличие initData
             if (!initDataRaw || typeof initDataRaw !== "string") {
-                const errorMsg = "Failed to get authorization data. Please open the application through Telegram.";
-                setAuthError(errorMsg);
-                toast.error(errorMsg);
+                setAuthError("Failed to get authorization data. Please open the application through Telegram.");
                 setIsAuthenticating(false);
                 return;
             }
@@ -77,11 +68,7 @@ function App() {
 
                 // Получаем данные пользователя из ответа
                 if (authResponse.user) {
-                    const { username, firstName, telegramUserId } = authResponse.user;
-                    const displayName = username || firstName || `User ${telegramUserId}`;
-
-                    // Показываем уведомление о успешном входе
-                    toast.success(`Logged in as: ${displayName}`);
+                    logAnalyticsEvent("login", { method: "telegram" });
                 }
 
                 setIsAuthenticating(false);
@@ -101,15 +88,7 @@ function App() {
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <SnackbarProvider
-                maxSnack={5}
-                anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'center',
-                }}
-                autoHideDuration={4000}
-            >
-                {isAuthenticating && (
+            {isAuthenticating && (
                     <Box
                         sx={{
                             display: 'flex',
@@ -181,7 +160,6 @@ function App() {
                         </Routes>
                     </BrowserRouter>
                 )}
-            </SnackbarProvider>
         </ThemeProvider>
     );
 }

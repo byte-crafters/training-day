@@ -5,6 +5,7 @@ import "./WorkoutResults.scss";
 import { useAppSelector, RootState } from "../../store";
 import { useEffect, useState } from "react";
 import FeedbackButton from "../../components/FeedbackButton";
+import { logAnalyticsEvent } from "../../utils/firebase";
 
 // Функция для форматирования времени начала тренировки
 const formatStartTime = (dateString: string): string => {
@@ -43,6 +44,15 @@ function WorkoutResults() {
     const currentWorkout = useAppSelector((state: RootState) => state.currentWorkout);
 
     const [workout, _setWorkout] = useState<Workout | null>(workoutFromState || currentWorkout);
+
+    useEffect(() => {
+        if (workout) {
+            logAnalyticsEvent("screen_view", {
+                screen_name: "workout_results",
+                workout_id: workout.id,
+            });
+        }
+    }, [workout?.id]);
 
     useEffect(() => {
         if (!workout) {

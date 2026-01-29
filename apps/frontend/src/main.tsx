@@ -3,7 +3,10 @@ import { StrictMode } from "react";
 import App from "./app/App.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/index.ts";
+import { initFirebase } from "./utils/firebase";
 import "./index.css";
+
+initFirebase();
 
 async function enableMocking() {
     return;

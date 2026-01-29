@@ -4,7 +4,8 @@ import WorkoutCard from "../../components/WorkoutCard";
 import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
 import FeedbackButton from "../../components/FeedbackButton";
 import "./WorkoutTracker.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { logAnalyticsEvent } from "../../utils/firebase";
 import {
     getWorkouts,
     createWorkout as createWorkoutAPI,
@@ -15,6 +16,10 @@ import { Workout } from "@training-day/shared";
 function WorkoutTracker() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        logAnalyticsEvent("screen_view", { screen_name: "workout_tracker" });
+    }, []);
 
     const [isDismissed, setIsDismissed] = useState(false);
     const [showStartDialog, setShowStartDialog] = useState(false);

@@ -1,10 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
+import { useEffect } from "react";
 import "./NotFound.scss";
 import FeedbackButton from "../../components/FeedbackButton";
+import { logAnalyticsEvent } from "../../utils/firebase";
 
 function NotFound() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        logAnalyticsEvent("screen_view", { screen_name: "not_found" });
+    }, []);
 
     return (
         <Box className="not-found">

@@ -6,6 +6,7 @@ import { Set, Activity } from "@training-day/shared";
 import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector } from "../../store";
 import SetForm from "../../components/SetForm";
 import FeedbackButton from "../../components/FeedbackButton";
+import { logAnalyticsEvent } from "../../utils/firebase";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
@@ -44,6 +45,16 @@ function ExerciseDetail() {
             setSavedSets(activity.sets);
         }
     }, [activity?.sets]);
+
+    useEffect(() => {
+        if (exercise) {
+            logAnalyticsEvent("screen_view", {
+                screen_name: "exercise_detail",
+                exercise_id: exercise.id,
+                exercise_name: exercise.name,
+            });
+        }
+    }, [exercise?.id]);
 
     if (!exercise) {
         navigate("/my-workout");
