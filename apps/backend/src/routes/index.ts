@@ -32,5 +32,9 @@ router.get('/health', (_req, res) => {
     res.json({ status: 'ok' });
 });
 
+router.get("/debug-sentry", function mainHandler(_req, _res) {
+    throw new Error("My first Sentry error!");
+});
+
 export default router;
 
