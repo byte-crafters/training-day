@@ -13,7 +13,7 @@ import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { logAnalyticsEvent } from "../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_PARAMS } from "../utils/analytics";
 import { setExercises, setWorkouts, useAppDispatch } from "../store";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { darkTheme } from "../theme";
@@ -22,8 +22,20 @@ function App() {
     const dispatch = useAppDispatch();
     const [isAuthenticating, setIsAuthenticating] = useState(true);
     const [authError, setAuthError] = useState<string | null>(null);
+    const initDataMountTime = useRef<number | null>(null);
 
     const initDataRaw = useRawInitData();
+    if (initDataMountTime.current === null) {
+        initDataMountTime.current = performance.now();
+    }
+
+    useEffect(() => {
+        if (initDataRaw && initDataMountTime.current !== null) {
+            const elapsed = performance.now() - initDataMountTime.current;
+            console.log(`[useRawInitData] время до появления данных: ${elapsed.toFixed(0)} ms`);
+            initDataMountTime.current = null;
+        }
+    }, [initDataRaw]);
 
     const fetchWorkouts = useCallback(async () => {
         try {
