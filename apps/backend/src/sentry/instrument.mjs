@@ -2,7 +2,11 @@ import * as Sentry from "@sentry/node";
 // Ensure to call this before importing any other modules!
 Sentry.init({
     dsn: "https://d3e46e67dcc28a0aaf406fb6a3d03bbd@o4510822724861952.ingest.us.sentry.io/4510822730301440",
-    // Add Tracing by setting tracesSampleRate
-    // We recommend adjusting this value in production
-    tracesSampleRate: 1.0,
+    // Adds request headers and IP for users, for more info visit:
+    // https://docs.sentry.io/platforms/javascript/guides/node/configuration/options/#sendDefaultPii
+    sendDefaultPii: true,
+    enableLogs: true,
+    integrations: [
+        Sentry.consoleLoggingIntegration({ levels: ['error', 'warn', 'info', 'debug', 'log'] }),
+    ]
 });

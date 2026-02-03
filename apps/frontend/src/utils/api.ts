@@ -1,6 +1,8 @@
 import { Workout } from "@training-day/shared";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.DEV
+    ? 'http://localhost:3001/api'
+    : (import.meta.env.VITE_API_URL || 'http://localhost:3001/api');
 
 /**
  * Получить initData из sessionStorage

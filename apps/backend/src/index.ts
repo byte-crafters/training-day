@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import './sentry/instrument.mjs';
 import express from 'express';
+import './sentry/instrument.mjs';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import routes from './routes/index.js';
@@ -37,7 +37,6 @@ app.use(cookieParser());
 // API Routes
 app.use('/api', routes);
 
-// Sentry error handler — обязательно после всех маршрутов
 Sentry.setupExpressErrorHandler(app);
 
 // Запуск сервера

@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/node';
 import { Request, Response } from 'express';
 import { FeedbackService } from '../services/feedbackService.js';
 import { UserService } from '../services/userService.js';
@@ -46,6 +47,7 @@ export class FeedbackController {
                 message: 'Feedback sent successfully' 
             });
         } catch (error) {
+            Sentry.captureException(error);
             console.error('❌ Error sending feedback:', error);
             return res.status(500).json({ 
                 error: error instanceof Error ? error.message : 'Failed to send feedback' 

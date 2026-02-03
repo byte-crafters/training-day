@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/node';
 import { Request, Response } from 'express';
 import { ExerciseService } from '../services/exerciseService.js';
 
@@ -15,6 +16,7 @@ export class ExerciseController {
             const exercises = await ExerciseService.getAll();
             res.json(exercises);
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             res.status(500).json({ error: message });
         }
@@ -35,6 +37,7 @@ export class ExerciseController {
 
             res.json(exercise);
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             res.status(500).json({ error: message });
         }
@@ -49,6 +52,7 @@ export class ExerciseController {
             const exercise = await ExerciseService.create(req.body);
             res.status(201).json(exercise);
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             res.status(500).json({ error: message });
         }
@@ -79,6 +83,7 @@ export class ExerciseController {
             await ExerciseService.delete(id);
             res.status(204).send();
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             res.status(500).json({ error: message });
         }

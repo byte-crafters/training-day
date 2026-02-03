@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/node';
 import { Request, Response } from 'express';
 import { WorkoutService } from '../services/workoutService.js';
 
@@ -24,6 +25,7 @@ export class WorkoutController {
             console.log(`✅ WorkoutController.getAll: Found ${workouts.length} workouts for userId:`, userId);
             res.json(workouts);
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             console.error('❌ WorkoutController.getAll error:', message);
             res.status(500).json({ error: message });
@@ -51,6 +53,7 @@ export class WorkoutController {
 
             res.json(workout);
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             res.status(500).json({ error: message });
         }
@@ -86,6 +89,7 @@ export class WorkoutController {
             const createdWorkout = await WorkoutService.create(workout, userId);
             res.status(201).json(createdWorkout);
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             console.error('Error creating workout:', error);
             res.status(500).json({ error: message });
@@ -108,6 +112,7 @@ export class WorkoutController {
             const workout = await WorkoutService.update(id, req.body, userId);
             res.json(workout);
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             
             // Если тренировка не найдена или доступ запрещен
@@ -135,6 +140,7 @@ export class WorkoutController {
             await WorkoutService.delete(id, userId);
             res.status(204).send();
         } catch (error) {
+            Sentry.captureException(error);
             const message = error instanceof Error ? error.message : 'Unknown error';
             res.status(500).json({ error: message });
         }
