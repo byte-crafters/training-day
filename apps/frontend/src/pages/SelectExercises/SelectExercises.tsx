@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { ExerciseType, Activity } from "@training-day/shared";
 import "./SelectExercises.scss";
+import { logAnalyticsEvent } from "../../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 import {
     RootState,
     setCurrentWorkout,
@@ -26,6 +28,10 @@ type Category = "All" | ExerciseType;
 function SelectExercises() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.SELECT_EXERCISES });
+    }, []);
 
     const [selectedCategory, setSelectedCategory] = useState<Category>("All");
     const [searchQuery, setSearchQuery] = useState("");
@@ -136,6 +142,9 @@ function SelectExercises() {
             saveCurrentWorkout(newWorkout);
         }
 
+        logAnalyticsEvent(ANALYTICS_EVENTS.WORKOUT_STARTED, {
+            [ANALYTICS_PARAMS.EXERCISES_COUNT]: selectedExercises.length,
+        });
         navigate("/my-workout", { state: { exercises: selectedExercises } });
     };
 

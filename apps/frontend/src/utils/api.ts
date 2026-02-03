@@ -1,5 +1,4 @@
 import { Workout } from "@training-day/shared";
-import { toast } from "./toast";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -75,16 +74,11 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
                 errorMessage = 'Требуется авторизация. Пожалуйста, обновите страницу.';
             }
             
-            toast.error(errorMessage);
             throw new Error(`API Error: ${response.status} ${response.statusText}`);
         }
         
         return await response.json();
     } catch (error) {
-        if (error instanceof Error && !error.message.includes('API Error')) {
-            const errorMessage = error.message || `Ошибка запроса к ${endpoint}`;
-            toast.error(errorMessage);
-        }
         throw error;
     }
 }
@@ -128,8 +122,6 @@ export const createWorkout = async (workout: Workout) => {
             method: 'POST',
             body: JSON.stringify(normalizedWorkout),
         });
-        
-    toast.success('Тренировка успешно создана');
     return result;
 };
 
@@ -141,8 +133,6 @@ export const updateWorkout = async (id: string, workout: Workout) => {
             method: 'PUT',
             body: JSON.stringify(workout),
         });
-        
-    toast.success('Тренировка успешно обновлена');
     return result;
 };
 
@@ -153,8 +143,6 @@ export const deleteWorkout = async (id: string) => {
     await fetchAPI(`/workouts/${id}`, {
             method: 'DELETE',
         });
-        
-    toast.success('Тренировка успешно удалена');
 };
 
 /**

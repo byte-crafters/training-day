@@ -1,10 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
+import { useEffect } from "react";
 import "./NotFound.scss";
 import FeedbackButton from "../../components/FeedbackButton";
+import { logAnalyticsEvent } from "../../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 
 function NotFound() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.NOT_FOUND });
+    }, []);
 
     return (
         <Box className="not-found">

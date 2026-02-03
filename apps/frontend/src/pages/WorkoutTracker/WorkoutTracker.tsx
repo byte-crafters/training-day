@@ -4,7 +4,9 @@ import WorkoutCard from "../../components/WorkoutCard";
 import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
 import FeedbackButton from "../../components/FeedbackButton";
 import "./WorkoutTracker.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { logAnalyticsEvent } from "../../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 import {
     getWorkouts,
     createWorkout as createWorkoutAPI,
@@ -15,6 +17,10 @@ import { Workout } from "@training-day/shared";
 function WorkoutTracker() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.WORKOUT_TRACKER });
+    }, []);
 
     const [isDismissed, setIsDismissed] = useState(false);
     const [showStartDialog, setShowStartDialog] = useState(false);
@@ -57,6 +63,7 @@ function WorkoutTracker() {
     };
 
     const handleStartTraining = () => {
+        logAnalyticsEvent(ANALYTICS_EVENTS.WORKOUT_START_CLICKED, {});
         // Если есть текущая тренировка, показываем диалог выбора
         if (currentWorkout && currentWorkout.exercises?.length > 0) {
             setShowStartDialog(true);

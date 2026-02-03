@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Box,
@@ -9,12 +9,17 @@ import {
 } from "@mui/material";
 import "./FeedBackPage.scss";
 import { sendFeedback } from "../../utils/api";
-import { toast } from "../../utils/toast";
+import { logAnalyticsEvent } from "../../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 
 function FeedBackPage() {
     const navigate = useNavigate();
     const [feedback, setFeedback] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.FEEDBACK });
+    }, []);
 
     const submitFeedback = async () => {
         if (!feedback.trim()) {
@@ -25,12 +30,11 @@ function FeedBackPage() {
         
         try {
             await sendFeedback(feedback);
-            toast.success("Feedback sent successfully!");
+            logAnalyticsEvent(ANALYTICS_EVENTS.FEEDBACK_SENT, {});
             setFeedback("");
             navigate(-1);
         } catch (error) {
             console.error("Failed to submit feedback:", error);
-            // Ошибка уже обработана в fetchAPI и показана через toast
         } finally {
             setIsSubmitting(false);
         }

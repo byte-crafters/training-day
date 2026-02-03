@@ -24,6 +24,8 @@ import {
 } from "../../utils/api";
 import { saveCurrentWorkout } from "../../utils/storage";
 import FeedbackButton from "../../components/FeedbackButton";
+import { logAnalyticsEvent } from "../../utils/firebase";
+import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -38,6 +40,10 @@ function MyWorkout() {
         currentWorkout?.exercises?.length &&
         currentWorkout.exercises.length > 0;
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.MY_WORKOUT });
+    }, []);
     const [isEditingName, setIsEditingName] = useState(false);
     const [editedName, setEditedName] = useState(workoutName);
     const textRef = useRef<HTMLDivElement>(null);
@@ -90,6 +96,11 @@ function MyWorkout() {
 
             const workouts = await getWorkouts();//надо ли тут?
             dispatch(setWorkouts(workouts));
+
+            logAnalyticsEvent(ANALYTICS_EVENTS.WORKOUT_COMPLETED, {
+                [ANALYTICS_PARAMS.WORKOUT_ID]: currentWorkout.id,
+                [ANALYTICS_PARAMS.DURATION]: currentWorkout.duration || "0",
+            });
 
             dispatch(setCurrentWorkout(null));
             saveCurrentWorkout(null);
