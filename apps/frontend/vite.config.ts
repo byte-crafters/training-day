@@ -13,15 +13,23 @@ const dirname =
         : path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+    const alias: Record<string, string> = {
+        "@training-day/shared": path.resolve(
+            dirname,
+            "../../packages/shared/src"
+        ),
+    };
+    if (mode === "development") {
+        alias["@tma.js/sdk-react"] = path.resolve(
+            dirname,
+            "src/mocks/tma-sdk-react.ts"
+        );
+    }
+    return {
     plugins: [react()],
     resolve: {
-        alias: {
-            "@training-day/shared": path.resolve(
-                __dirname,
-                "../../packages/shared/src"
-            ),
-        },
+        alias,
     },
     test: {
         projects: [
@@ -51,4 +59,5 @@ export default defineConfig({
             },
         ],
     },
+};
 });
