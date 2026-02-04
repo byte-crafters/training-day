@@ -87,7 +87,11 @@ export class WorkoutService {
             .eq('workout_id', workoutId);
 
         if (activitiesError) {
-            throw new Error(`Failed to fetch activities: ${activitiesError.message}`);
+            const msg = activitiesError.message;
+            const hint = msg.toLowerCase().includes('fetch failed')
+                ? ' (check SUPABASE_URL, network, and that the Supabase project is not paused)'
+                : '';
+            throw new Error(`Failed to fetch activities: ${msg}${hint} idid: ${workoutId} data: ${JSON.stringify(activities)}`);
         }
 
         if (!activities || activities.length === 0) {
@@ -131,9 +135,7 @@ export class WorkoutService {
     static async create(workout: Workout, userId: string): Promise<Workout> {
         // Начинаем транзакцию (Supabase не поддерживает транзакции напрямую,
         // поэтому делаем последовательные операции)
-        
-        console.log('Creating workout:', JSON.stringify(workout, null, 2));
-        
+
         // 1. Создаем тренировку
         const { data: createdWorkout, error: workoutError } = await supabase
             .from('workouts')
@@ -148,7 +150,6 @@ export class WorkoutService {
             .single();
 
         if (workoutError) {
-            console.error('Workout creation error:', workoutError);
             throw new Error(`Failed to create workout: ${workoutError.message}`);
         }
 
@@ -156,9 +157,8 @@ export class WorkoutService {
         for (const exercise of workout.exercises) {
             // Генерируем уникальный ID для activity
             const activityId = uuidv4();
-            
+
             // Создаем activity
-            console.log('Creating activity for exercise:', exercise.id, exercise.name);
             const { data: activity, error: activityError } = await supabase
                 .from('activities')
                 .insert({
@@ -173,7 +173,6 @@ export class WorkoutService {
                 .single();
 
             if (activityError) {
-                console.error('Activity creation error:', activityError);
                 // Если ошибка, удаляем созданную тренировку
                 await supabase.from('workouts').delete().eq('id', workout.id);
                 throw new Error(`Failed to create activity: ${activityError.message}`);

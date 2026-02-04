@@ -18,23 +18,13 @@ export class FeedbackService {
         // Используем основной бот для отправки feedback
         const botToken = process.env.TELEGRAM_BOT_TOKEN;
         if (!botToken) {
-            console.error('❌ TELEGRAM_BOT_TOKEN is not set in environment variables');
             throw new Error('TELEGRAM_BOT_TOKEN is not set');
         }
 
         const adminChatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
         if (!adminChatId) {
-            console.error('❌ TELEGRAM_ADMIN_CHAT_ID is not set in environment variables');
             throw new Error('TELEGRAM_ADMIN_CHAT_ID is not set');
         }
-
-        // Логируем попытку отправки (без токена для безопасности)
-        console.log('📤 Sending feedback to Telegram:', {
-            chatId: adminChatId,
-            hasToken: !!botToken,
-            tokenLength: botToken.length,
-            userId: data.telegramUserId,
-        });
 
         // Форматируем сообщение
         const userDisplayName = data.userInfo?.firstName || 

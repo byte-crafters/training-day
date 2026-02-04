@@ -4,6 +4,7 @@ import App from "./app/App.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/index.ts";
 import { initFirebase } from "./utils/firebase";
+import "./sentry/instrument.js";
 import "./index.css";
 
 initFirebase();

@@ -20,6 +20,7 @@
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
     "@reduxjs/toolkit": "^2.11.2",
+    "@sentry/react": "^10.38.0",
     "@tma.js/sdk": "^3.1.6",
     "@tma.js/sdk-react": "^3.0.15",
     "@training-day/shared": "file:../../packages/shared",
