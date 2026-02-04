@@ -25,9 +25,7 @@ function WorkoutTracker() {
     const [isDismissed, setIsDismissed] = useState(false);
     const [showStartDialog, setShowStartDialog] = useState(false);
 
-    const workouts = useAppSelector((state: RootState) => {
-        return state.workouts.slice(0, 4);
-    });
+    const workouts = useAppSelector((state: RootState) => state.workouts);
 
     const currentWorkout = useAppSelector((state: RootState) => state.currentWorkout);
 

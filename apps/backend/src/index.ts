@@ -1,8 +1,10 @@
 import 'dotenv/config';
 import express from 'express';
+import './sentry/instrument.mjs';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import routes from './routes/index.js';
+import * as Sentry from '@sentry/node';
 
 // Инициализируем Supabase (проверяем подключение)
 import './db/supabase.js';
@@ -11,7 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // CORS configuration
-const allowedOrigins = process.env.CORS_ORIGIN 
+const allowedOrigins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
     : ['http://localhost:5173', 'http://localhost:3000'];
 
@@ -19,7 +21,7 @@ app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-        
+
         if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -34,6 +36,8 @@ app.use(cookieParser());
 
 // API Routes
 app.use('/api', routes);
+
+Sentry.setupExpressErrorHandler(app);
 
 // Запуск сервера
 app.listen(PORT, () => {

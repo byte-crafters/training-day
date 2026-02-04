@@ -13,6 +13,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,js,json}\""
   },
   "dependencies": {
+    "@sentry/node": "^10.38.0",
     "@supabase/supabase-js": "^2.90.1",
     "@tma.js/init-data-node": "^2.0.6",
     "@training-day/shared": "workspace:*",
