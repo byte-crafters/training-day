@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
+    "build": "tsc && node -e \"require('fs').mkdirSync('dist/apps/backend/src/sentry',{recursive:true}); require('fs').copyFileSync('src/sentry/instrument.mjs','dist/apps/backend/src/sentry/instrument.mjs')\"",
+    "start": "node dist/apps/backend/src/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{ts,js,json}\"",

@@ -18,7 +18,7 @@ function FeedbackButton({ className = "" }: FeedbackButtonProps) {
             className={`feedback-button ${className}`}
             onClick={handleClick}
             aria-label="Leave feedback"
-        >   
+        >
             <svg
                 width="14"
                 height="14"

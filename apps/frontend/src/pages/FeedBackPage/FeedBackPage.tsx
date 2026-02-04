@@ -11,6 +11,7 @@ import "./FeedBackPage.scss";
 import { sendFeedback } from "../../utils/api";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
+import * as Sentry from "@sentry/react";
 
 function FeedBackPage() {
     const navigate = useNavigate();
@@ -34,6 +35,7 @@ function FeedBackPage() {
             setFeedback("");
             navigate(-1);
         } catch (error) {
+            Sentry.captureException(error);
             console.error("Failed to submit feedback:", error);
         } finally {
             setIsSubmitting(false);

@@ -17,6 +17,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { darkTheme } from "../theme";
+import * as Sentry from "@sentry/react";
 
 function App() {
     const dispatch = useAppDispatch();
@@ -42,6 +43,7 @@ function App() {
             const workouts = await getWorkouts();
             dispatch(setWorkouts(workouts));
         } catch (error) {
+            Sentry.captureException(error);
             dispatch(setWorkouts([]));
         }
     }, [dispatch]);
@@ -51,6 +53,7 @@ function App() {
             const exercises = await getExercises();
             dispatch(setExercises(exercises));
         } catch (error) {
+            Sentry.captureException(error);
             dispatch(setExercises([]));
         }
     }, [dispatch]);
@@ -87,7 +90,7 @@ function App() {
                 setIsAuthenticating(false);
                 await Promise.all([fetchWorkouts(), fetchExercises()]);
             } catch (error) {
-
+                Sentry.captureException(error);
                 const errorMessage = error instanceof Error ? error.message : "Ошибка авторизации";
                 setAuthError(errorMessage);
                 setIsAuthenticating(false);
