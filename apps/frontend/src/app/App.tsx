@@ -82,8 +82,13 @@ function App() {
             try {
                 const authResponse = await sendTelegramInitData(initDataRaw);
 
-                // Получаем данные пользователя из ответа
+                // Получаем данные пользователя из ответа и записываем контекст пользователя в Sentry
                 if (authResponse.user) {
+                    Sentry.setUser({
+                        username: authResponse.user.username ?? null,
+                        telegramUserId: authResponse.user.telegramUserId ?? null,
+                    });
+
                     logAnalyticsEvent(ANALYTICS_EVENTS.LOGIN, { [ANALYTICS_PARAMS.METHOD]: "telegram" });
                 }
 

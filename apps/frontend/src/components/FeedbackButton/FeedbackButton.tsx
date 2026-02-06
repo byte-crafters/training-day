@@ -1,5 +1,6 @@
 import { IconButton } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import * as Sentry from "@sentry/react";
 import "./FeedbackButton.scss";
 
 interface FeedbackButtonProps {
@@ -7,16 +8,19 @@ interface FeedbackButtonProps {
 }
 
 function FeedbackButton({ className = "" }: FeedbackButtonProps) {
-    const navigate = useNavigate();
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-    const handleClick = () => {
-        navigate("/feedback");
-    };
+    useEffect(() => {
+        const feedback = Sentry.getFeedback();
+        if (buttonRef.current) {
+            feedback?.attachTo(buttonRef.current, { formTitle: "Report a Bug!" });
+        }
+    }, []);
 
     return (
         <IconButton
+            ref={buttonRef}
             className={`feedback-button ${className}`}
-            onClick={handleClick}
             aria-label="Leave feedback"
         >
             <svg
