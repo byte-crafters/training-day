@@ -29,14 +29,14 @@ function BottomNavigation() {
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
-        
+
         switch (newValue) {
             case 0:
                 navigate("/");
                 break;
             case 1:
                 // Create - переходим на страницу создания тренировки
-                navigate("/select-exercises");
+                navigate("/add-program");
                 break;
             case 2:
                 // Progress - пока заглушка, потом будет отдельная страница

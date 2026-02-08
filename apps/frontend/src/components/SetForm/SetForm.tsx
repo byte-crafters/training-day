@@ -14,9 +14,12 @@ interface SetFormProps {
 }
 
 function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: SetFormProps) {
+    const MAX_REPS = 300;
+    const MAX_WEIGHT = 800;
+
     const [reps, setReps] = useState<number | "">(15);
     const [weight, setWeight] = useState<number | "">("");
-    const [note, setNote] = useState("");
+    const [note, setNote] = useState<string>("");
 
     // Заполняем форму при открытии или изменении initialSet
     useEffect(() => {
@@ -41,30 +44,34 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
         }
     }, [open, initialSet, mode]);
 
-    // Единая функция обработки изменения значения
-    const handleValueChange = (
-        value: string,
-        setter: (val: number | "") => void
-    ) => {
-        const trimmedValue = value.trim();
+    const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const trimmedValue = e.target.value.trim();
         if (trimmedValue === "" || trimmedValue === "-") {
-            setter("");
-        } else if (!isNaN(Number(trimmedValue)) && Number(trimmedValue) >= 0) {
-            setter(Number(trimmedValue));
+            setReps("");
+        } else if (!isNaN(Number(trimmedValue))
+            && Number(trimmedValue) >= 0
+            && Number(trimmedValue) <= MAX_REPS) {
+            setReps(Number(trimmedValue));
         }
     };
 
-    const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleValueChange(e.target.value, setReps);
-    };
-
     const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        handleValueChange(e.target.value, setWeight);
+        const trimmedValue = e.target.value.trim();
+        if (trimmedValue === "" || trimmedValue === "-") {
+            setWeight("");
+        } else if (!isNaN(Number(trimmedValue))
+            && Number(trimmedValue) >= 0
+            && Number(trimmedValue) <= MAX_WEIGHT) {
+            setWeight(Number(trimmedValue));
+        }
     };
 
     // Функции для увеличения/уменьшения значений (steppers)
     const incrementReps = () => {
-        setReps((prev) => (prev === "" ? 1 : Math.max(0, prev + 1)));
+        setReps((prev) => {
+            if (prev === "" || prev === 0) return 1;
+            return Math.min(MAX_REPS, prev + 1);
+        });
     };
 
     const decrementReps = () => {
@@ -75,7 +82,10 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
     };
 
     const incrementWeight = () => {
-        setWeight((prev) => (prev === "" ? 1 : prev + 1));
+        setWeight((prev) => {
+            if (prev === "" || prev === 0) return 1;
+            return Math.min(MAX_WEIGHT, prev + 1);
+        });
     };
 
     const decrementWeight = () => {
@@ -86,7 +96,10 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
     };
 
     const incrementWeightBy5 = () => {
-        setWeight((prev) => (prev === "" ? 5 : Math.max(0, prev + 5)));
+        setWeight((prev) => {
+            if (prev === "" || prev === 0) return 5;
+            return Math.min(MAX_WEIGHT, prev + 5);
+        });
     };
 
     const decrementWeightBy5 = () => {
@@ -94,6 +107,10 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
             if (prev === "" || prev === 0) return "";
             return Math.max(0, prev - 5);
         });
+    };
+
+    const handleNoteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNote(e.target.value.slice(0, 100));
     };
 
     const handleSave = () => {
@@ -196,6 +213,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                 <IconButton
                                     className="set-form__stepper-button"
                                     onClick={incrementReps}
+                                    disabled={reps === MAX_REPS}
                                     aria-label="Increase reps"
                                 >
                                     <svg
@@ -274,6 +292,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                 <IconButton
                                     className="set-form__stepper-button"
                                     onClick={incrementWeight}
+                                    disabled={weight === MAX_WEIGHT}
                                     aria-label="Increase weight"
                                 >
                                     <svg
@@ -292,6 +311,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                 <IconButton
                                     className="set-form__stepper-button set-form__stepper-button--large"
                                     onClick={incrementWeightBy5}
+                                    disabled={weight === MAX_WEIGHT}
                                     aria-label="Increase weight by 5"
                                 >
                                     <Typography className="set-form__stepper-button-text">+5</Typography>
@@ -308,7 +328,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                             className="set-form__note-input"
                             placeholder="Add note..."
                             value={note}
-                            onChange={(e) => setNote(e.target.value)}
+                            onChange={handleNoteChange}
                             multiline
                             rows={2}
                         />

@@ -110,77 +110,78 @@ function App() {
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             {isAuthenticating && (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            minHeight: '100vh',
-                            gap: 2,
-                        }}
-                    >
-                        <CircularProgress />
-                        <Typography variant="body1" color="text.secondary">
-                            Authorizing...
-                        </Typography>
-                    </Box>
-                )}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minHeight: '100vh',
+                        gap: 2,
+                    }}
+                >
+                    <CircularProgress />
+                    <Typography variant="body1" color="text.secondary">
+                        Authorizing...
+                    </Typography>
+                </Box>
+            )}
 
-                {authError && !isAuthenticating && (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            minHeight: '100vh',
-                            gap: 2,
-                            p: 3,
-                        }}
-                    >
-                        <Typography variant="h6" color="error" align="center">
-                            Authorization error
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" align="center">
-                            {authError}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-                            Please reload the page
-                        </Typography>
-                    </Box>
-                )}
+            {authError && !isAuthenticating && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minHeight: '100vh',
+                        gap: 2,
+                        p: 3,
+                    }}
+                >
+                    <Typography variant="h6" color="error" align="center">
+                        Authorization error
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" align="center">
+                        {authError}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
+                        Please reload the page
+                    </Typography>
+                </Box>
+            )}
 
-                {!isAuthenticating && !authError && (
-                    <BrowserRouter>
-                        <Routes>
-                            <Route
-                                path="/select-exercises"
-                                element={<SelectExercises />}
-                            />
-                            <Route element={<NavigationLayout />}>
-                                <Route path="/" element={<WorkoutTracker />} />
-                                <Route path="/progress" element={<NotFound />} />
-                                <Route path="/profile" element={<NotFound />} />
-
-                            </Route>
-                            <Route path="/my-workout" element={<MyWorkout />} />
-                            <Route
-                                path="/exercise-detail"
-                                element={<ExerciseDetail />}
-                            />
-                            <Route
-                                path="/workout-results"
-                                element={<WorkoutResults />}
-                            />
-                            <Route
-                                path="/feedback"
-                                element={<FeedBackPage />}
-                            />
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </BrowserRouter>
-                )}
+            {!isAuthenticating && !authError && (
+                <BrowserRouter>
+                    <Routes>
+                        <Route
+                            path="/select-exercises"
+                            element={<SelectExercises />}
+                        />
+                        <Route element={<NavigationLayout />}>
+                            <Route path="/" element={<WorkoutTracker />} />
+                            <Route path="/progress" element={<NotFound />} />
+                            <Route path="/profile" element={<NotFound />} />
+                            <Route path="/add-program" element={<NotFound />} />
+                            <Route path="/add-workout" element={<NotFound />} />
+                        </Route>
+                        <Route path="/my-workout" element={<MyWorkout />} />
+                        <Route
+                            path="/exercise-detail"
+                            element={<ExerciseDetail />}
+                        />
+                        <Route
+                            path="/workout-results"
+                            element={<WorkoutResults />}
+                        />
+                        <Route
+                            path="/feedback"
+                            element={<FeedBackPage />}
+                        />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </BrowserRouter>
+            )}
         </ThemeProvider>
     );
 }
