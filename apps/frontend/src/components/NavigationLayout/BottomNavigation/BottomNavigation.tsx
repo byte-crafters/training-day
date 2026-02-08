@@ -1,118 +1,68 @@
-import { BottomNavigation as MuiBottomNavigation, BottomNavigationAction } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import AddIcon from "@mui/icons-material/Add";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import PersonIcon from "@mui/icons-material/Person";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import "./BottomNavigation.scss";
+
+const NAV_ITEMS = [
+    { path: "/", label: "Home", icon: HomeIcon },
+    { path: "/add-program", label: "Create", icon: AddIcon },
+    { path: "/progress", label: "Progress", icon: TrendingUpIcon },
+    { path: "/profile", label: "Profile", icon: PersonIcon },
+] as const;
+
+// Пути, при которых считаем активной вкладку "Create"
+const CREATE_PATHS = ["/select-exercises", "/my-workout", "/exercise-detail", "/workout-results"];
 
 function BottomNavigation() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [value, setValue] = useState(0);
 
-    // Определяем активную вкладку на основе текущего пути
-    useEffect(() => {
+    const getActiveIndex = () => {
         const path = location.pathname;
-        if (path === "/") {
-            setValue(0); // Home
-        } else if (path === "/select-exercises" || path === "/my-workout" || path === "/exercise-detail") {
-            setValue(1); // Create
-        } else if (path === "/progress") {
-            setValue(2); // Progress
-        } else if (path === "/profile") {
-            setValue(3); // Profile
-        }
-    }, [location.pathname]);
+        if (path === "/") return 0;
+        if (CREATE_PATHS.some((p) => path.startsWith(p)) || path === "/add-program") return 1;
+        if (path === "/progress") return 2;
+        if (path === "/profile") return 3;
+        return 0;
+    };
 
-    const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+    const activeIndex = getActiveIndex();
 
-        switch (newValue) {
-            case 0:
-                navigate("/");
-                break;
-            case 1:
-                // Create - переходим на страницу создания тренировки
-                navigate("/add-program");
-                break;
-            case 2:
-                // Progress - пока заглушка, потом будет отдельная страница
-                navigate("/progress");
-                break;
-            case 3:
-                // Profile - пока заглушка, потом будет отдельная страница
-                navigate("/profile");
-                break;
-        }
+    const handleClick = (index: number) => {
+        const item = NAV_ITEMS[index];
+        navigate(item.path);
     };
 
     const navigationElement = (
-        <MuiBottomNavigation
-            value={value}
-            onChange={handleChange}
-            className="bottom-navigation"
-            showLabels
-            sx={{
-                position: "fixed",
-                bottom: 0,
-                left: 0,
-                right: 0,
-                width: "100vw",
-                maxWidth: "100vw",
-                backgroundColor: "#000000",
-                borderTop: "none",
-                margin: 0,
-                padding: 0,
-                "&.MuiBottomNavigation-root": {
-                    backgroundColor: "#000000",
-                    position: "fixed",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    width: "100vw",
-                    maxWidth: "100vw",
-                    margin: 0,
-                    padding: 0,
-                },
-                "& .MuiBottomNavigationAction-root": {
-                    color: "#ffffff",
-                    "&.Mui-selected": {
-                        color: (theme) => theme.palette.primary.main,
-                    },
-                },
-                "& .MuiBottomNavigationAction-label": {
-                    color: "#ffffff",
-                    "&.Mui-selected": {
-                        color: (theme) => theme.palette.primary.main,
-                    },
-                },
-            }}
-        >
-            <BottomNavigationAction
-                label="Home"
-                icon={<HomeIcon />}
-            />
-            <BottomNavigationAction
-                label="Create"
-                icon={<AddIcon />}
-            />
-            <BottomNavigationAction
-                label="Progress"
-                icon={<TrendingUpIcon />}
-            />
-            <BottomNavigationAction
-                label="Profile"
-                icon={<PersonIcon />}
-            />
-        </MuiBottomNavigation>
+        <nav className="bottom-navigation" role="navigation" aria-label="Bottom navigation">
+            <div className="bottom-navigation__pill">
+                {NAV_ITEMS.map((item, index) => {
+                    const isActive = activeIndex === index;
+                    const Icon = item.icon;
+                    return (
+                        <button
+                            key={item.path}
+                            type="button"
+                            className={`bottom-navigation__item ${isActive ? "bottom-navigation__item--active" : ""}`}
+                            onClick={() => handleClick(index)}
+                            aria-label={item.label}
+                            aria-current={isActive ? "page" : undefined}
+                        >
+                            <span className="bottom-navigation__icon-wrap">
+                                <Icon className="bottom-navigation__icon" />
+                            </span>
+                            <span className="bottom-navigation__label">{item.label}</span>
+                        </button>
+                    );
+                })}
+            </div>
+        </nav>
     );
 
-    // Рендерим через Portal напрямую в body или #storybook-root, чтобы избежать проблем с прокруткой
     if (typeof document !== "undefined") {
-        // В Storybook используем #storybook-root, в обычном приложении - body
         const portalTarget = document.getElementById("storybook-root") || document.body;
         return createPortal(navigationElement, portalTarget);
     }

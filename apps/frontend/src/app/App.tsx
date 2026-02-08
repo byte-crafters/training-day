@@ -163,7 +163,6 @@ function App() {
                             <Route path="/progress" element={<NotFound />} />
                             <Route path="/profile" element={<NotFound />} />
                             <Route path="/add-program" element={<NotFound />} />
-                            <Route path="/add-workout" element={<NotFound />} />
                         </Route>
                         <Route path="/my-workout" element={<MyWorkout />} />
                         <Route
