@@ -13,6 +13,7 @@ import {
 } from "../../utils/api";
 import { setWorkouts, setCurrentWorkout, useAppSelector, useAppDispatch, RootState } from "../../store";
 import { Workout } from "@training-day/shared";
+import * as Sentry from "@sentry/react";
 
 function WorkoutTracker() {
     const navigate = useNavigate();
@@ -53,6 +54,7 @@ function WorkoutTracker() {
             // Очищаем currentWorkout только после успешного сохранения
             dispatch(setCurrentWorkout(null));
         } catch (error) {
+            Sentry.captureException(error);
             console.error("Failed to save workout:", error);
             // При ошибке показываем карточку снова, чтобы пользователь мог попробовать еще раз
             setIsDismissed(false);

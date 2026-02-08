@@ -26,6 +26,7 @@ import { saveCurrentWorkout } from "../../utils/storage";
 import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
+import * as Sentry from "@sentry/react";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -107,6 +108,7 @@ function MyWorkout() {
 
             navigate("/");
         } catch (error) {
+            Sentry.captureException(error);
             console.error("Failed to finish workout:", error);
         } finally {
             setIsSaving(false);
