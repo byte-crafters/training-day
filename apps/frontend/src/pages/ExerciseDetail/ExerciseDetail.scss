@@ -136,9 +136,15 @@
         background-color: transparent;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
         z-index: 1000;
         pointer-events: auto;
+    }
+
+    &__footer-buttons-row {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
     }
 
     &__save-button {
@@ -175,6 +181,8 @@
     }
 
     &__finish-button {
+        height: 52px !important;
+        min-height: 52px !important;
         padding: 16px !important;
         font-size: 16px !important;
         font-weight: 600 !important;
@@ -240,6 +248,10 @@
     }
 
     &__add-set-button-bottom {
+        flex: 1;
+        min-width: 0;
+        height: 52px !important;
+        min-height: 52px !important;
         padding: 16px !important;
         font-size: 16px !important;
         font-weight: 600 !important;

@@ -1,5 +1,15 @@
 import { Workout } from "@training-day/shared";
 
+/** Приводит тренировку с API (duration может быть строкой из БД) к типу Workout */
+function normalizeWorkoutFromAPI(raw: Record<string, unknown>): Workout {
+    const duration = raw.duration;
+    const durationNum =
+        typeof duration === "string"
+            ? parseInt(duration, 10) || 0
+            : Number(duration) || 0;
+    return { ...raw, duration: durationNum } as Workout;
+}
+
 const API_BASE_URL = import.meta.env.DEV
     ? 'http://localhost:3001/api'
     : (import.meta.env.VITE_API_URL || 'http://localhost:3001/api');
@@ -88,8 +98,9 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 /**
  * Получить все тренировки
  */
-export const getWorkouts = async () => {
-    return fetchAPI('/workouts');
+export const getWorkouts = async (): Promise<Workout[]> => {
+    const data = await fetchAPI("/workouts");
+    return Array.isArray(data) ? data.map(normalizeWorkoutFromAPI) : [];
 };
 
 /**
@@ -107,8 +118,8 @@ function normalizeWorkoutForAPI(workout: Workout) {
     return {
         id: workout.id,
         name: workout.name,
-        date: workout.date || new Date().toISOString(), // Если нет date, используем текущее время
-        duration: workout.duration || '0:00', // Если нет duration, используем '0:00'
+        date: workout.date || new Date().toISOString(),
+        duration: String(workout.duration ?? 0), // в БД сохраняем как текст
         exercises: workout.exercises || [],
     };
 }
@@ -132,9 +143,9 @@ export const createWorkout = async (workout: Workout) => {
  */
 export const updateWorkout = async (id: string, workout: Workout) => {
     const result = await fetchAPI(`/workouts/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(workout),
-        });
+        method: "PUT",
+        body: JSON.stringify(normalizeWorkoutForAPI(workout)),
+    });
     return result;
 };
 

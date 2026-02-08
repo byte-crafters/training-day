@@ -12,7 +12,8 @@ import NavigationLayout from "../components/NavigationLayout";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { logAnalyticsEvent } from "../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_PARAMS } from "../utils/analytics";
-import { setExercises, setWorkouts, useAppDispatch } from "../store";
+import { setExercises, setWorkouts, store, useAppDispatch } from "../store";
+import { saveCurrentWorkout } from "../utils/storage";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
@@ -57,6 +58,25 @@ function App() {
             dispatch(setExercises([]));
         }
     }, [dispatch]);
+
+    useEffect(() => {
+        const saveWorkoutWithElapsedBeforeUnload = () => {
+            const state = store.getState();
+            if (!state.currentWorkout) return;
+            const elapsedMs =
+                state.timer.accumulated +
+                (state.timer.startedAt ? Date.now() - state.timer.startedAt : 0);
+            if (elapsedMs > 0) {
+                saveCurrentWorkout({ ...state.currentWorkout, elapsedMs });
+            }
+        };
+        window.addEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
+        window.addEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
+            window.removeEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
+        };
+    }, []);
 
     useEffect(() => {
         const initializeApp = async () => {

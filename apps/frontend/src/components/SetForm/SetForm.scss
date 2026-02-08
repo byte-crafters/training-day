@@ -229,6 +229,8 @@
     }
 
     &__add-button {
+        height: 52px !important;
+        min-height: 52px !important;
         padding: 16px !important;
         font-size: 16px !important;
         font-weight: 600 !important;
@@ -253,6 +255,8 @@
     }
 
     &__delete-button {
+        height: 52px !important;
+        min-height: 52px !important;
         padding: 16px !important;
         font-size: 16px !important;
         font-weight: 600 !important;

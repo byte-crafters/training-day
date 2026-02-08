@@ -26,7 +26,7 @@ const meta = {
           id: 'workout-1',
           name: 'My Workout',
           date: new Date().toISOString(),
-          duration: '0',
+          duration: 0,
           exercises: [
             {
               id: exercise.id,

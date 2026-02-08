@@ -30,7 +30,7 @@ const createWorkout = (name: string, exerciseCount: number): Workout => {
     id: 'workout-1',
     name,
     date: new Date().toISOString(),
-    duration: '0',
+    duration: 0,
     exercises,
   };
 };

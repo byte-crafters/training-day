@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button, IconButton } from "@mui/material";
 import { Workout } from "@training-day/shared";
 import "./ContinueWorkoutCard.scss";
+import formatTimerHMS from "../../utils/time";
+import { useAppDispatch, setTimerFromWorkout } from "../../store";
 
 interface ContinueWorkoutCardProps {
     workout: Workout;
@@ -11,6 +13,7 @@ interface ContinueWorkoutCardProps {
 
 function ContinueWorkoutCard({ workout, onDismiss, onDelete }: ContinueWorkoutCardProps) {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     // Вычисляем количество оставшихся упражнений
     const completedExercises = workout.exercises?.filter(
@@ -19,8 +22,11 @@ function ContinueWorkoutCard({ workout, onDismiss, onDelete }: ContinueWorkoutCa
     const totalExercises = workout.exercises?.length || 0;
     const remainingExercises = totalExercises - completedExercises;
 
-    // Вычисляем время (пока заглушка)
-    const elapsedTime = "45 mins";
+    const elapsedSeconds =
+        workout.elapsedMs != null
+            ? Math.floor(workout.elapsedMs / 1000)
+            : workout.duration;
+    const elapsedTime = formatTimerHMS(elapsedSeconds);
 
     return (
         <Box className="continue-workout-card">
@@ -57,9 +63,12 @@ function ContinueWorkoutCard({ workout, onDismiss, onDelete }: ContinueWorkoutCa
                         variant="contained"
                         size="small"
                         color="info"
-                        sx={{fontSize: "0.7rem", textTransform: "none", fontWeight: 600}}
+                        sx={{ fontSize: "0.7rem", textTransform: "none", fontWeight: 600 }}
                         className="continue-workout-card__continue-button"
-                        onClick={() => navigate("/my-workout")}
+                        onClick={() => {
+                            dispatch(setTimerFromWorkout(workout));
+                            navigate("/my-workout");
+                        }}
                         startIcon={
                             <svg
                                 width="16"
