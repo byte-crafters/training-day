@@ -8,7 +8,7 @@ import BottomNavigation from '../../components/NavigationLayout/BottomNavigation
 
 const createMockWorkout = (name: string, exerciseCount: number): Workout => {
   const exercises = [];
-  
+
   for (let i = 0; i < exerciseCount; i++) {
     exercises.push({
       id: `exercise-${i + 1}`,
@@ -22,7 +22,7 @@ const createMockWorkout = (name: string, exerciseCount: number): Workout => {
     id: `workout-${name.toLowerCase().replace(/\s+/g, '-')}`,
     name,
     date: new Date().toISOString(),
-    duration: '0',
+    duration: 0,
     exercises,
   };
 };

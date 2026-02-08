@@ -14,7 +14,7 @@ export const darkTheme = createTheme({
             dark: "#00B8CC",
         },
         background: {
-            default: "#0A0A0A",
+            default: "#1a1a1a",
             paper: "#161618",
         },
         text: {
@@ -216,7 +216,7 @@ export const darkTheme = createTheme({
                     "--mui-palette-primary-dark": "#00B8CC",
                     "--mui-palette-primary-light": "#00E5FF",
                     "--mui-palette-secondary-main": "#00E5FF",
-                    "--mui-palette-background-default": "#0A0A0A",
+                    "--mui-palette-background-default": "#1a1a1a",
                     "--mui-palette-background-paper": "#161618",
                     "--mui-palette-text-primary": "#ffffff",
                     "--mui-palette-text-secondary": "#a1a1aa",
@@ -224,7 +224,7 @@ export const darkTheme = createTheme({
                     "--mui-palette-action-hover": "rgba(255, 255, 255, 0.1)",
                 },
                 body: {
-                    backgroundColor: "#0A0A0A", // bg-dark
+                    backgroundColor: "#1a1a1a", // bg-dark
                     color: "#ffffff",
                     minHeight: "100vh",
                     WebkitTapHighlightColor: "transparent",

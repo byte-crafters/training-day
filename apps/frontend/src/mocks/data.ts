@@ -5,7 +5,7 @@ export const workouts: Workout[] = [
         id: "workout-1",
         name: "Full Body Workout",
         date: "Mon, Apr 20",
-        duration: "45 mins",
+        duration: 45 * 60,
         exercises: [
             {
                 id: "exercise-1-1",
@@ -46,7 +46,7 @@ export const workouts: Workout[] = [
         id: "workout-2",
         name: "Cardio Session",
         date: "Sat, Apr 18",
-        duration: "30 mins",
+        duration: 30 * 60,
         exercises: [
             {
                 id: "exercise-2-1",
@@ -74,7 +74,7 @@ export const workouts: Workout[] = [
         id: "workout-3",
         name: "Upper Body",
         date: "Wed, Apr 16",
-        duration: "50 mins",
+        duration: 50 * 60,
         exercises: [
             {
                 id: "exercise-3-1",
@@ -126,7 +126,7 @@ export const workouts: Workout[] = [
         id: "workout-4",
         name: "Leg Day",
         date: "Mon, Apr 14",
-        duration: "55 mins",
+        duration: 55 * 60,
         exercises: [
             {
                 id: "exercise-4-1",
@@ -179,7 +179,7 @@ export const workouts: Workout[] = [
         id: "workout-5",
         name: "Push Day",
         date: "Fri, Apr 12",
-        duration: "40 mins",
+        duration: 40 * 60,
         exercises: [
             {
                 id: "exercise-5-1",

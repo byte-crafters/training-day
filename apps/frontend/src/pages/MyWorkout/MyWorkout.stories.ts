@@ -28,7 +28,7 @@ const createMockWorkout = (name: string, exerciseCount: number, setsPerExercise:
     id: 'workout-1',
     name,
     date: new Date().toISOString(),
-    duration: '0',
+    duration: 0,
     exercises,
   };
 };

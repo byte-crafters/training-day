@@ -2,27 +2,22 @@ import { Box, Typography } from "@mui/material";
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import "./WorkoutCard.scss";
 
+import formatTimerHMS from "../../utils/time";
+
 export interface WorkoutCardProps {
     name: string;
     date: string; // ISO timestamp string (время создания)
-    duration: string; // Длительность тренировки
+    duration: number; // длительность в секундах
     onClick?: () => void;
 }
 
 function WorkoutCard({ name, date, duration, onClick }: WorkoutCardProps) {
-
     const workoutDate = new Date(date);
-    const formattedDate = workoutDate.toLocaleDateString('en-US', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric'
+    const formattedDate = workoutDate.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
     });
-
-    const formatDuration = (duration: string) => {
-        const minutes = parseInt(duration, 10);
-        if (isNaN(minutes)) return duration;
-        return `${minutes}m`;
-    };
 
     return (
         <Box
@@ -39,7 +34,7 @@ function WorkoutCard({ name, date, duration, onClick }: WorkoutCardProps) {
             </Box>
             <Box className="workout-card__right">
                 <Typography variant="body2" color='text.secondary' className="workout-card__duration">
-                    {formatDuration(duration)}
+                    {formatTimerHMS(duration)}
                 </Typography>
                 <svg
                     width="20"

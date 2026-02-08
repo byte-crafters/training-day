@@ -27,7 +27,7 @@ export function createWorkout(exercises: Exercise[]): Workout {
         id: uuidv4(),
         name: 'Training on ' + now.toLocaleDateString(),
         date: now.toISOString(), // Время создания тренировки
-        duration: '0:00', // Начальная длительность
+        duration: 0, // длительность в секундах
         exercises: activities,
     };
 }

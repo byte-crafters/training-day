@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
+import formatTimerHMS from "../../utils/time";
 
 // Функция для форматирования времени начала тренировки
 const formatStartTime = (dateString: string): string => {
@@ -66,7 +67,7 @@ function WorkoutResults() {
     }
 
     const startTime = formatStartTime(workout.date);
-    const duration = workout.duration || "0M";
+    const durationFormatted = formatTimerHMS(workout.duration ?? 0);
 
     return (
         <Box className="workout-results">
@@ -106,7 +107,7 @@ function WorkoutResults() {
                             Started at {startTime}
                         </Typography>
                         <Typography variant="body2" className="workout-results__duration">
-                            Total duration: {duration}
+                            Total duration: {durationFormatted}
                         </Typography>
                     </Box>
                 </Box>

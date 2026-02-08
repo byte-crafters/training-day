@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Box, Typography, IconButton, Button, Card } from "@mui/material";
 import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
-import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector } from "../../store";
+import { addSet, updateSet, deleteSet, startTimer, RootState, useAppDispatch, useAppSelector } from "../../store";
 import SetForm from "../../components/SetForm";
 import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
+import WorkoutTimer from "../../components/WorkoutTimer";
+import PausePlayButton from "../../components/PausePlayButton";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
@@ -39,6 +41,11 @@ function ExerciseDetail() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingSet, setEditingSet] = useState<Set | null>(null);
     const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
+
+    // Таймер продолжает идти на странице упражнения (не ставим на паузу)
+    useEffect(() => {
+        dispatch(startTimer());
+    }, [dispatch]);
 
     // Синхронизируем savedSets с sets из activity
     useEffect(() => {
@@ -159,6 +166,7 @@ function ExerciseDetail() {
             </Box>
 
             <Box component="main" className="exercise-detail__main">
+                <WorkoutTimer />
                 {savedSets.length > 0 ? (
                     <Box className="exercise-detail__previous-sets">
                         <Typography variant="h5"
@@ -228,16 +236,18 @@ function ExerciseDetail() {
             </Box>
 
             <Box className="exercise-detail__footer">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    fullWidth
-                    className="exercise-detail__add-set-button-bottom"
-                    onClick={handleOpenForm}
-                >
-                    Add Set
-                </Button>
+                <Box className="exercise-detail__footer-buttons-row">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        className="exercise-detail__add-set-button-bottom"
+                        onClick={handleOpenForm}
+                    >
+                        Add Set
+                    </Button>
+                    <PausePlayButton className="exercise-detail__pause-button" />
+                </Box>
                 <Button
                     variant="outlined"
                     color="primary"

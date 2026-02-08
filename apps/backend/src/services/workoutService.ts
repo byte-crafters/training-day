@@ -142,9 +142,9 @@ export class WorkoutService {
             .insert({
                 id: workout.id,
                 name: workout.name,
-                date: workout.date, // Время создания тренировки
-                duration: workout.duration, // Длительность тренировки
-                user_id: userId, // Привязываем к пользователю
+                date: workout.date,
+                duration: String(workout.duration ?? 0), // в БД сохраняем как текст
+                user_id: userId,
             })
             .select()
             .single();
@@ -213,7 +213,7 @@ export class WorkoutService {
         const updateData: any = {};
         if (updates.name !== undefined) updateData.name = updates.name;
         if (updates.date !== undefined) updateData.date = updates.date;
-        if (updates.duration !== undefined) updateData.duration = updates.duration;
+        if (updates.duration !== undefined) updateData.duration = String(updates.duration);
 
         const { data, error } = await supabase
             .from('workouts')

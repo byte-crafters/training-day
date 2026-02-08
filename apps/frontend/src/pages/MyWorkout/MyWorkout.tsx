@@ -17,6 +17,9 @@ import {
     useAppDispatch,
     useAppSelector,
     RootState,
+    startTimer,
+    pauseTimer,
+    resetTimer,
 } from "../../store";
 import {
     createWorkout as createWorkoutAPI,
@@ -27,6 +30,8 @@ import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 import * as Sentry from "@sentry/react";
+import WorkoutTimer from "../../components/WorkoutTimer";
+import PausePlayButton from "../../components/PausePlayButton";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -36,6 +41,7 @@ function MyWorkout() {
     const currentWorkout = useAppSelector(
         (state: RootState) => state.currentWorkout
     );
+    const timer = useAppSelector((state: RootState) => state.timer);
     const workoutName = currentWorkout?.name || "Untitled Workout";
     const hasExercises =
         currentWorkout?.exercises?.length &&
@@ -43,8 +49,12 @@ function MyWorkout() {
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
+        dispatch(startTimer());
         logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.MY_WORKOUT });
-    }, []);
+        return () => {
+            dispatch(pauseTimer());
+        };
+    }, [dispatch]);
     const [isEditingName, setIsEditingName] = useState(false);
     const [editedName, setEditedName] = useState(workoutName);
     const textRef = useRef<HTMLDivElement>(null);
@@ -87,25 +97,34 @@ function MyWorkout() {
             return;
         }
 
+        const totalMs =
+            timer.accumulated +
+            (timer.startedAt ? Date.now() - timer.startedAt : 0);
+        const duration = Math.floor(totalMs / 1000); // секунды, в БД сохраняется как текст
+
         setIsSaving(true);
         try {
-            const savedWorkout = await createWorkoutAPI(currentWorkout);
+            const savedWorkout = await createWorkoutAPI({
+                ...currentWorkout,
+                duration,
+            });
 
             if (!savedWorkout) {
                 throw new Error("Failed to save workout");
             }
-
+            dispatch(pauseTimer());
             const workouts = await getWorkouts();//надо ли тут?
             dispatch(setWorkouts(workouts));
 
             logAnalyticsEvent(ANALYTICS_EVENTS.WORKOUT_COMPLETED, {
                 [ANALYTICS_PARAMS.WORKOUT_ID]: currentWorkout.id,
-                [ANALYTICS_PARAMS.DURATION]: currentWorkout.duration || "0",
+                [ANALYTICS_PARAMS.DURATION]: String(duration),
             });
 
             dispatch(setCurrentWorkout(null));
             saveCurrentWorkout(null);
 
+            dispatch(resetTimer());
             navigate("/");
         } catch (error) {
             Sentry.captureException(error);
@@ -113,6 +132,11 @@ function MyWorkout() {
         } finally {
             setIsSaving(false);
         }
+    };
+
+    const handleAddExercises = () => {
+        dispatch(pauseTimer());
+        navigate("/select-exercises");
     };
 
     return (
@@ -214,16 +238,16 @@ function MyWorkout() {
                 )}
                 <Box className="my-workout__header-spacer" />
             </Box>
-
             {hasExercises && (
                 <Box component="main" className="my-workout__main">
+                    <WorkoutTimer />
                     <Box className="my-workout__add-exercises-section">
                         <Button
                             variant="outlined"
                             color="primary"
                             fullWidth
                             className="my-workout__add-exercises-button"
-                            onClick={() => navigate("/select-exercises")}
+                            onClick={handleAddExercises}
                         >
                             Add Exercises
                         </Button>
@@ -236,6 +260,11 @@ function MyWorkout() {
             )}
 
             <Box className="my-workout__footer">
+                {hasExercises && (
+                    <Box className="my-workout__footer-pause-row">
+                        <PausePlayButton className="my-workout__pause-button" />
+                    </Box>
+                )}
                 <Button
                     variant="contained"
                     size="large"

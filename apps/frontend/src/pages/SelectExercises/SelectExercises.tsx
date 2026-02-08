@@ -224,9 +224,16 @@ function SelectExercises() {
             </Box>
 
             <Box className="select-exercises__section-title">
-                <Typography variant="h5" color='text.secondary' sx={{ textTransform: "uppercase" }}>
-                    Recommended
-                </Typography>
+                {filteredExercises.length > 0 ? (
+
+                    <Typography variant="h5" color='text.secondary' sx={{ textTransform: "uppercase" }}>
+                        Recommended
+                    </Typography>
+                ) : (
+                    <Typography variant="h4" color="text.secondary" textAlign="center">
+                        No exercises found
+                    </Typography>
+                )}
             </Box>
 
             <Box component="main" className="select-exercises__main">

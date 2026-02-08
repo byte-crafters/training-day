@@ -20,8 +20,10 @@ export interface Workout {
     id: string;
     name: string;
     date: string; // ISO timestamp string (время создания тренировки)
-    duration: string; // Длительность тренировки
+    duration: number; // Длительность тренировки в секундах
     exercises: Activity[];
+    /** Прошлое время таймера в мс (только для текущей тренировки в localStorage, на API не отправляется) */
+    elapsedMs?: number;
 }
 
 export enum ExerciseType {
@@ -37,3 +39,7 @@ export enum ExerciseType {
     CALVES = "calves",
 }
 
+export interface Timer {
+    startedAt: number | null;
+    accumulated: number; //ms
+}

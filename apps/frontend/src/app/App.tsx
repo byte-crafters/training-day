@@ -12,7 +12,8 @@ import NavigationLayout from "../components/NavigationLayout";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { logAnalyticsEvent } from "../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_PARAMS } from "../utils/analytics";
-import { setExercises, setWorkouts, useAppDispatch } from "../store";
+import { setExercises, setWorkouts, store, useAppDispatch } from "../store";
+import { saveCurrentWorkout } from "../utils/storage";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
@@ -57,6 +58,25 @@ function App() {
             dispatch(setExercises([]));
         }
     }, [dispatch]);
+
+    useEffect(() => {
+        const saveWorkoutWithElapsedBeforeUnload = () => {
+            const state = store.getState();
+            if (!state.currentWorkout) return;
+            const elapsedMs =
+                state.timer.accumulated +
+                (state.timer.startedAt ? Date.now() - state.timer.startedAt : 0);
+            if (elapsedMs > 0) {
+                saveCurrentWorkout({ ...state.currentWorkout, elapsedMs });
+            }
+        };
+        window.addEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
+        window.addEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
+            window.removeEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
+        };
+    }, []);
 
     useEffect(() => {
         const initializeApp = async () => {
@@ -110,77 +130,77 @@ function App() {
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             {isAuthenticating && (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            minHeight: '100vh',
-                            gap: 2,
-                        }}
-                    >
-                        <CircularProgress />
-                        <Typography variant="body1" color="text.secondary">
-                            Authorizing...
-                        </Typography>
-                    </Box>
-                )}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minHeight: '100vh',
+                        gap: 2,
+                    }}
+                >
+                    <CircularProgress />
+                    <Typography variant="body1" color="text.secondary">
+                        Authorizing...
+                    </Typography>
+                </Box>
+            )}
 
-                {authError && !isAuthenticating && (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            minHeight: '100vh',
-                            gap: 2,
-                            p: 3,
-                        }}
-                    >
-                        <Typography variant="h6" color="error" align="center">
-                            Authorization error
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" align="center">
-                            {authError}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
-                            Please reload the page
-                        </Typography>
-                    </Box>
-                )}
+            {authError && !isAuthenticating && (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        minHeight: '100vh',
+                        gap: 2,
+                        p: 3,
+                    }}
+                >
+                    <Typography variant="h6" color="error" align="center">
+                        Authorization error
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" align="center">
+                        {authError}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
+                        Please reload the page
+                    </Typography>
+                </Box>
+            )}
 
-                {!isAuthenticating && !authError && (
-                    <BrowserRouter>
-                        <Routes>
-                            <Route
-                                path="/select-exercises"
-                                element={<SelectExercises />}
-                            />
-                            <Route element={<NavigationLayout />}>
-                                <Route path="/" element={<WorkoutTracker />} />
-                                <Route path="/progress" element={<NotFound />} />
-                                <Route path="/profile" element={<NotFound />} />
-
-                            </Route>
-                            <Route path="/my-workout" element={<MyWorkout />} />
-                            <Route
-                                path="/exercise-detail"
-                                element={<ExerciseDetail />}
-                            />
-                            <Route
-                                path="/workout-results"
-                                element={<WorkoutResults />}
-                            />
-                            <Route
-                                path="/feedback"
-                                element={<FeedBackPage />}
-                            />
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </BrowserRouter>
-                )}
+            {!isAuthenticating && !authError && (
+                <BrowserRouter>
+                    <Routes>
+                        <Route
+                            path="/select-exercises"
+                            element={<SelectExercises />}
+                        />
+                        <Route element={<NavigationLayout />}>
+                            <Route path="/" element={<WorkoutTracker />} />
+                            <Route path="/progress" element={<NotFound />} />
+                            <Route path="/profile" element={<NotFound />} />
+                            <Route path="/add-program" element={<NotFound />} />
+                        </Route>
+                        <Route path="/my-workout" element={<MyWorkout />} />
+                        <Route
+                            path="/exercise-detail"
+                            element={<ExerciseDetail />}
+                        />
+                        <Route
+                            path="/workout-results"
+                            element={<WorkoutResults />}
+                        />
+                        <Route
+                            path="/feedback"
+                            element={<FeedBackPage />}
+                        />
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </BrowserRouter>
+            )}
         </ThemeProvider>
     );
 }

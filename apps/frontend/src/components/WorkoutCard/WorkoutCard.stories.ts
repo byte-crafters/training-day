@@ -13,7 +13,7 @@ export const Default: Story = {
   args: {
     name: 'Morning Workout',
     date: new Date().toISOString(),
-    duration: '0',
+    duration: 0,
   },
 };
 
