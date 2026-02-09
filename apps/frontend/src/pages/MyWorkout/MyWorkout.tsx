@@ -211,7 +211,7 @@ function MyWorkout() {
                                     ref={textRef}
                                     className="my-workout__name-text"
                                 >
-                                    {workoutName.slice(0, 10)}...
+                                    {workoutName.length > 10 ? `${workoutName.slice(0, 10)}...` : workoutName}
                                 </Typography>
                                 <IconButton
                                     className="my-workout__edit-button"

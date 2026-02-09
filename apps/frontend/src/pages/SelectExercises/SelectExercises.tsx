@@ -177,7 +177,7 @@ function SelectExercises() {
             </Box>
 
             <Box className="select-exercises__sticky-section">
-                <Box sx={{ marginBottom: "20px" }}>
+                <Box sx={{ marginBottom: "10px" }}>
                     <TextField
                         className="select-exercises__search"
                         placeholder="Search 200+ exercises"
@@ -210,7 +210,7 @@ function SelectExercises() {
                         <Button
                             key={category}
                             variant="text"
-                            sx={{ fontSize: 12, fontWeight: 700, padding: "6px 15px", minWidth: "auto" }}
+                            sx={{ fontSize: 10, fontWeight: 700, padding: "2px 15px", minWidth: "auto" }}
                             className={`select-exercises__category ${selectedCategory === category
                                 ? "select-exercises__category--active"
                                 : ""
