@@ -26,12 +26,9 @@ import {
     getWorkouts,
 } from "../../utils/api";
 import { saveCurrentWorkout } from "../../utils/storage";
-import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 import * as Sentry from "@sentry/react";
-import WorkoutTimer from "../../components/WorkoutTimer";
-import PausePlayButton from "../../components/PausePlayButton";
 
 function MyWorkout() {
     const navigate = useNavigate();
@@ -135,32 +132,12 @@ function MyWorkout() {
     };
 
     const handleAddExercises = () => {
-        dispatch(pauseTimer());
         navigate("/select-exercises");
     };
 
     return (
         <Box className="my-workout">
             <Box component="header" className="my-workout__header">
-                <IconButton
-                    className="my-workout__back-button"
-                    onClick={() => navigate(-1)}
-                    aria-label="Back"
-                    sx={{ color: '#ffffff' }}
-                >
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                </IconButton>
                 {hasExercises && (
                     <Box className="my-workout__name-section">
                         {isEditingName ? (
@@ -236,11 +213,9 @@ function MyWorkout() {
                         )}
                     </Box>
                 )}
-                <Box className="my-workout__header-spacer" />
             </Box>
             {hasExercises && (
                 <Box component="main" className="my-workout__main">
-                    <WorkoutTimer />
                     <Box className="my-workout__add-exercises-section">
                         <Button
                             variant="outlined"
@@ -260,11 +235,6 @@ function MyWorkout() {
             )}
 
             <Box className="my-workout__footer">
-                {hasExercises && (
-                    <Box className="my-workout__footer-pause-row">
-                        <PausePlayButton className="my-workout__pause-button" />
-                    </Box>
-                )}
                 <Button
                     variant="contained"
                     size="large"
@@ -288,8 +258,6 @@ function MyWorkout() {
                     )}
                 </Button>
             </Box>
-
-            <FeedbackButton />
         </Box>
     );
 }

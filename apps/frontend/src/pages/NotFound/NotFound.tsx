@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import { useEffect } from "react";
-import "./NotFound.scss";
-import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
+import "./NotFound.scss";
 
 function NotFound() {
     const navigate = useNavigate();
@@ -33,8 +32,6 @@ function NotFound() {
                     Return to the main page
                 </Button>
             </Box>
-
-            <FeedbackButton />
         </Box>
     );
 }

@@ -19,30 +19,13 @@
 
     &__header {
         display: flex;
+        height: 65px;
         align-items: center;
         justify-content: space-between;
         padding: 24px 24px 16px;
         flex-shrink: 0;
         position: relative;
         gap: 16px;
-    }
-
-    &__back-button {
-        color: #ffffff !important;
-        padding: 8px;
-
-        &:hover {
-            opacity: 0.8;
-        }
-
-        svg {
-            color: #ffffff !important;
-            stroke: #ffffff !important;
-        }
-
-        &.MuiIconButton-root {
-            color: #ffffff !important;
-        }
     }
 
     &__header-spacer {

@@ -1,10 +1,20 @@
-.workout-timer {
+.timer-panel {
+    display: flex;
     text-align: center;
-    margin-bottom: 24px;
-    padding: 20px 24px;
+    left: 24px;
+    right: 24px;
+    padding: 10px 24px;
+    flex: 1;
     background: rgba(0, 229, 255, 0.06);
     border-radius: 16px;
+    background: #213438;
+    background: linear-gradient(90deg, rgba(33, 52, 56, 1) 0%, rgba(66, 128, 135, 1) 41%, rgba(61, 61, 74, 1) 100%);
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
 }
+
+.workout-timer {}
 
 .workout-timer__time {
     font-size: 22px;

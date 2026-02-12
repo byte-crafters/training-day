@@ -12,25 +12,9 @@
         justify-content: space-between;
         padding: 24px 24px 16px;
         position: relative;
+        height: 65px;
         flex-shrink: 0;
-    }
-
-    &__back-button {
-        color: #ffffff !important;
-        padding: 8px;
-
-        &:hover {
-            opacity: 0.8;
-        }
-
-        svg {
-            color: #ffffff !important;
-            stroke: #ffffff !important;
-        }
-
-        &.MuiIconButton-root {
-            color: #ffffff !important;
-        }
+        margin-bottom: 20px;
     }
 
     &__title {
@@ -143,7 +127,7 @@
             letter-spacing: normal !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
-            
+
             input {
                 text-align: center !important;
                 padding: 0 !important;
@@ -159,7 +143,7 @@
                 -moz-osx-font-smoothing: grayscale !important;
                 font-variant: normal !important;
                 text-rendering: optimizeLegibility !important;
-                
+
                 &::placeholder {
                     color: rgba(255, 255, 255, 0.5);
                     font-size: 20px !important;
@@ -167,7 +151,7 @@
                 }
             }
         }
-        
+
         .MuiInputBase-input {
             font-size: 20px !important;
             font-weight: 600 !important;
@@ -177,7 +161,7 @@
             letter-spacing: normal !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
-            
+
             &:focus {
                 text-align: center;
             }
@@ -187,6 +171,7 @@
     &__main {
         flex: 1;
         display: flex;
+        margin-top: 85px;
         flex-direction: column;
         min-height: 0;
         overflow: hidden;
@@ -207,8 +192,7 @@
         border-radius: 12px !important;
         background-color: transparent !important;
 
-        &:hover {
-        }
+        &:hover {}
     }
 
     &__exercises-list {
@@ -264,4 +248,3 @@
         }
     }
 }
-

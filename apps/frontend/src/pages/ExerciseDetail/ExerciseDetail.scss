@@ -8,6 +8,7 @@
 
     &__header {
         display: flex;
+        height: 65px;
         align-items: center;
         justify-content: space-between;
         padding: 24px 24px 16px;
@@ -53,6 +54,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         min-height: 0;
+        margin-top: 85px;
     }
 
     &__card {
@@ -275,4 +277,3 @@
         }
     }
 }
-

@@ -19,6 +19,8 @@ import { useRawInitData } from "@tma.js/sdk-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { darkTheme } from "../theme";
 import * as Sentry from "@sentry/react";
+import DefaultLayout from "../components/DefaultLayout";
+import TimerLayout from "../components/TimerLayout";
 
 function App() {
     const dispatch = useAppDispatch();
@@ -174,30 +176,34 @@ function App() {
             {!isAuthenticating && !authError && (
                 <BrowserRouter>
                     <Routes>
-                        <Route
-                            path="/select-exercises"
-                            element={<SelectExercises />}
-                        />
                         <Route element={<NavigationLayout />}>
                             <Route path="/" element={<WorkoutTracker />} />
                             <Route path="/progress" element={<NotFound />} />
                             <Route path="/profile" element={<NotFound />} />
                             <Route path="/add-program" element={<NotFound />} />
                         </Route>
-                        <Route path="/my-workout" element={<MyWorkout />} />
-                        <Route
-                            path="/exercise-detail"
-                            element={<ExerciseDetail />}
-                        />
-                        <Route
-                            path="/workout-results"
-                            element={<WorkoutResults />}
-                        />
-                        <Route
-                            path="/feedback"
-                            element={<FeedBackPage />}
-                        />
-                        <Route path="*" element={<NotFound />} />
+                        <Route element={<DefaultLayout />}>
+                            <Route element={<TimerLayout />}>
+                                <Route path="/my-workout" element={<MyWorkout />} />
+                                <Route
+                                    path="/exercise-detail"
+                                    element={<ExerciseDetail />}
+                                />
+                            </Route>
+                            <Route
+                                path="/select-exercises"
+                                element={<SelectExercises />}
+                            />
+                            <Route
+                                path="/workout-results"
+                                element={<WorkoutResults />}
+                            />
+                            <Route
+                                path="/feedback"
+                                element={<FeedBackPage />}
+                            />
+                            <Route path="*" element={<NotFound />} />
+                        </Route>
                     </Routes>
                 </BrowserRouter>
             )}

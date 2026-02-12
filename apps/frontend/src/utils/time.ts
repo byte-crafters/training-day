@@ -8,14 +8,16 @@ export default function formatTimerHMS(totalSeconds: number): string {
     const parts: string[] = [];
 
     if (hours > 0) {
-        parts.push(`${hours}h.`);
+        parts.push(`${hours}:`);
     }
 
     if (minutes > 0) {
-        parts.push(`${minutes}m.`);
+        parts.push(`${minutes}:`.padStart(2, '0'));
+    } else {
+        parts.push('0:')
     }
 
-    parts.push(`${seconds}s.`);
+    parts.push(`${seconds}`.padStart(2, '0'));
 
     return parts.join('');
 }

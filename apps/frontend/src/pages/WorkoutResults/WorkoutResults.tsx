@@ -1,10 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, Typography, IconButton, Button, Card } from "@mui/material";
+import { Box, Typography, Card } from "@mui/material";
 import { Activity, Workout, ExerciseType } from "@training-day/shared";
 import "./WorkoutResults.scss";
 import { useAppSelector, RootState } from "../../store";
 import { useEffect, useState } from "react";
-import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 import formatTimerHMS from "../../utils/time";
@@ -73,32 +72,11 @@ function WorkoutResults() {
         <Box className="workout-results">
             <Box className="workout-results__sticky-header">
                 <Box component="header" className="workout-results__header">
-                    <IconButton
-                        className="workout-results__back-button"
-                        onClick={() => navigate(-1)}
-                        aria-label="Back"
-                        sx={{ color: '#ffffff' }}
-                    >
-                        <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M19 12H5M12 19l-7-7 7-7" />
-                        </svg>
-                    </IconButton>
                     <Box className="workout-results__title-row">
                         <Typography variant="h4" className="workout-results__title">
                             {workout.name}
                         </Typography>
-
                     </Box>
-                    <Box className="workout-results__header-spacer" />
                 </Box>
 
                 <Box className="workout-results__title-section">
@@ -163,30 +141,6 @@ function WorkoutResults() {
                     </Card>
                 ))}
             </Box>
-
-            <Box className="workout-results__footer">
-                <Button
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    className="workout-results__continue-button"
-                    onClick={() => navigate("/my-workout")}
-                    startIcon={
-                        <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                        >
-                            <path d="M8 5v14l11-7z" />
-                        </svg>
-                    }
-                >
-                    CONTINUE WORKOUT
-                </Button>
-            </Box>
-
-            <FeedbackButton />
         </Box>
     );
 }
