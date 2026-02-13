@@ -2,6 +2,10 @@ import { Box, SxProps, Typography, Theme } from "@mui/material";
 import useTimer from "../../../hooks/use-timer";
 import "./WorkoutTimer.scss";
 import PausePlayButton from "../../PausePlayButton";
+import { useEffect } from "react";
+import { setTimerFromWorkout, startTimer, store, useAppDispatch } from "../../../store";
+import { loadCurrentWorkout, saveCurrentWorkout } from "../../../utils/storage";
+import * as Sentry from "@sentry/react";
 
 type TProps = {
     sx?: SxProps<Theme>;
@@ -10,6 +14,35 @@ type TProps = {
 
 export default function WorkoutTimer({ sx }: TProps) {
     const time = useTimer();
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+
+        const loadTimer = () => {
+            const workout = loadCurrentWorkout();
+            if (workout) {
+                dispatch(setTimerFromWorkout(workout));
+            }
+        }
+
+        const saveWorkoutWithElapsedBeforeUnload = () => {
+            const state = store.getState();
+            if (!state.currentWorkout) return;
+            const elapsedMs =
+                state.timer.accumulated +
+                (state.timer.startedAt ? Date.now() - state.timer.startedAt : 0);
+            if (elapsedMs > 0) {
+                saveCurrentWorkout({ ...state.currentWorkout, elapsedMs });
+            }
+        };
+
+        loadTimer()
+        dispatch(startTimer());
+
+        return () => {
+            saveWorkoutWithElapsedBeforeUnload();
+        };
+    }, [])
 
     return (
         <Box className="timer-panel"

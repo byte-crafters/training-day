@@ -17,7 +17,7 @@ export default function useTimer() {
             setSeconds(Math.floor(total / 1000));
         };
 
-        tick(); // сразу обновить
+        tick();
 
         if (!startedAt) return;
 

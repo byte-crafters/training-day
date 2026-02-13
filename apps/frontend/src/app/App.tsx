@@ -62,22 +62,24 @@ function App() {
     }, [dispatch]);
 
     useEffect(() => {
-        const saveWorkoutWithElapsedBeforeUnload = () => {
-            const state = store.getState();
-            if (!state.currentWorkout) return;
-            const elapsedMs =
-                state.timer.accumulated +
-                (state.timer.startedAt ? Date.now() - state.timer.startedAt : 0);
-            if (elapsedMs > 0) {
-                saveCurrentWorkout({ ...state.currentWorkout, elapsedMs });
-            }
-        };
-        window.addEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
-        window.addEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
-        return () => {
-            window.removeEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
-            window.removeEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
-        };
+        // const saveWorkoutWithElapsedBeforeUnload = () => {
+        //     const state = store.getState();
+        //     if (!state.currentWorkout) return;
+        //     const elapsedMs =
+        //         state.timer.accumulated +
+        //         (state.timer.startedAt ? Date.now() - state.timer.startedAt : 0);
+        //     if (elapsedMs > 0) {
+        //         saveCurrentWorkout({ ...state.currentWorkout, elapsedMs });
+        //     }
+        // };
+
+        // window.addEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
+        // window.addEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
+
+        // return () => {
+        //     window.removeEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
+        //     window.removeEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
+        // };
     }, []);
 
     useEffect(() => {

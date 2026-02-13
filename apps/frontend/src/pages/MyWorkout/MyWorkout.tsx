@@ -17,7 +17,6 @@ import {
     useAppDispatch,
     useAppSelector,
     RootState,
-    startTimer,
     pauseTimer,
     resetTimer,
 } from "../../store";
@@ -45,17 +44,15 @@ function MyWorkout() {
         currentWorkout.exercises.length > 0;
     const [isSaving, setIsSaving] = useState(false);
 
-    useEffect(() => {
-        dispatch(startTimer());
-        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.MY_WORKOUT });
-        return () => {
-            dispatch(pauseTimer());
-        };
-    }, [dispatch]);
+
     const [isEditingName, setIsEditingName] = useState(false);
     const [editedName, setEditedName] = useState(workoutName);
     const textRef = useRef<HTMLDivElement>(null);
     const [textWidth, setTextWidth] = useState<number | undefined>(undefined);
+
+    useEffect(() => {
+        logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.MY_WORKOUT });
+    }, []);
 
     // Синхронизируем editedName с workoutName
     useEffect(() => {

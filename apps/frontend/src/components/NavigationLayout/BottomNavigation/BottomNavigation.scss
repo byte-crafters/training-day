@@ -4,7 +4,7 @@ $nav-text: #ffffff;
 $nav-active: #00e5ff;
 $nav-active-bg: rgba(0, 229, 255, 0.15);
 $nav-height: 52px;
-$pill-radius: 24px;
+$pill-radius: 52px;
 $icon-wrap-size: 36px;
 $safe-bottom: env(safe-area-inset-bottom, 0);
 
@@ -14,12 +14,11 @@ $safe-bottom: env(safe-area-inset-bottom, 0);
     left: 0;
     right: 0;
     z-index: 9999;
-    margin: 0 12px 12px;
+    margin: 0 16px 16px;
     pointer-events: none;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    background-color: rgba($color: #1a1a1a, $alpha: 0.5);
 
     &__pill {
         pointer-events: auto;
@@ -47,10 +46,10 @@ $safe-bottom: env(safe-area-inset-bottom, 0);
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: 0;
         gap: 2px;
         flex: 1;
         min-width: 0;
-        padding: 4px 2px;
         border: none;
         background: none;
         color: $nav-text;

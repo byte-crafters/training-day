@@ -39,11 +39,6 @@ function ExerciseDetail() {
     const [editingSet, setEditingSet] = useState<Set | null>(null);
     const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
 
-    // Таймер продолжает идти на странице упражнения (не ставим на паузу)
-    useEffect(() => {
-        dispatch(startTimer());
-    }, [dispatch]);
-
     // Синхронизируем savedSets с sets из activity
     useEffect(() => {
         if (activity?.sets) {

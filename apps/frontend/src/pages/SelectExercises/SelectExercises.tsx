@@ -158,7 +158,7 @@ function SelectExercises() {
                 <Box sx={{ marginBottom: "10px" }}>
                     <TextField
                         className="select-exercises__search"
-                        placeholder="Search 200+ exercises"
+                        placeholder="Search exercises"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         InputProps={{
@@ -185,10 +185,9 @@ function SelectExercises() {
 
                 <Box className="select-exercises__categories">
                     {categories.map((category) => (
-                        <Button
+                        <Box
                             key={category}
-                            variant="text"
-                            sx={{ fontSize: 10, fontWeight: 700, padding: "2px 15px", minWidth: "auto" }}
+                            sx={{ fontSize: 12, fontWeight: 700, padding: "5px 15px", minWidth: "auto", borderRadius: "20px" }}
                             className={`select-exercises__category ${selectedCategory === category
                                 ? "select-exercises__category--active"
                                 : ""
@@ -196,7 +195,7 @@ function SelectExercises() {
                             onClick={() => setSelectedCategory(category)}
                         >
                             {getCategoryLabel(category)}
-                        </Button>
+                        </Box>
                     ))}
                 </Box>
             </Box>

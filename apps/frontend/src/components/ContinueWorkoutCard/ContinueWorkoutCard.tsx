@@ -66,7 +66,6 @@ function ContinueWorkoutCard({ workout, onDismiss, onDelete }: ContinueWorkoutCa
                         sx={{ fontSize: "0.7rem", textTransform: "none", fontWeight: 600 }}
                         className="continue-workout-card__continue-button"
                         onClick={() => {
-                            dispatch(setTimerFromWorkout(workout));
                             navigate("/my-workout");
                         }}
                         startIcon={
