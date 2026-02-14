@@ -1,14 +1,18 @@
 import { Outlet } from "react-router-dom";
-import BackButton from "./BackButton";
-import FeedbackButton from "./FeedbackButton";
+import { ReactNode, useState } from "react";
+import Header from "./Header";
+import { Box } from "@mui/material";
 
 function DefaultLayout() {
+    const [headerContent, setHeaderContent] = useState<ReactNode>(null);
+
     return (
-        <>
-            <BackButton />
-            <FeedbackButton />
-            <Outlet />
-        </>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+            <Header>
+                {headerContent}
+            </Header>
+            <Outlet context={{ setHeaderContent }} />
+        </Box>
     );
 }
 

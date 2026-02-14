@@ -4,7 +4,7 @@
     left: 24px;
     right: 24px;
     padding: 10px 24px;
-    flex: 1;
+    // flex: 1;
     background: rgba(0, 229, 255, 0.06);
     border-radius: 16px;
     background: #213438;
@@ -14,12 +14,9 @@
     z-index: 1000;
 }
 
-.workout-timer {}
-
 .workout-timer__time {
     font-size: 22px;
     font-weight: 700;
-    color: #00e5ff;
     margin-bottom: 4px;
     line-height: 1.2;
     font-variant-numeric: tabular-nums;

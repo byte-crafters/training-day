@@ -51,7 +51,7 @@ export default function WorkoutTimer({ sx }: TProps) {
                 <Typography variant="body2" sx={{ color: 'white' }} className="workout-timer__label">
                     Time
                 </Typography>
-                <Typography component="h5" sx={{ fontSize: "20px" }} className="workout-timer__time" aria-live="polite">
+                <Typography component="h5" sx={{ fontSize: "20px", color: 'white' }} className="workout-timer__time" aria-live="polite">
                     {time}
                 </Typography>
             </Box>

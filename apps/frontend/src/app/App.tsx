@@ -191,11 +191,11 @@ function App() {
                                     path="/exercise-detail"
                                     element={<ExerciseDetail />}
                                 />
+                                <Route
+                                    path="/select-exercises"
+                                    element={<SelectExercises />}
+                                />
                             </Route>
-                            <Route
-                                path="/select-exercises"
-                                element={<SelectExercises />}
-                            />
                             <Route
                                 path="/workout-results"
                                 element={<WorkoutResults />}

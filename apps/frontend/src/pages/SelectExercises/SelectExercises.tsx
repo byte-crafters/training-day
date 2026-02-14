@@ -20,6 +20,7 @@ import {
 import { createWorkout, exerciseToActivity } from "../../utils/helpers";
 import ExerciseListItem from "../../components/ExerciseListItem";
 import { saveCurrentWorkout } from "../../utils/storage";
+import useHeader from "../../hooks/use-header";
 
 type Category = "All" | ExerciseType;
 
@@ -43,6 +44,7 @@ function SelectExercises() {
     const currentWorkout = useAppSelector(
         (state: RootState) => state.currentWorkout
     );
+
 
     // Инициализируем выбранные упражнения из текущей тренировки, если она существует
     useEffect(() => {
@@ -146,15 +148,17 @@ function SelectExercises() {
         navigate("/my-workout", { state: { exercises: selectedExercises } });
     };
 
+    const headerContent = (
+        <Typography variant="h4" className="select-exercises__title">
+            Choose exercises
+        </Typography>
+    )
+
+    useHeader(headerContent);
+
     return (
         <Box className="select-exercises">
-            <Box component="header" className="select-exercises__header">
-                <Typography variant="h4" className="select-exercises__title">
-                    Choose exercises
-                </Typography>
-            </Box>
-
-            <Box className="select-exercises__sticky-section">
+            <Box className="select-exercises__search-section">
                 <Box sx={{ marginBottom: "10px" }}>
                     <TextField
                         className="select-exercises__search"
@@ -183,6 +187,10 @@ function SelectExercises() {
                     />
                 </Box>
 
+
+            </Box>
+
+            <Box className="select-exercises__sticky-section">
                 <Box className="select-exercises__categories">
                     {categories.map((category) => (
                         <Box

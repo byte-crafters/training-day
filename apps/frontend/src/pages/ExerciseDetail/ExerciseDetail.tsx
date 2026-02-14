@@ -7,6 +7,7 @@ import { addSet, updateSet, deleteSet, startTimer, RootState, useAppDispatch, us
 import SetForm from "../../components/SetForm";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
+import useHeader from "../../hooks/use-header";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
@@ -129,14 +130,16 @@ function ExerciseDetail() {
         setEditingSet(null);
     };
 
+    const header = (
+        <Typography variant="h4" className="exercise-detail__title">
+            {exercise.name}
+        </Typography>
+    );
+
+    useHeader(header);
+
     return (
         <Box className="exercise-detail">
-            <Box component="header" className="exercise-detail__header">
-                <Typography variant="h4" className="exercise-detail__title">
-                    {exercise.name}
-                </Typography>
-            </Box>
-
             <Box component="main" className="exercise-detail__main">
                 {savedSets.length > 0 ? (
                     <Box className="exercise-detail__previous-sets">
@@ -151,10 +154,10 @@ function ExerciseDetail() {
                                 variant="outlined"
                                 className="exercise-detail__previous-set-item"
                                 onClick={() => handleEditSet(set)}
-                                sx={{ padding: "26px", borderRadius: "16px", margin: "10px 0", cursor: "pointer" }}
+                                sx={{ padding: "16px 26px", borderRadius: "16px", margin: "10px 0", cursor: "pointer" }}
                             >
                                 <Typography className="exercise-detail__previous-set-text">
-                                    Set {index + 1}: {set.reps} reps
+                                    {set.reps} reps
                                     {set.weight !== undefined &&
                                         set.weight > 0 &&
                                         ` • ${set.weight} kg`}

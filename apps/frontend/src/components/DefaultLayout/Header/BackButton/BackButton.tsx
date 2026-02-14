@@ -9,7 +9,7 @@ function BackButton() {
             className="back-button"
             onClick={() => navigate(-1)}
             aria-label="Back"
-            sx={{ position: 'fixed', padding: '24px', color: '#ffffff', zIndex: 1000 }}
+            sx={{ padding: '24px', color: '#ffffff', zIndex: 1000 }}
         >
             <svg
                 width="24"

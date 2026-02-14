@@ -6,7 +6,9 @@ import { useAppSelector, RootState } from "../../store";
 import { useEffect, useState } from "react";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
-import formatTimerHMS from "../../utils/time";
+import useHeader from "../../hooks/use-header";
+import formatDate from "../../utils/date";
+import WorkoutRecords from "../../components/WorkoutRecords";
 
 // Функция для форматирования времени начала тренировки
 const formatStartTime = (dateString: string): string => {
@@ -65,32 +67,27 @@ function WorkoutResults() {
         return null;
     }
 
-    const startTime = formatStartTime(workout.date);
-    const durationFormatted = formatTimerHMS(workout.duration ?? 0);
+    const formattedDate = formatDate(workout.date);
+
+    const header = (
+        <Typography variant="h4" className="workout-results__title">
+            Workout summary
+        </Typography>
+    )
+
+    useHeader(header);
 
     return (
         <Box className="workout-results">
-            <Box className="workout-results__sticky-header">
-                <Box component="header" className="workout-results__header">
-                    <Box className="workout-results__title-row">
-                        <Typography variant="h4" className="workout-results__title">
-                            {workout.name}
-                        </Typography>
-                    </Box>
-                </Box>
-
-                <Box className="workout-results__title-section">
-                    <Box className="workout-results__metadata">
-                        <Typography variant="body2" className="workout-results__start-time">
-                            Started at {startTime}
-                        </Typography>
-                        <Typography variant="body2" className="workout-results__duration">
-                            Total duration: {durationFormatted}
-                        </Typography>
-                    </Box>
-                </Box>
+            <Box className="workout-results__sticky-section">
+                <Typography variant="h1" sx={{ fontSize: 20 }} className="workout-results__name">
+                    {workout.name}
+                </Typography>
+                <Typography variant="h3" className="workout-results__start-time">
+                    {formattedDate}
+                </Typography>
             </Box>
-
+            <WorkoutRecords workout={workout} />
             <Box component="main" className="workout-results__main">
                 {workout.exercises.map((exercise: Activity) => (
                     <Card
