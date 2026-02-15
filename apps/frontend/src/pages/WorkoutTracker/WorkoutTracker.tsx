@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import WorkoutCard from "../../components/WorkoutCard";
 import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
-import FeedbackButton from "../../components/DefaultLayout/Header/FeedbackButton";
 import "./WorkoutTracker.scss";
 import { useState, useEffect } from "react";
 import { logAnalyticsEvent } from "../../utils/firebase";

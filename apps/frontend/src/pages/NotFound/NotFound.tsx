@@ -15,17 +15,21 @@ function NotFound() {
     return (
         <Box className="not-found">
             <Box className="not-found__content">
-                <Typography variant="h1" className="not-found__title">
+                {/* <Typography variant="h1" className="not-found__title">
                     404
                 </Typography>
                 <Typography variant="h5" className="not-found__subtitle">
                     Page not found
-                </Typography>
+                </Typography> */}
                 <Typography variant="body1" className="not-found__description">
-                    Unfortunately, the requested page does not exist.
+                    Coming Soon
+                </Typography>
+                <Typography>
+                    this feature is not ready yet!
                 </Typography>
                 <Button
                     variant="contained"
+                    size="small"
                     onClick={() => navigate("/")}
                     className="not-found__button"
                 >

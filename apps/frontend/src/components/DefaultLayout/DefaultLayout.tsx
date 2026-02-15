@@ -3,6 +3,10 @@ import { ReactNode, useState } from "react";
 import Header from "./Header";
 import { Box } from "@mui/material";
 
+export type LayoutContext = {
+    setHeaderContent: (node: ReactNode) => void;
+};
+
 function DefaultLayout() {
     const [headerContent, setHeaderContent] = useState<ReactNode>(null);
 

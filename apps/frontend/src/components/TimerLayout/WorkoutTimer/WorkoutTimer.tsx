@@ -5,7 +5,6 @@ import PausePlayButton from "../../PausePlayButton";
 import { useEffect } from "react";
 import { setTimerFromWorkout, startTimer, store, useAppDispatch } from "../../../store";
 import { loadCurrentWorkout, saveCurrentWorkout } from "../../../utils/storage";
-import * as Sentry from "@sentry/react";
 
 type TProps = {
     sx?: SxProps<Theme>;

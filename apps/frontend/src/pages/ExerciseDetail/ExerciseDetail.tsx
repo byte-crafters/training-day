@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Box, Typography, Button, Card } from "@mui/material";
 import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
-import { addSet, updateSet, deleteSet, startTimer, RootState, useAppDispatch, useAppSelector } from "../../store";
+import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector } from "../../store";
 import SetForm from "../../components/SetForm";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
@@ -148,7 +148,7 @@ function ExerciseDetail() {
                             className="exercise-detail__previous-sets-title">
                             Previous Sets
                         </Typography>
-                        {savedSets.map((set, index) => (
+                        {savedSets.map((set) => (
                             <Card
                                 key={set.id}
                                 variant="outlined"

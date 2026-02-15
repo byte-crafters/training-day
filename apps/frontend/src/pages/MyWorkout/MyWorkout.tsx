@@ -1,19 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Box,
-    IconButton,
     Button,
-    Typography,
     CircularProgress,
-    TextField,
 } from "@mui/material";
 import ExerciseList from "../../components/ExerciseList";
 import "./MyWorkout.scss";
 import {
     setCurrentWorkout,
     setWorkouts,
-    updateWorkoutName,
     useAppDispatch,
     useAppSelector,
     RootState,
