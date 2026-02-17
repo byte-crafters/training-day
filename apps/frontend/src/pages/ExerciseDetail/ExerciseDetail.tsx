@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, Typography, IconButton, Button, Card } from "@mui/material";
+import { Box, Typography, Button, Card } from "@mui/material";
 import "./ExerciseDetail.scss";
 import { Set, Activity } from "@training-day/shared";
-import { addSet, updateSet, deleteSet, startTimer, RootState, useAppDispatch, useAppSelector } from "../../store";
+import { addSet, updateSet, deleteSet, RootState, useAppDispatch, useAppSelector } from "../../store";
 import SetForm from "../../components/SetForm";
-import FeedbackButton from "../../components/FeedbackButton";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
-import WorkoutTimer from "../../components/WorkoutTimer";
-import PausePlayButton from "../../components/PausePlayButton";
+import useHeader from "../../hooks/use-header";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
@@ -41,11 +39,6 @@ function ExerciseDetail() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingSet, setEditingSet] = useState<Set | null>(null);
     const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
-
-    // Таймер продолжает идти на странице упражнения (не ставим на паузу)
-    useEffect(() => {
-        dispatch(startTimer());
-    }, [dispatch]);
 
     // Синхронизируем savedSets с sets из activity
     useEffect(() => {
@@ -137,36 +130,17 @@ function ExerciseDetail() {
         setEditingSet(null);
     };
 
+    const header = (
+        <Typography variant="h4" className="exercise-detail__title">
+            {exercise.name}
+        </Typography>
+    );
+
+    useHeader(header);
+
     return (
         <Box className="exercise-detail">
-            <Box component="header" className="exercise-detail__header">
-                <IconButton
-                    className="exercise-detail__back-button"
-                    onClick={() => navigate(-1)}
-                    aria-label="Back"
-                    sx={{ color: '#ffffff' }}
-                >
-                    <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M19 12H5M12 19l-7-7 7-7" />
-                    </svg>
-                </IconButton>
-                <Typography variant="h4" className="exercise-detail__title">
-                    {exercise.name}
-                </Typography>
-                <Box className="exercise-detail__header-spacer" />
-            </Box>
-
             <Box component="main" className="exercise-detail__main">
-                <WorkoutTimer />
                 {savedSets.length > 0 ? (
                     <Box className="exercise-detail__previous-sets">
                         <Typography variant="h5"
@@ -174,16 +148,16 @@ function ExerciseDetail() {
                             className="exercise-detail__previous-sets-title">
                             Previous Sets
                         </Typography>
-                        {savedSets.map((set, index) => (
+                        {savedSets.map((set) => (
                             <Card
                                 key={set.id}
                                 variant="outlined"
                                 className="exercise-detail__previous-set-item"
                                 onClick={() => handleEditSet(set)}
-                                sx={{ padding: "26px", borderRadius: "16px", margin: "10px 0", cursor: "pointer" }}
+                                sx={{ padding: "16px 26px", borderRadius: "16px", margin: "10px 0", cursor: "pointer" }}
                             >
                                 <Typography className="exercise-detail__previous-set-text">
-                                    Set {index + 1}: {set.reps} reps
+                                    {set.reps} reps
                                     {set.weight !== undefined &&
                                         set.weight > 0 &&
                                         ` • ${set.weight} kg`}
@@ -246,7 +220,6 @@ function ExerciseDetail() {
                     >
                         Add Set
                     </Button>
-                    <PausePlayButton className="exercise-detail__pause-button" />
                 </Box>
                 <Button
                     variant="outlined"
@@ -268,8 +241,6 @@ function ExerciseDetail() {
                 initialSet={editingSet}
                 mode={formMode}
             />
-
-            <FeedbackButton />
         </Box>
     );
 }

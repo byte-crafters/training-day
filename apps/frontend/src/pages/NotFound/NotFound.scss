@@ -15,7 +15,7 @@
     &__title {
         font-size: 120px;
         font-weight: 700;
-        color: #0066ff;
+        color: var(--mui-palette-primary-main);
         margin-bottom: 16px;
         line-height: 1;
     }
@@ -41,6 +41,7 @@
         font-weight: 600;
         text-transform: none;
         border-radius: 8px;
+        margin-top: 20px !important;
 
         &:hover {
             background-color: #0052cc;

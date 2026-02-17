@@ -12,13 +12,14 @@ import NavigationLayout from "../components/NavigationLayout";
 import { getExercises, getWorkouts, sendTelegramInitData } from "../utils/api";
 import { logAnalyticsEvent } from "../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_PARAMS } from "../utils/analytics";
-import { setExercises, setWorkouts, store, useAppDispatch } from "../store";
-import { saveCurrentWorkout } from "../utils/storage";
+import { setExercises, setWorkouts, useAppDispatch } from "../store";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRawInitData } from "@tma.js/sdk-react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { darkTheme } from "../theme";
 import * as Sentry from "@sentry/react";
+import DefaultLayout from "../components/DefaultLayout";
+import TimerLayout from "../components/TimerLayout";
 
 function App() {
     const dispatch = useAppDispatch();
@@ -60,22 +61,24 @@ function App() {
     }, [dispatch]);
 
     useEffect(() => {
-        const saveWorkoutWithElapsedBeforeUnload = () => {
-            const state = store.getState();
-            if (!state.currentWorkout) return;
-            const elapsedMs =
-                state.timer.accumulated +
-                (state.timer.startedAt ? Date.now() - state.timer.startedAt : 0);
-            if (elapsedMs > 0) {
-                saveCurrentWorkout({ ...state.currentWorkout, elapsedMs });
-            }
-        };
-        window.addEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
-        window.addEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
-        return () => {
-            window.removeEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
-            window.removeEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
-        };
+        // const saveWorkoutWithElapsedBeforeUnload = () => {
+        //     const state = store.getState();
+        //     if (!state.currentWorkout) return;
+        //     const elapsedMs =
+        //         state.timer.accumulated +
+        //         (state.timer.startedAt ? Date.now() - state.timer.startedAt : 0);
+        //     if (elapsedMs > 0) {
+        //         saveCurrentWorkout({ ...state.currentWorkout, elapsedMs });
+        //     }
+        // };
+
+        // window.addEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
+        // window.addEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
+
+        // return () => {
+        //     window.removeEventListener("beforeunload", saveWorkoutWithElapsedBeforeUnload);
+        //     window.removeEventListener("pagehide", saveWorkoutWithElapsedBeforeUnload);
+        // };
     }, []);
 
     useEffect(() => {
@@ -174,30 +177,34 @@ function App() {
             {!isAuthenticating && !authError && (
                 <BrowserRouter>
                     <Routes>
-                        <Route
-                            path="/select-exercises"
-                            element={<SelectExercises />}
-                        />
                         <Route element={<NavigationLayout />}>
                             <Route path="/" element={<WorkoutTracker />} />
                             <Route path="/progress" element={<NotFound />} />
                             <Route path="/profile" element={<NotFound />} />
                             <Route path="/add-program" element={<NotFound />} />
                         </Route>
-                        <Route path="/my-workout" element={<MyWorkout />} />
-                        <Route
-                            path="/exercise-detail"
-                            element={<ExerciseDetail />}
-                        />
-                        <Route
-                            path="/workout-results"
-                            element={<WorkoutResults />}
-                        />
-                        <Route
-                            path="/feedback"
-                            element={<FeedBackPage />}
-                        />
-                        <Route path="*" element={<NotFound />} />
+                        <Route element={<DefaultLayout />}>
+                            <Route element={<TimerLayout />}>
+                                <Route path="/my-workout" element={<MyWorkout />} />
+                                <Route
+                                    path="/exercise-detail"
+                                    element={<ExerciseDetail />}
+                                />
+                                <Route
+                                    path="/select-exercises"
+                                    element={<SelectExercises />}
+                                />
+                            </Route>
+                            <Route
+                                path="/workout-results"
+                                element={<WorkoutResults />}
+                            />
+                            <Route
+                                path="/feedback"
+                                element={<FeedBackPage />}
+                            />
+                            <Route path="*" element={<NotFound />} />
+                        </Route>
                     </Routes>
                 </BrowserRouter>
             )}

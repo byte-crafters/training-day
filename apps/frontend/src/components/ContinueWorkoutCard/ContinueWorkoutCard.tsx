@@ -3,7 +3,6 @@ import { Box, Typography, Button, IconButton } from "@mui/material";
 import { Workout } from "@training-day/shared";
 import "./ContinueWorkoutCard.scss";
 import formatTimerHMS from "../../utils/time";
-import { useAppDispatch, setTimerFromWorkout } from "../../store";
 
 interface ContinueWorkoutCardProps {
     workout: Workout;
@@ -13,7 +12,6 @@ interface ContinueWorkoutCardProps {
 
 function ContinueWorkoutCard({ workout, onDismiss, onDelete }: ContinueWorkoutCardProps) {
     const navigate = useNavigate();
-    const dispatch = useAppDispatch();
 
     // Вычисляем количество оставшихся упражнений
     const completedExercises = workout.exercises?.filter(
@@ -66,7 +64,6 @@ function ContinueWorkoutCard({ workout, onDismiss, onDelete }: ContinueWorkoutCa
                         sx={{ fontSize: "0.7rem", textTransform: "none", fontWeight: 600 }}
                         className="continue-workout-card__continue-button"
                         onClick={() => {
-                            dispatch(setTimerFromWorkout(workout));
                             navigate("/my-workout");
                         }}
                         startIcon={

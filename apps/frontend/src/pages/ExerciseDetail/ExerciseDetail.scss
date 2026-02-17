@@ -8,6 +8,7 @@
 
     &__header {
         display: flex;
+        height: 65px;
         align-items: center;
         justify-content: space-between;
         padding: 24px 24px 16px;
@@ -34,16 +35,11 @@
     }
 
     &__title {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
         font-size: 24px;
         font-weight: 600;
         color: #ffffff;
-    }
-
-    &__header-spacer {
-        width: 40px;
+        align-self: center;
+        margin: auto;
     }
 
     &__main {
@@ -275,4 +271,3 @@
         }
     }
 }
-

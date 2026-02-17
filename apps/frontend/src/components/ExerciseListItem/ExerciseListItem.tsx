@@ -16,7 +16,7 @@ function ExerciseListItem({
     return (
         <Card
             variant="outlined"
-            sx={{ padding: "25px 16px", borderRadius: "16px", margin: "5px" }}
+            sx={{ padding: "15px 16px", borderRadius: "16px", margin: "5px" }}
             className="exercise-list-item"
             onClick={onClick}
         >

@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import WorkoutCard from "../../components/WorkoutCard";
 import ContinueWorkoutCard from "../../components/ContinueWorkoutCard";
-import FeedbackButton from "../../components/FeedbackButton";
 import "./WorkoutTracker.scss";
 import { useState, useEffect } from "react";
 import { logAnalyticsEvent } from "../../utils/firebase";
@@ -69,7 +68,7 @@ function WorkoutTracker() {
             setShowStartDialog(true);
         } else {
             // Если нет текущей тренировки, сразу переходим к выбору упражнений
-            navigate("/select-exercises");
+            navigate("/select-exercises", { state: { hideTimer: true } });
         }
     };
 
@@ -160,7 +159,7 @@ function WorkoutTracker() {
                 </Box>
             </Box>
 
-            <FeedbackButton />
+            {/* <FeedbackButton /> */}
 
             <Dialog
                 open={showStartDialog}

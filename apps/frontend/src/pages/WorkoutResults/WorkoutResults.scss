@@ -1,52 +1,35 @@
 .workout-results {
+    display: flex;
     height: 100vh;
-    max-height: 100vh;
     background-color: #1a1a1a;
     color: #ffffff;
-    display: flex;
     flex-direction: column;
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
+    align-items: center;
+    overflow: auto;
+    padding: 0 24px;
+    padding-bottom: 20px;
 
-    &__sticky-header {
-        flex-shrink: 0;
+    &__name {
+        position: sticky;
+        top: 0px;
+        background: #1a1a1a;
         width: 100%;
-        position: relative;
-        z-index: 1;
-    }
-
-    &__header {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 24px 24px 16px;
+        flex-direction: column;
+        z-index: 9999;
+    }
+
+    &__sticky-section {
+        // position: sticky;
         flex-shrink: 0;
-        position: relative;
-        gap: 16px;
+        // top: 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    &__back-button {
-        color: #ffffff !important;
-        padding: 8px;
-
-        &:hover {
-            opacity: 0.8;
-        }
-
-        svg {
-            color: #ffffff !important;
-            stroke: #ffffff !important;
-        }
-
-        &.MuiIconButton-root {
-            color: #ffffff !important;
-        }
-    }
-
-    &__header-spacer {
-        width: 40px;
+    &__info {
+        display: flex;
     }
 
     &__title-section {
@@ -67,7 +50,7 @@
         font-size: 24px;
         font-weight: 700;
         color: #ffffff;
-        text-align: center;
+        align-self: center;
     }
 
     &__edit-button {
@@ -87,6 +70,7 @@
         gap: 4px;
     }
 
+
     &__start-time {
         font-size: 14px;
         color: #a1a1aa;
@@ -97,145 +81,5 @@
         color: #a1a1aa;
         text-transform: uppercase;
         font-weight: 500;
-    }
-
-    &__main {
-        flex: 1;
-        padding: 0 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        padding-bottom: 100px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        min-height: 0; // Важно для flex-скролла
-        width: 100%;
-        box-sizing: border-box;
-        -webkit-overflow-scrolling: touch; // Плавный скролл на iOS
-    }
-
-    &__exercise-card {
-        background-color: #161618 !important;
-        border-radius: 16px !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        padding: 20px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 16px !important;
-        width: 100% !important;
-        flex-shrink: 0 !important;
-        box-sizing: border-box !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-    }
-
-    &__exercise-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    &__exercise-name {
-        font-size: 18px;
-        font-weight: 700;
-        color: #ffffff;
-    }
-
-    &__muscle-group {
-        font-size: 14px;
-        color: var(--mui-palette-primary-main);
-        font-weight: 500;
-    }
-
-    &__sets-header {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 8px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    &__set-label,
-    &__reps-label,
-    &__weight-label {
-        font-size: 12px;
-        color: #a1a1aa;
-        text-transform: uppercase;
-        font-weight: 500;
-    }
-
-    &__reps-label {
-        text-align: center;
-    }
-
-    &__weight-label {
-        text-align: right;
-    }
-
-    &__sets-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    &__set-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 8px;
-        align-items: center;
-    }
-
-    &__set-number {
-        font-size: 14px;
-        color: #a1a1aa;
-    }
-
-    &__set-reps {
-        font-size: 14px;
-        color: #ffffff;
-        text-align: center;
-        font-weight: 500;
-    }
-
-    &__set-weight {
-        font-size: 14px;
-        color: var(--mui-palette-primary-main);
-        text-align: right;
-        font-weight: 500;
-    }
-
-    &__footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 16px 24px;
-        background-color: transparent;
-        z-index: 1000;
-        pointer-events: auto;
-    }
-
-    &__continue-button {
-        padding: 16px !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        border-radius: 12px !important;
-        background-color: #1a1a1a !important;
-        color: #00d4ff !important;
-        border: 1px solid #00d4ff !important;
-        position: relative !important;
-        z-index: 1001 !important;
-
-        &:hover {
-            background-color: #1a1a1a !important;
-            border-color: #00e5ff !important;
-            color: #00e5ff !important;
-        }
-
-        &:disabled {
-            background-color: #1a1a1a !important;
-            border-color: rgba(0, 212, 255, 0.3) !important;
-            color: rgba(0, 212, 255, 0.3) !important;
-        }
     }
 }

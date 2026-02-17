@@ -1,11 +1,10 @@
-// Нативный вид: "таблетка" с отступами, активный пункт с круглым фоном под иконкой
 $nav-bg: #161618;
 $nav-pill-bg: #1c1c1e;
 $nav-text: #ffffff;
 $nav-active: #00e5ff;
 $nav-active-bg: rgba(0, 229, 255, 0.15);
 $nav-height: 52px;
-$pill-radius: 24px;
+$pill-radius: 52px;
 $icon-wrap-size: 36px;
 $safe-bottom: env(safe-area-inset-bottom, 0);
 
@@ -15,13 +14,11 @@ $safe-bottom: env(safe-area-inset-bottom, 0);
     left: 0;
     right: 0;
     z-index: 9999;
-    padding: 0 12px calc(6px + #{$safe-bottom});
-    padding-bottom: calc(6px + #{$safe-bottom});
+    margin: 0 16px 16px;
     pointer-events: none;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    background-color: #1a1a1a;
 
     &__pill {
         pointer-events: auto;
@@ -32,20 +29,27 @@ $safe-bottom: env(safe-area-inset-bottom, 0);
         max-width: 360px;
         min-height: #{$nav-height};
         padding: 4px 6px;
-        background-color: $nav-pill-bg;
         border-radius: $pill-radius;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.2);
+        /* прозрачность */
+        backdrop-filter: blur(10px);
+        /* размытие фона */
+        -webkit-backdrop-filter: blur(10px);
+        /* для Safari */
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
+
 
     &__item {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        padding: 0;
         gap: 2px;
         flex: 1;
         min-width: 0;
-        padding: 4px 2px;
         border: none;
         background: none;
         color: $nav-text;

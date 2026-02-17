@@ -85,6 +85,7 @@ const timerSlice = createSlice({
     initialState: initialTimer,
     reducers: {
         startTimer(state) {
+            console.log('started')
             if (!state.startedAt) {
                 state.startedAt = Date.now();
             }

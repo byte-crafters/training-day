@@ -22,6 +22,7 @@ function FeedbackButton({ className = "" }: FeedbackButtonProps) {
             ref={buttonRef}
             className={`feedback-button ${className}`}
             aria-label="Leave feedback"
+            sx={{ margin: '24px' }}
         >
             <svg
                 width="14"
