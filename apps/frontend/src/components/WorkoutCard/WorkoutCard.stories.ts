@@ -12,6 +12,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     name: 'Morning Workout',
+    index: 0,
     date: new Date().toISOString(),
     duration: 0,
   },

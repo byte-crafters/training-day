@@ -19,5 +19,6 @@ export const Default: Story = {
             completedSets: 0,
             currentSet: 1,
         },
+        index: 0,
     },
 };

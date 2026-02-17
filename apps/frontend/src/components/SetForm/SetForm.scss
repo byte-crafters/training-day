@@ -2,7 +2,6 @@
     &__drawer {
         display: flex;
         flex-direction: column;
-        padding: 0 24px 24px;
         max-height: 90vh;
         overflow-y: auto;
     }
@@ -17,10 +16,11 @@
     }
 
     &__drawer-content {
-        padding-bottom: 24px;
+        z-index: 1000;
     }
 
     &__title {
+        padding: 0 24px;
         font-size: 20px;
         font-weight: 600;
         color: #ffffff;
@@ -28,6 +28,8 @@
     }
 
     &__inputs-row {
+
+        padding: 0 24px 24px;
         display: flex !important;
         flex-direction: column !important;
         gap: 20px !important;
@@ -131,7 +133,7 @@
 
             &:hover {
                 border-color: rgba(255, 255, 255, 0.05) !important;
-                
+
                 fieldset {
                     border: none !important;
                 }
@@ -140,7 +142,7 @@
             &.Mui-focused {
                 border-color: var(--mui-palette-primary-main) !important;
                 box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2), 0 0 20px rgba(0, 229, 255, 0.3) !important;
-                
+
                 fieldset {
                     border: none !important;
                 }
@@ -181,6 +183,7 @@
 
     &__note-section {
         margin-bottom: 32px;
+        padding: 0 24px;
     }
 
     &__note-label {
@@ -211,7 +214,7 @@
             &.Mui-focused {
                 border-color: var(--mui-palette-primary-main) !important;
                 box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.2), 0 0 20px rgba(0, 229, 255, 0.3) !important;
-                
+
                 fieldset {
                     border-color: var(--mui-palette-primary-main);
                 }
@@ -231,7 +234,6 @@
     &__add-button {
         height: 52px !important;
         min-height: 52px !important;
-        padding: 16px !important;
         font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 12px !important;
@@ -239,7 +241,7 @@
         color: #000000 !important;
         border: 1px solid #00d4ff !important;
         margin-top: 0 !important;
-        margin-bottom: 12px !important;
+        z-index: 10050;
 
         &:hover {
             background-color: #00e5ff !important;

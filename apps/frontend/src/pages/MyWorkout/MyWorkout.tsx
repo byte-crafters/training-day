@@ -26,10 +26,16 @@ import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../uti
 import EditNameHeader from "../../components/EditNameHeader";
 import * as Sentry from "@sentry/react";
 import useHeader from "../../hooks/use-header";
+import { useFirstWorkout } from "../../features/first-workout/model/use-first-workout";
+import { useFirstWorkoutEvents } from "../../features/first-workout/model/use-first-workout-events";
+import { SpotlightCoachmark } from "../../features/first-workout/ui/SpotlightCoachmark";
 
 function MyWorkout() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { mode } = useFirstWorkout();
+    console.log(mode)
+    const { setWorkoutFinished } = useFirstWorkoutEvents();
 
     // Получаем текущую тренировку из Redux store
     const currentWorkout = useAppSelector(
@@ -48,6 +54,7 @@ function MyWorkout() {
     }, []);
 
     const handleFinishWorkout = async () => {
+
         if (!currentWorkout) {
             return;
         }
@@ -85,6 +92,7 @@ function MyWorkout() {
             Sentry.captureException(error);
             console.error("Failed to finish workout:", error);
         } finally {
+            setWorkoutFinished();
             setIsSaving(false);
         }
     };
@@ -116,7 +124,7 @@ function MyWorkout() {
                 </Box>
             )}
 
-            <Box className="my-workout__footer">
+            <Box className="my-workout__footer" id="finish-workout-btn" >
                 <Button
                     variant="contained"
                     size="large"
@@ -140,7 +148,21 @@ function MyWorkout() {
                     )}
                 </Button>
             </Box>
-        </Box>
+            {
+                mode == 'set_opened' &&
+                <SpotlightCoachmark
+                    targetId="set-panel"
+                    title="Open selected exercise"
+                    description="Click the button above to start your workout routine" />
+            }
+            {
+                mode == 'workout_finished' &&
+                <SpotlightCoachmark
+                    targetId="finish-workout-btn"
+                    title="Finish workout"
+                    description="Click the button above to start your workout routine" />
+            }
+        </Box >
     );
 }
 

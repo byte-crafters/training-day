@@ -1,17 +1,21 @@
-import { Box, Typography } from "@mui/material"; 
+import { Box, Typography } from "@mui/material";
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import "./WorkoutCard.scss";
 
 import formatTimerHMS from "../../utils/time";
+import { useFirstWorkoutEvents } from "../../features/first-workout/model/use-first-workout-events";
 
 export interface WorkoutCardProps {
     name: string;
     date: string; // ISO timestamp string (время создания)
     duration: number; // длительность в секундах
+    index: number;
     onClick?: () => void;
 }
 
-function WorkoutCard({ name, date, duration, onClick }: WorkoutCardProps) {
+function WorkoutCard({ name, date, duration, index, onClick }: WorkoutCardProps) {
+    const { setWorkoutShowed } = useFirstWorkoutEvents();
+
     const workoutDate = new Date(date);
     const formattedDate = workoutDate.toLocaleDateString("en-US", {
         weekday: "short",
@@ -20,13 +24,17 @@ function WorkoutCard({ name, date, duration, onClick }: WorkoutCardProps) {
     });
 
     return (
-        <Box
+        <Box id={index === 0 ? 'show-workout-panel' : undefined}
             className="workout-card"
-            onClick={onClick}
+            onClick={() => {
+                if (index === 0)
+                    setWorkoutShowed();
+                onClick!();
+            }}
             sx={{ cursor: "pointer" }}
         >
             <Box className="workout-card__icon">
-               <FitnessCenterIcon />
+                <FitnessCenterIcon />
             </Box>
             <Box className="workout-card__content">
                 <Typography variant="h4" className="workout-card__name">{name}</Typography>

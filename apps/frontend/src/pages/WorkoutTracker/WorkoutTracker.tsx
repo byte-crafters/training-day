@@ -13,10 +13,16 @@ import {
 import { setWorkouts, setCurrentWorkout, useAppSelector, useAppDispatch, RootState } from "../../store";
 import { Workout } from "@training-day/shared";
 import * as Sentry from "@sentry/react";
+import { useFirstWorkout } from "../../features/first-workout/model/use-first-workout";
+import { SpotlightCoachmark } from "../../features/first-workout/ui/SpotlightCoachmark";
+import { useFirstWorkoutEvents } from "../../features/first-workout/model/use-first-workout-events";
+import { deleteState } from "../../features/first-workout/model/storage";
 
 function WorkoutTracker() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { mode } = useFirstWorkout();
+    const { setWorkoutStarted } = useFirstWorkoutEvents();
 
     useEffect(() => {
         logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.WORKOUT_TRACKER });
@@ -32,6 +38,7 @@ function WorkoutTracker() {
     const handleDeleteWorkout = () => {
         dispatch(setCurrentWorkout(null));
         setIsDismissed(true);
+        deleteState();
     };
 
     const handleDismissAndSave = async () => {
@@ -62,8 +69,9 @@ function WorkoutTracker() {
     };
 
     const handleStartTraining = () => {
+        setWorkoutStarted();
         logAnalyticsEvent(ANALYTICS_EVENTS.WORKOUT_START_CLICKED, {});
-        // Если есть текущая тренировка, показываем диалог выбора
+
         if (currentWorkout && currentWorkout.exercises?.length > 0) {
             setShowStartDialog(true);
         } else {
@@ -97,6 +105,7 @@ function WorkoutTracker() {
             <Box component="main" className="workout-tracker__main">
                 <Box className="workout-tracker__welcome-section">
                     <Button
+                        id="start-workout-btn"
                         variant="contained"
                         size="large"
                         className="workout-tracker__start-button"
@@ -144,12 +153,13 @@ function WorkoutTracker() {
                         </Typography>
                     </Box>
                     <Box className="workout-tracker__workouts-list">
-                        {workouts.map((workout: Workout) => (
+                        {workouts.map((workout: Workout, index: number) => (
                             <WorkoutCard
                                 key={workout.id}
                                 name={workout.name}
                                 date={workout.date}
                                 duration={workout.duration}
+                                index={index}
                                 onClick={() => {
                                     navigate("/workout-results", { state: { workout } });
                                 }}
@@ -158,9 +168,6 @@ function WorkoutTracker() {
                     </Box>
                 </Box>
             </Box>
-
-            {/* <FeedbackButton /> */}
-
             <Dialog
                 open={showStartDialog}
                 onClose={() => setShowStartDialog(false)}
@@ -213,6 +220,18 @@ function WorkoutTracker() {
                     </Button>
                 </DialogActions>
             </Dialog>
+            {mode == 'start_workout' &&
+                <SpotlightCoachmark
+                    targetId="start-workout-btn"
+                    title="Start workout"
+                    description="Click the button above to start your workout routine" />
+            }
+            {mode == 'workout_showed' &&
+                <SpotlightCoachmark
+                    targetId="show-workout-panel"
+                    title="Done!"
+                    description="Now you can view workout results" />
+            }
         </Box>
     );
 }

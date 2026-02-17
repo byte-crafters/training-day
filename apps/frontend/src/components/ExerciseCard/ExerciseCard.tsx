@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./ExerciseCard.scss";
+import { useFirstWorkoutEvents } from "../../features/first-workout/model/use-first-workout-events";
 
 export interface ExerciseCardProps {
     exercise: {
@@ -10,18 +11,24 @@ export interface ExerciseCardProps {
         totalSets: number;
         completedSets: number;
         currentSet: number;
-    };
+    },
+    index: number;
 }
 
-function ExerciseCard({ exercise }: ExerciseCardProps) {
+function ExerciseCard({ exercise, index }: ExerciseCardProps) {
     const navigate = useNavigate();
+    const { setOpened } = useFirstWorkoutEvents();
 
     const handleClick = () => {
         navigate("/exercise-detail", { state: { exercise } });
     };
 
     return (
-        <Box className="exercise-card" onClick={handleClick} sx={{ cursor: "pointer" }}>
+        <Box id={index === 0 ? 'set-panel' : undefined}
+            className="exercise-card" onClick={() => {
+                setOpened();
+                handleClick();
+            }} sx={{ cursor: "pointer" }}>
             <Box className="exercise-card__content">
                 <Typography className="exercise-card__name">
                     {exercise.name}
@@ -48,7 +55,7 @@ function ExerciseCard({ exercise }: ExerciseCardProps) {
                     <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
             </Box>
-        </Box>
+        </Box >
     );
 }
 

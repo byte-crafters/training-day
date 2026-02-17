@@ -21,6 +21,7 @@ export const Default: Story = {
     args: {
         exercise: mockExercise,
         isSelected: false,
+        id: undefined,
         onClick: () => console.log('Clicked'),
     },
 };
@@ -29,6 +30,7 @@ export const Selected: Story = {
     args: {
         exercise: mockExercise,
         isSelected: true,
+        id: undefined,
         onClick: () => console.log('Clicked'),
     },
 };

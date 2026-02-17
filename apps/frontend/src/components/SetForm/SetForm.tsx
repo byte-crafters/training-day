@@ -3,6 +3,9 @@ import { Box, Typography, IconButton, Button, TextField, Drawer } from "@mui/mat
 import { Set } from "@training-day/shared";
 import { v4 as uuidv4 } from 'uuid';
 import "./SetForm.scss";
+import { useFirstWorkout } from "../../features/first-workout/model/use-first-workout";
+import { useFirstWorkoutEvents } from "../../features/first-workout/model/use-first-workout-events";
+import { SpotlightCoachmark } from "../../features/first-workout/ui/SpotlightCoachmark";
 
 interface SetFormProps {
     open: boolean;
@@ -10,39 +13,43 @@ interface SetFormProps {
     onSave: (set: Set) => void;
     onDelete?: () => void;
     initialSet?: Set | null;
-    mode?: 'add' | 'edit';
+    formMode?: 'add' | 'edit';
 }
 
-function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: SetFormProps) {
+function SetForm({ open, onClose, onSave, onDelete, initialSet, formMode = 'add' }: SetFormProps) {
     const MAX_REPS = 300;
     const MAX_WEIGHT = 800;
 
     const [reps, setReps] = useState<number | "">(15);
-    const [weight, setWeight] = useState<number | "">("");
+    const [weight, setWeight] = useState<number | "">(30);
     const [note, setNote] = useState<string>("");
+
+    const { mode } = useFirstWorkout();
+    console.log(mode)
+    const { setLogged } = useFirstWorkoutEvents();
 
     // Заполняем форму при открытии или изменении initialSet
     useEffect(() => {
         if (open) {
-            if (initialSet && mode === 'edit') {
+            if (initialSet && formMode === 'edit') {
                 // Режим редактирования: заполняем значениями из initialSet
                 setReps(initialSet.reps || 15);
-                setWeight(initialSet.weight > 0 ? initialSet.weight : "");
+                setWeight(initialSet.weight > 0 ? initialSet.weight : 30);
                 setNote(initialSet.note || "");
-            } else if (mode === 'add') {
+            } else if (formMode === 'add') {
                 // Режим добавления: используем дефолтные значения или значения из initialSet (последний сет)
                 if (initialSet) {
                     setReps(initialSet.reps || 15);
-                    setWeight(initialSet.weight > 0 ? initialSet.weight : "");
+                    setWeight(initialSet.weight > 0 ? initialSet.weight : 30);
                     setNote(initialSet.note || "");
                 } else {
                     setReps(15);
-                    setWeight("");
+                    setWeight(30);
                     setNote("");
                 }
             }
         }
-    }, [open, initialSet, mode]);
+    }, [open, initialSet, formMode]);
 
     const handleRepsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const trimmedValue = e.target.value.trim();
@@ -114,6 +121,8 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
     };
 
     const handleSave = () => {
+
+        setLogged();
         // Валидация: reps должен быть больше 0
         const repsValue = reps === "" ? 0 : reps;
         if (repsValue <= 0) {
@@ -130,7 +139,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
         onSave(set);
 
         // Сброс полей после сохранения (только в режиме добавления)
-        if (mode === 'add') {
+        if (formMode === 'add') {
             setReps(15);
             setWeight("");
             setNote("");
@@ -159,7 +168,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
 
                 <Box className="set-form__drawer-content">
                     <Typography variant="h4" color="text.secondary" className="set-form__title">
-                        {mode === 'edit' ? 'Edit set' : 'Add set'}
+                        {formMode === 'edit' ? 'Edit set' : 'Add set'}
                     </Typography>
 
                     <Box className="set-form__inputs-row">
@@ -270,7 +279,7 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                                     className="set-form__compact-input"
                                     value={weight === "" ? "" : weight}
                                     onChange={handleWeightChange}
-                                    placeholder="0"
+                                    placeholder="30"
                                     inputProps={{
                                         min: 0,
                                         step: 1,
@@ -333,29 +342,38 @@ function SetForm({ open, onClose, onSave, onDelete, initialSet, mode = 'add' }: 
                             rows={2}
                         />
                     </Box>
-
+                    {formMode === 'edit' && onDelete && (
+                        <Box
+                            sx={{ padding: '0px 24px' }}><Button
+                                variant="outlined"
+                                fullWidth
+                                className="set-form__delete-button"
+                                onClick={onDelete}
+                            >
+                                Delete
+                            </Button>
+                        </Box>
+                    )}
+                </Box>
+                <Box
+                    id="log-set-btn" sx={{ padding: '16px 24px' }}>
                     <Button
                         variant="contained"
-                        fullWidth
                         className="set-form__add-button"
                         onClick={handleSave}
                         disabled={reps === "" || reps <= 0}
+                        fullWidth
                     >
-                        {mode === 'edit' ? 'Save' : 'Add'}
+                        {formMode === 'edit' ? 'Save' : 'Add'}
                     </Button>
-
-                    {mode === 'edit' && onDelete && (
-                        <Button
-                            variant="outlined"
-                            fullWidth
-                            className="set-form__delete-button"
-                            onClick={onDelete}
-                        >
-                            Delete
-                        </Button>
-                    )}
                 </Box>
             </Box>
+            {mode == 'set_logged' &&
+                <SpotlightCoachmark
+                    targetId="log-set-btn"
+                    title="Start doing set"
+                    description="Click the button above to start your workout routine" />
+            }
         </Drawer>
     );
 }

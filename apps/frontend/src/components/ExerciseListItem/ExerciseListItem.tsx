@@ -3,18 +3,21 @@ import { Exercise } from "@training-day/shared";
 import "./ExerciseListItem.scss";
 
 export interface ExerciseListItemProps {
+    id: string | undefined;
     exercise: Exercise;
     isSelected: boolean;
     onClick: () => void;
 }
 
 function ExerciseListItem({
+    id,
     exercise,
     isSelected,
     onClick,
 }: ExerciseListItemProps) {
     return (
         <Card
+            id={id}
             variant="outlined"
             sx={{ padding: "15px 16px", borderRadius: "16px", margin: "5px" }}
             className="exercise-list-item"

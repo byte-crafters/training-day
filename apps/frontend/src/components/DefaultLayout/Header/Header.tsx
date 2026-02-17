@@ -15,7 +15,7 @@ function Header({ children }: THeaderProps) {
             display: 'flex',
             justifyContent: 'space-between',
             // backgroundColor: 'green',
-            zIndex: '9999'
+            zIndex: '1002'
         }}>
             <BackButton />
             {children}

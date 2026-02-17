@@ -8,11 +8,17 @@ import SetForm from "../../components/SetForm";
 import { logAnalyticsEvent } from "../../utils/firebase";
 import { ANALYTICS_EVENTS, ANALYTICS_SCREENS, ANALYTICS_PARAMS } from "../../utils/analytics";
 import useHeader from "../../hooks/use-header";
+import { useFirstWorkout } from "../../features/first-workout/model/use-first-workout";
+import { useFirstWorkoutEvents } from "../../features/first-workout/model/use-first-workout-events";
+import { SpotlightCoachmark } from "../../features/first-workout/ui/SpotlightCoachmark";
 
 function ExerciseDetail() {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useAppDispatch();
+    const { mode } = useFirstWorkout();
+    console.log(mode)
+    const { setStarted, setExerciseFinished } = useFirstWorkoutEvents();
 
     // Получаем exercise из location.state (для отображения)
     const exerciseFromState = (
@@ -63,6 +69,7 @@ function ExerciseDetail() {
     }
 
     const handleOpenForm = () => {
+        setStarted();
         // Если есть сохраненные сеты, используем последний сет для предзаполнения
         const lastSet = savedSets.length > 0 ? savedSets[savedSets.length - 1] : null;
         setEditingSet(lastSet);
@@ -209,25 +216,49 @@ function ExerciseDetail() {
                 )}
             </Box>
 
-            <Box className="exercise-detail__footer">
-                <Box className="exercise-detail__footer-buttons-row">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        className="exercise-detail__add-set-button-bottom"
-                        onClick={handleOpenForm}
-                    >
-                        Add Set
-                    </Button>
-                </Box>
+            <Box
+                id="start-set-btn"
+                sx={{
+                    position: 'fixed',
+                    bottom: 80, // немного выше, чтобы не накладывалась на другую кнопку
+                    left: 0,
+                    right: 0,
+                    padding: '16px 24px 0',
+                    zIndex: 1002, // выше любых overlay
+                }}
+            >
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    className="exercise-detail__add-set-button-bottom"
+                    onClick={handleOpenForm}
+                >
+                    Add Set
+                </Button>
+            </Box>
+
+            {/* Кнопка Finish Exercise */}
+            <Box id="finish-exercise-btn"
+                sx={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '16px 24px 16px',
+                    zIndex: 1000,
+                }}
+            >
                 <Button
                     variant="outlined"
                     color="primary"
                     size="large"
                     fullWidth
                     className="exercise-detail__finish-button"
-                    onClick={() => navigate("/my-workout")}
+                    onClick={() => {
+                        setExerciseFinished();
+                        navigate("/my-workout")
+                    }}
                 >
                     Finish Exercise
                 </Button>
@@ -239,8 +270,20 @@ function ExerciseDetail() {
                 onSave={handleSaveSet}
                 onDelete={handleDeleteSet}
                 initialSet={editingSet}
-                mode={formMode}
+                formMode={formMode}
             />
+            {mode == 'set_started' &&
+                <SpotlightCoachmark
+                    targetId="start-set-btn"
+                    title="Log set"
+                    description="Click the button above to start your workout routine" />
+            }
+            {mode == 'exercise_finished' &&
+                <SpotlightCoachmark
+                    targetId="finish-exercise-btn"
+                    title="Finish exercise"
+                    description="Click the button above to start your workout routine" />
+            }
         </Box>
     );
 }

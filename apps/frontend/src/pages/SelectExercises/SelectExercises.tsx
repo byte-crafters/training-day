@@ -21,12 +21,18 @@ import { createWorkout, exerciseToActivity } from "../../utils/helpers";
 import ExerciseListItem from "../../components/ExerciseListItem";
 import { saveCurrentWorkout } from "../../utils/storage";
 import useHeader from "../../hooks/use-header";
+import { useFirstWorkout } from "../../features/first-workout/model/use-first-workout";
+import { SpotlightCoachmark } from "../../features/first-workout/ui/SpotlightCoachmark";
+import { useFirstWorkoutEvents } from "../../features/first-workout/model/use-first-workout-events";
 
 type Category = "All" | ExerciseType;
 
 function SelectExercises() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const { mode } = useFirstWorkout();
+    console.log(mode);
+    const { setExercisesSelected, setWorkoutTimerStarted } = useFirstWorkoutEvents();
 
     useEffect(() => {
         logAnalyticsEvent(ANALYTICS_EVENTS.SCREEN_VIEW, { [ANALYTICS_PARAMS.SCREEN_NAME]: ANALYTICS_SCREENS.SELECT_EXERCISES });
@@ -100,6 +106,7 @@ function SelectExercises() {
     const selectedExercisesCount = selectedExerciseIds.length;
 
     const handleBeginWorkout = () => {
+        setWorkoutTimerStarted();
         const selectedExercises = exercisesFromStore.filter((exercise) =>
             selectedExerciseIds.includes(exercise.id)
         );
@@ -186,8 +193,6 @@ function SelectExercises() {
                         }}
                     />
                 </Box>
-
-
             </Box>
 
             <Box className="select-exercises__sticky-section">
@@ -222,24 +227,30 @@ function SelectExercises() {
             </Box>
 
             <Box component="main" className="select-exercises__main">
-                <Box className="select-exercises__list">
-                    {filteredExercises.map((exercise) => {
+                <Box className="select-exercises__list" >
+                    {filteredExercises.map((exercise, index) => {
                         const isSelected = selectedExerciseIds.includes(
                             exercise.id
                         );
                         return (
                             <ExerciseListItem
+                                id={index == 0 ? "select-exercises-panel" : undefined}
                                 key={exercise.id}
                                 exercise={exercise}
                                 isSelected={isSelected}
-                                onClick={() => handleToggleExercise(exercise.id)}
+                                onClick={() => {
+                                    if (index == 0)
+                                        setExercisesSelected();
+                                    handleToggleExercise(exercise.id)
+                                }}
                             />
                         );
                     })}
                 </Box>
             </Box>
 
-            <Box className="select-exercises__footer">
+            <Box className="select-exercises__footer"
+                id="begin-workout-btn">
                 <Button
                     variant="contained"
                     size="large"
@@ -251,6 +262,18 @@ function SelectExercises() {
                     {currentWorkout ? "Continue Workout" : "Begin Workout"}
                 </Button>
             </Box>
+            {mode == 'select_exercises' &&
+                <SpotlightCoachmark
+                    targetId="select-exercises-panel"
+                    title="Select exercises"
+                    description="Click the button above to start your workout routine" />
+            }
+            {mode == 'start_workout_timer' &&
+                <SpotlightCoachmark
+                    targetId="begin-workout-btn"
+                    title="Begin workout!"
+                    description="Click the button above to start your workout routine" />
+            }
         </Box>
     );
 }

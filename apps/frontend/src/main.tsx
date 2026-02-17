@@ -7,6 +7,7 @@ import { store } from "./store/index.ts";
 import { initFirebase } from "./utils/firebase";
 // import "./sentry/instrument.js";
 import "./index.css";
+import { FirstWorkoutProvider } from "./features/first-workout/model/FirstWorkoutProvider";
 
 initFirebase();
 
@@ -32,7 +33,9 @@ enableMocking().then(() => {
         <StrictMode>
             <Sentry.ErrorBoundary fallback={<div>Something went wrong.</div>} showDialog={false}>
                 <Provider store={store}>
-                    <App />
+                    <FirstWorkoutProvider>
+                        <App />
+                    </FirstWorkoutProvider>
                 </Provider>
             </Sentry.ErrorBoundary>
         </StrictMode>

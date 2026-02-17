@@ -48,8 +48,8 @@ function ExerciseList() {
 
     return (
         <Box className="exercise-list">
-            {exercises.map((exercise) => (
-                <ExerciseCard key={exercise.id} exercise={exercise} />
+            {exercises.map((exercise, index) => (
+                <ExerciseCard index={index} key={exercise.id} exercise={exercise} />
             ))}
         </Box>
     );
